@@ -1,0 +1,3265 @@
+<<<<<<< HEAD
+<!-- admin.html -->
+=======
+>>>>>>> 4accfcc52580821ba69af8fd5736127bcd739ae7
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel</title>
+  <link rel="stylesheet" href="style.css" />
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    /* ✅ Section Switch */
+    .pageSection {
+      display: none;
+    }
+
+    .pageSection.active {
+      display: block;
+    }
+
+    /* ✅ small top heading inside each page */
+    .pageTop {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .pageTop h2 {
+      font-size: 16px;
+      font-weight: 900;
+      letter-spacing: 0.4px;
+    }
+
+    .pageTop p {
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 6px;
+      line-height: 1.4;
+    }
+
+    /* ✅ 3 dot button */
+    .dotBtn {
+      padding: 8px 12px;
+      border-radius: 14px;
+      font-weight: 900;
+      border: 1px solid rgba(255, 255, 255, 0.10);
+      background: rgba(255, 255, 255, 0.03);
+      color: var(--text);
+      cursor: pointer;
+    }
+
+    .dotBtn:hover {
+      background: rgba(255, 255, 255, 0.06);
+      box-shadow: 0 0 25px rgba(124, 0, 255, 0.12);
+      transform: translateY(-1px);
+      transition: 0.2s;
+    }
+
+    /* ✅ Modal */
+    .modalOverlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.65);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      padding: 16px;
+    }
+
+    .modalOverlay.show {
+      display: flex;
+    }
+
+    .modalCard {
+      width: min(1150px, 96vw);
+      max-height: 90vh;
+      overflow: auto;
+      border-radius: 22px;
+      border: 1px solid rgba(124, 0, 255, 0.25);
+      background: rgba(10, 8, 18, 0.96);
+      box-shadow: var(--shadow);
+      padding: 16px;
+    }
+
+    .card canvas {
+      max-height: 220px;
+    }
+
+    /* ===============================
+   Intern Hover Tooltip
+================================ */
+
+    .internCell {
+      position: relative;
+      cursor: pointer;
+    }
+
+    .internTooltip {
+      position: absolute;
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%) scale(0.9);
+
+      background: linear-gradient(135deg, #7C00FF, #B100FF);
+      color: #fff;
+
+      padding: 6px 10px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+
+      white-space: nowrap;
+
+      opacity: 0;
+      pointer-events: none;
+      transition: 0.25s;
+
+      box-shadow: 0 8px 25px rgba(124, 0, 255, 0.35);
+      z-index: 100;
+    }
+
+<<<<<<< HEAD
+=======
+    /* arrow */
+>>>>>>> 4accfcc52580821ba69af8fd5736127bcd739ae7
+    .internTooltip::after {
+      content: "";
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+<<<<<<< HEAD
+=======
+
+>>>>>>> 4accfcc52580821ba69af8fd5736127bcd739ae7
+      border-width: 6px;
+      border-style: solid;
+      border-color: #7C00FF transparent transparent transparent;
+    }
+
+    .internCell:hover .internTooltip {
+      opacity: 1;
+      transform: translateX(-50%) scale(1);
+    }
+
+    /* ===============================
+   MOBILE RESPONSIVE ADMIN PANEL
+================================ */
+
+<<<<<<< HEAD
+=======
+    /* Layout Fix */
+>>>>>>> 4accfcc52580821ba69af8fd5736127bcd739ae7
+    .appShell {
+      display: flex;
+      gap: 16px;
+    }
+
+<<<<<<< HEAD
+=======
+    /* Sidebar Default */
+>>>>>>> 4accfcc52580821ba69af8fd5736127bcd739ae7
+    .sidebar {
+      width: 260px;
+      transition: 0.3s;
+    }
+
+<<<<<<< HEAD
+=======
+    /* Mobile Menu Button Hidden Desktop */
+>>>>>>> 4accfcc52580821ba69af8fd5736127bcd739ae7
+    .mobileMenuBtn {
+      display: none;
+    }
+
+<<<<<<< HEAD
+=======
+    /* ===============================
+   MOBILE RESPONSIVE
+================================ */
+
+>>>>>>> 4accfcc52580821ba69af8fd5736127bcd739ae7
+    @media (max-width:1000px) {
+
+      .container {
+        max-width: 420px;
+        padding: 12px;
+      }
+
+      .appShell {
+        flex-direction: column;
+        gap: 0;
+        position: relative;
+      }
+
+<<<<<<< HEAD
+=======
+      /* Sidebar dropdown under button */
+
+>>>>>>> 4accfcc52580821ba69af8fd5736127bcd739ae7
+      .sidebar {
+        position: absolute;
+        top: 70px;
+        left: 12px;
+        right: 12px;
+        width: auto;
+        height: auto;
+
+        transform: scale(0.95);
+        opacity: 0;
+        pointer-events: none;
+
+        transition: 0.25s;
+        z-index: 9999;
+      }
+
+      .sidebar.show {
+        transform: scale(1);
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      .mobileMenuBtn {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .topbar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+      }
+
+      .actions {
+        flex-direction: column;
+      }
+
+      .actions .btn {
+        width: 100%;
+      }
+
+      .grid2,
+      .row2 {
+        grid-template-columns: 1fr;
+      }
+
+      .kpis {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      table {
+        min-width: 700px;
+      }
+
+      .modalCard {
+        max-width: 420px;
+      }
+
+    }
+
+<<<<<<< HEAD
+    @media (max-width: 1000px) {
+
+=======
+    /* ===============================
+   ADVANCED MOBILE RESPONSIVE FIX
+================================ */
+
+    @media (max-width: 1000px) {
+
+      /* Container ko full width aur safe padding dena */
+>>>>>>> 4accfcc52580821ba69af8fd5736127bcd739ae7
+      .container {
+        max-width: 100% !important;
+        padding: 10px !important;
+      }
+
+      .appShell {
+        flex-direction: column;
+        gap: 0;
+        position: relative;
+      }
+
+<<<<<<< HEAD
+      .sidebar {
+        position: fixed !important;
+        top: 0;
+        left: -300px;
+=======
+      /* 📱 Sidebar: Ab ye overlay ki tarah dikhega */
+      .sidebar {
+        position: fixed !important;
+        /* Screen par fixed rahega */
+        top: 0;
+        left: -300px;
+        /* Default hide rahega */
+>>>>>>> 4accfcc52580821ba69af8fd5736127bcd739ae7
+        width: 280px !important;
+        height: 100vh !important;
+        z-index: 10000;
+        background: #0a0812 !important;
+<<<<<<< HEAD
+=======
+        /* Background dark rakha hai */
+>>>>>>> 4accfcc52580821ba69af8fd5736127bcd739ae7
+        transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 20px 0 50px rgba(0, 0, 0, 0.8);
+        padding: 20px !important;
+        border-radius: 0 20px 20px 0 !important;
+      }
+
+<<<<<<< HEAD
+=======
+      /* Sidebar dikhane ke liye class */
+>>>>>>> 4accfcc52580821ba69af8fd5736127bcd739ae7
+      .sidebar.show {
+        left: 0;
+      }
+
+<<<<<<< HEAD
+=======
+      /* 🍔 Mobile Menu Button: Har page par dikhega */
+>>>>>>> 4accfcc52580821ba69af8fd5736127bcd739ae7
+      .mobileMenuBtn {
+        display: flex !important;
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        width: 55px;
+        height: 55px;
+        background: linear-gradient(135deg, #7C00FF, #B100FF);
+        border-radius: 50%;
+        z-index: 9999;
+        color: white;
+        font-size: 24px;
+        box-shadow: 0 10px 25px rgba(124, 0, 255, 0.4);
+        border: none;
+      }
+
+<<<<<<< HEAD
+=======
+      /* Navigation Link ko mobile me bada aur clickable banana */
+>>>>>>> 4accfcc52580821ba69af8fd5736127bcd739ae7
+      .nav a {
+        padding: 15px !important;
+        margin-bottom: 8px !important;
+        font-size: 14px !important;
+      }
+
+      .topbar {
+        padding: 10px;
+        margin-bottom: 15px;
+      }
+
+<<<<<<< HEAD
+=======
+      /* Grid Layouts: Single column me stack karna */
+>>>>>>> 4accfcc52580821ba69af8fd5736127bcd739ae7
+      .grid2,
+      .row2,
+      .miniGrid {
+        grid-template-columns: 1fr !important;
+        gap: 15px !important;
+      }
+
+<<<<<<< HEAD
+=======
+      /* KPI cards ko mobile me 2-column grid dena */
+>>>>>>> 4accfcc52580821ba69af8fd5736127bcd739ae7
+      .kpis {
+        display: grid !important;
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 10px !important;
+      }
+
+<<<<<<< HEAD
+=======
+      /* Tables: Horizontal scroll enable karna taaki layout na toote */
+>>>>>>> 4accfcc52580821ba69af8fd5736127bcd739ae7
+      .tableWrap {
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch;
+        border-radius: 12px;
+      }
+
+      table {
+        min-width: 650px !important;
+<<<<<<< HEAD
+      }
+
+=======
+        /* Table ki readability ke liye */
+      }
+
+      /* Modal ko mobile screen ke hisaab se fit karna */
+>>>>>>> 4accfcc52580821ba69af8fd5736127bcd739ae7
+      .modalCard {
+        width: 95vw !important;
+        max-height: 85vh !important;
+        margin: 10px;
+        padding: 15px !important;
+      }
+
+<<<<<<< HEAD
+=======
+      /* Buttons ko mobile me full width touch targets dena */
+>>>>>>> 4accfcc52580821ba69af8fd5736127bcd739ae7
+      .actions {
+        display: flex;
+        flex-direction: row;
+        gap: 8px;
+        margin-top: 10px;
+      }
+
+      .actions .btn {
+        flex: 1;
+        font-size: 12px;
+        padding: 10px !important;
+      }
+    }
+
+    @media (max-width: 1000px) {
+<<<<<<< HEAD
+=======
+      /* ... baki purana code ... */
+>>>>>>> 4accfcc52580821ba69af8fd5736127bcd739ae7
+
+      .topbar {
+        display: flex !important;
+        flex-direction: row !important;
+<<<<<<< HEAD
+        align-items: center !important;
+        justify-content: flex-start !important;
+        padding: 12px 20px !important;
+        min-height: 80px !important;
+        gap: 15px !important;
+        background: rgba(255, 255, 255, 0.03) !important;
+=======
+        /* Items line mein rahenge */
+        align-items: center !important;
+        justify-content: flex-start !important;
+        padding: 12px 20px !important;
+        /* Sahi spacing taaki background dikhe */
+        min-height: 80px !important;
+        gap: 15px !important;
+        background: rgba(255, 255, 255, 0.03) !important;
+        /* Background wapas lane ke liye */
+>>>>>>> 4accfcc52580821ba69af8fd5736127bcd739ae7
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        border-radius: var(--radius) !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+      }
+
+      .mobileMenuBtn {
+        display: flex !important;
+        position: relative !important;
+<<<<<<< HEAD
+=======
+        /* Static/Relative taaki background ke andar rahe */
+>>>>>>> 4accfcc52580821ba69af8fd5736127bcd739ae7
+        width: 45px !important;
+        height: 45px !important;
+        flex-shrink: 0 !important;
+        z-index: 10 !important;
+        background: rgba(255, 255, 255, 0.05) !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .titleWrap {
+        flex: 1 !important;
+        text-align: left !important;
+      }
+
+<<<<<<< HEAD
+=======
+      /* Actions button ko control karne ke liye */
+>>>>>>> 4accfcc52580821ba69af8fd5736127bcd739ae7
+      .actions {
+        display: flex !important;
+        gap: 8px !important;
+      }
+    }
+
+    .taskDesc {
+      display: none;
+      margin-top: 6px;
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .taskDesc.show {
+      display: block;
+    }
+
+    .viewBtn {
+      display: inline-block;
+      margin-top: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #B100FF;
+      cursor: pointer;
+    }
+
+    .viewBtn:hover {
+      text-decoration: underline;
+    }
+
+    .columnChart {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-around;
+      height: 240px;
+      padding: 20px 10px 10px;
+      gap: 20px;
+    }
+
+    .colItem {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex: 1;
+    }
+
+    .colBarWrap {
+      width: 40px;
+      height: 180px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 20px;
+      display: flex;
+      align-items: flex-end;
+      overflow: hidden;
+    }
+
+    .colBar {
+      width: 100%;
+      height: 0%;
+      border-radius: 20px;
+      background: linear-gradient(180deg, #B100FF, #7C00FF);
+      box-shadow: 0 0 20px rgba(124, 0, 255, 0.5);
+      transition: height 1.2s ease;
+    }
+
+    .colPercent {
+      font-size: 12px;
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+
+    .colLabel {
+      font-size: 12px;
+      margin-top: 8px;
+      text-align: center;
+      color: var(--muted);
+    }
+
+    .batchPerfBox {
+      display: flex;
+      align-items: flex-end;
+<<<<<<< HEAD
+      justify-content: center;
+      gap: 40px;
+=======
+      /* neeche se align hoga */
+      justify-content: center;
+      /* center me aayega */
+      gap: 40px;
+      /* dono ke beech space */
+>>>>>>> 4accfcc52580821ba69af8fd5736127bcd739ae7
+      height: 240px;
+      padding: 20px 10px 10px;
+    }
+
+    .topBatchBlock {
+      margin-bottom: 20px;
+    }
+
+    .topBatchTitle {
+      font-size: 13px;
+      font-weight: 800;
+      margin-bottom: 10px;
+      color: #B100FF;
+      letter-spacing: 0.5px;
+    }
+
+    .topInternCard {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 14px;
+      border-radius: 14px;
+      margin-bottom: 8px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      transition: 0.2s;
+    }
+
+    /* ===== Full Analysis Table Fix ===== */
+
+    #analysisModal table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    #analysisModal th,
+    #analysisModal td {
+      padding: 12px 16px;
+    }
+
+    #analysisModal th {
+      text-align: left;
+      font-size: 13px;
+      font-weight: 700;
+      opacity: 0.8;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    #analysisModal td {
+      font-size: 13px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+<<<<<<< HEAD
+=======
+    /* Rank column */
+>>>>>>> 4accfcc52580821ba69af8fd5736127bcd739ae7
+    #analysisModal td:nth-child(1),
+    #analysisModal th:nth-child(1) {
+      width: 80px;
+      text-align: left;
+    }
+
+<<<<<<< HEAD
+=======
+    /* Name column */
+>>>>>>> 4accfcc52580821ba69af8fd5736127bcd739ae7
+    #analysisModal td:nth-child(2),
+    #analysisModal th:nth-child(2) {
+      text-align: left;
+    }
+
+<<<<<<< HEAD
+=======
+    /* Avg Grade column */
+>>>>>>> 4accfcc52580821ba69af8fd5736127bcd739ae7
+    #analysisModal td:nth-child(3),
+    #analysisModal th:nth-child(3) {
+      text-align: center;
+    }
+
+<<<<<<< HEAD
+=======
+    /* Approved column */
+>>>>>>> 4accfcc52580821ba69af8fd5736127bcd739ae7
+    #analysisModal td:nth-child(4),
+    #analysisModal th:nth-child(4) {
+      text-align: center;
+      width: 100px;
+    }
+
+    .topInternCard:hover {
+      background: rgba(124, 0, 255, 0.08);
+      border: 1px solid rgba(124, 0, 255, 0.3);
+      transform: translateY(-2px);
+    }
+
+    .rankBadge {
+      font-size: 18px;
+      margin-right: 10px;
+    }
+
+    .topInternLeft {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .topInternName {
+      font-weight: 700;
+      font-size: 13px;
+    }
+
+    .topInternScore {
+      font-weight: 900;
+      color: #7C00FF;
+      font-size: 13px;
+    }
+<<<<<<< HEAD
+
+    /* ===============================
+       BATCH PAGE TABS
+    ================================ */
+
+    .batchTabs {
+      display: flex;
+      gap: 4px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding-bottom: 0;
+      margin-bottom: 18px;
+    }
+
+    .batchTab {
+      padding: 9px 18px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      border-radius: 12px 12px 0 0;
+      border: 1px solid transparent;
+      border-bottom: none;
+      background: transparent;
+      color: var(--muted);
+      transition: 0.2s;
+      letter-spacing: 0.3px;
+    }
+
+    .batchTab.active {
+      background: rgba(124, 0, 255, 0.10);
+      border-color: rgba(124, 0, 255, 0.25);
+      color: var(--text);
+    }
+
+    .batchTab:hover:not(.active) {
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text);
+    }
+
+    .batchTabPanel {
+      display: none;
+    }
+
+    .batchTabPanel.active {
+      display: block;
+    }
+
+    /* ===============================
+       ENROLLED STUDENTS STYLES
+    ================================ */
+
+    .statusPill {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
+    }
+
+    .statusPill.pending {
+      background: rgba(255, 165, 0, 0.12);
+      border: 1px solid rgba(255, 165, 0, 0.3);
+      color: #ffaa33;
+    }
+
+    .statusPill.approved {
+      background: rgba(0, 200, 100, 0.12);
+      border: 1px solid rgba(0, 200, 100, 0.3);
+      color: #00c864;
+    }
+
+    .statusPill.rejected {
+      background: rgba(255, 60, 60, 0.12);
+      border: 1px solid rgba(255, 60, 60, 0.3);
+      color: #ff4444;
+    }
+
+    /* Review Modal */
+    #enrolledReviewModal .modalCard {
+      width: min(560px, 95vw);
+    }
+
+    .reviewSection {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 14px;
+      padding: 14px;
+      margin-bottom: 12px;
+    }
+
+    .reviewSection label {
+      font-size: 12px;
+      color: var(--muted);
+      display: block;
+      margin-bottom: 4px;
+      margin-top: 10px;
+    }
+
+    .reviewSection label:first-child {
+      margin-top: 0;
+    }
+
+    .reviewMeta {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .reviewGrid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .reviewActions {
+      display: flex;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .reviewActions .btn {
+      flex: 1;
+      font-size: 13px;
+      padding: 12px;
+      font-weight: 800;
+    }
+
+    .reviewAvatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: rgba(124, 0, 255, 0.15);
+      border: 1px solid rgba(124, 0, 255, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      font-weight: 900;
+      color: #B100FF;
+      flex-shrink: 0;
+    }
+
+    .enrolledTagBar {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+
+    .enrolledTag {
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+      background: rgba(124, 0, 255, 0.10);
+      border: 1px solid rgba(124, 0, 255, 0.2);
+      color: #B100FF;
+    }
+
+    .emptyEnrolled {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .emptyEnrolled span {
+      display: block;
+      font-size: 28px;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+
+=======
+  </style>
+</head>
+>>>>>>> 4accfcc52580821ba69af8fd5736127bcd739ae7
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<body>
+  <div class="container">
+    <div class="appShell">
+
+      <!-- ✅ SIDEBAR -->
+      <aside class="sidebar">
+
+        <div class="sideTop">
+          <div class="brandBox">
+            <div class="brandLogo">
+              <img src="logo.png" alt="COD Logo">
+            </div>
+            <div class="brandText">
+              <h3>COD PANEL</h3>
+              <p>Admin Control</p>
+            </div>
+          </div>
+
+          <div class="rolePill" id="adminPill">Admin</div>
+        </div>
+
+        <!-- ✅ MENU -->
+        <div class="nav" id="adminNav">
+          <a class="active" href="javascript:void(0)" onclick="switchPage('studentsPage', this)">👨‍🎓 Students</a>
+          <a href="javascript:void(0)" onclick="switchPage('batchPage', this)">🧩 Batch + Intern Create</a>
+          <a href="javascript:void(0)" onclick="switchPage('assignPage', this)">📌 Assign Task</a>
+          <a href="javascript:void(0)" onclick="switchPage('subsPage', this)">✅ Submissions</a>
+          <a href="javascript:void(0)" onclick="switchPage('incompletePage', this)">⚠️ Incomplete</a>
+          <a href="javascript:void(0)" onclick="switchPage('analyticsPage', this)">📊 Analytics</a>
+          <a href="javascript:void(0)" onclick="switchPage('editRequestsPage', this)">🔐 Edit Requests</a>
+<<<<<<< HEAD
+          <a href="javascript:void(0)" onclick="switchPage('sendDocsPage', this)">📄 Send Documents</a>
+=======
+>>>>>>> 4accfcc52580821ba69af8fd5736127bcd739ae7
+        </div>
+
+        <div class="sideFooter">
+          ✅ Max 20 interns per batch<br />
+          ✅ Batch + Individual task<br />
+          ✅ Grade + remarks<br />
+          ✅ Full tracking
+        </div>
+
+      </aside>
+
+      <!-- ✅ MAIN -->
+      <main class="main">
+
+<<<<<<< HEAD
+        <!-- ✅ TOPBAR -->
+=======
+        <!-- ✅ TOPBAR (Always visible) -->
+>>>>>>> 4accfcc52580821ba69af8fd5736127bcd739ae7
+        <div class="topbar">
+          <button class="btn ghost mobileMenuBtn" onclick="toggleSidebar()">☰</button>
+
+          <div class="titleWrap">
+            <h1>⚡CODELINE.AI</h1>
+            <p>Software training institute in Maharashtra</p>
+          </div>
+
+          <div class="actions">
+            <button class="btn ghost" onclick="init()">🔄 Refresh</button>
+            <button class="btn danger" onclick="logout()">Logout</button>
+          </div>
+        </div>
+
+        <!-- ✅ PAGE 1: STUDENTS -->
+        <section class="card pageSection active" id="studentsPage">
+          <div class="pageTop">
+            <div>
+              <h2>👨‍🎓 All Students List</h2>
+<<<<<<< HEAD
+            </div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;"></div>
+=======
+              <!-- <p>Batch-wise filter + A-Z sorting + 3 dot details view</p> -->
+            </div>
+
+            <div style="display:flex;gap:10px;flex-wrap:wrap;"> </div>
+>>>>>>> 4accfcc52580821ba69af8fd5736127bcd739ae7
+          </div>
+
+          <div class="row2">
+            <div>
+              <label>Batch Filter</label>
+              <select id="filterBatch"></select>
+            </div>
+          </div>
+
+          <div>
+            <label>Total Students</label>
+            <div style="
+<<<<<<< HEAD
+              padding:10px 14px;
+              border-radius:12px;
+              background:rgba(124,0,255,0.08);
+              border:1px solid rgba(124,0,255,0.25);
+              font-weight:900;
+              text-align:center;
+              min-width:120px;
+            ">
+=======
+      padding:10px 14px;
+      border-radius:12px;
+      background:rgba(124,0,255,0.08);
+      border:1px solid rgba(124,0,255,0.25);
+      font-weight:900;
+      text-align:center;
+      min-width:120px;
+    ">
+>>>>>>> 4accfcc52580821ba69af8fd5736127bcd739ae7
+              <span id="batchCount">0</span>
+            </div>
+          </div>
+
+          <div class="tableWrap" style="margin-top:12px;">
+            <table>
+              <thead>
+                <tr>
+                  <th>InternID</th>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Batch</th>
+                  <th>Duration</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="internTable"></tbody>
+            </table>
+          </div>
+<<<<<<< HEAD
+=======
+
+          <!-- <div class="small">✅ “⋮” click → full intern overview (history + submissions + streak)</div> -->
+>>>>>>> 4accfcc52580821ba69af8fd5736127bcd739ae7
+        </section>
+
+        <!-- ✅ PAGE 2: BATCH + INTERN CREATE -->
+        <section class="card pageSection" id="batchPage">
+<<<<<<< HEAD
+
+          <div class="pageTop">
+            <div>
+              <h2>🧩 Batch + Intern Manage</h2>
+              <p>Create batches · Add interns · Review enrollments</p>
+            </div>
+          </div>
+
+          <!-- Tab Switcher -->
+          <div class="batchTabs">
+            <button class="batchTab active" onclick="switchBatchTab('createTab', this)">🧩 Create Batch &amp; Intern</button>
+            <button class="batchTab" onclick="switchBatchTab('enrolledTab', this)">📋 Enrolled Students</button>
+          </div>
+
+          <!-- ── TAB 1: Create Batch + Intern ── -->
+          <div class="batchTabPanel active" id="createTab">
+            <div class="grid2">
+
+              <!-- Create Batch -->
+              <div class="card">
+                <div class="cardHead">
+                  <div>
+                    <h2>🧩 Create Batch</h2>
+                  </div>
+                </div>
+
+                <label>Batch Name</label>
+                <input id="batchName" placeholder="BATCH-1 / JAN-2026" />
+                <button class="btn primary" onclick="createBatch()">Create Batch</button>
+                <div class="small" id="batchMsg"></div>
+              </div>
+
+              <!-- Create Intern -->
+              <div class="card">
+                <div class="cardHead">
+                  <div>
+                    <h2>➕ Create Intern</h2>
+                    <span>Intern ID will auto generate</span>
+                  </div>
+                </div>
+
+                <label>Name</label>
+                <input id="inName" placeholder="Intern Name" />
+
+                <label>Email</label>
+                <input id="inEmail" type="email" autocomplete="email" placeholder="intern@gmail.com" />
+
+                <label>Select Batch</label>
+                <select id="inBatch"></select>
+
+                <label>Duration</label>
+                <select id="inDuration">
+                  <option>6 Months</option>
+                  <option>9 Months</option>
+                </select>
+
+                <button class="btn primary" onclick="createIntern()">Create Intern</button>
+                <div class="small" id="createdInternText"></div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- ── TAB 2: Enrolled Students ── -->
+          <div class="batchTabPanel" id="enrolledTab">
+
+            <div class="pageTop" style="margin-bottom:10px;">
+              <div>
+                <p style="margin:0;">Students who applied via the enrollment form</p>
+              </div>
+              <button class="btn" onclick="loadEnrolledStudents()">🔄 Refresh</button>
+            </div>
+
+            <!-- Summary Tags -->
+            <div class="enrolledTagBar" id="enrolledTagBar">
+              <span class="enrolledTag" id="tagTotal">0 Total</span>
+              <span class="statusPill pending" id="tagPending">0 Pending</span>
+              <span class="statusPill approved" id="tagApproved">0 Approved</span>
+              <span class="statusPill rejected" id="tagRejected">0 Rejected</span>
+            </div>
+
+            <div class="tableWrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Applied Date</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="enrolledTable">
+                  <tr>
+                    <td colspan="7">
+                      <div class="emptyEnrolled"><span>📋</span>Click Refresh to load enrolled students</div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+          </div>
+
+=======
+          <div class="pageTop">
+            <div>
+              <h2>🧩 Batch + Intern Create</h2>
+              <p>Batch mandatory • Max 20 interns in 1 batch</p>
+            </div>
+          </div>
+
+          <div class="grid2">
+
+            <!-- Create Batch -->
+            <div class="card">
+              <div class="cardHead">
+                <div>
+                  <h2>🧩 Create Batch</h2>
+                  <!-- <span>Auto BatchID generate</span> -->
+                </div>
+              </div>
+
+              <label>Batch Name</label>
+              <input id="batchName" placeholder="BATCH-1 / JAN-2026" />
+
+              <button class="btn primary" onclick="createBatch()">Create Batch</button>
+              <div class="small" id="batchMsg"></div>
+            </div>
+
+            <!-- Create Intern -->
+            <div class="card">
+              <div class="cardHead">
+                <div>
+                  <h2>➕ Create Intern</h2>
+                  <span>Intern ID will auto generate</span>
+                </div>
+              </div>
+
+              <label>Name</label>
+              <input id="inName" placeholder="Intern Name" />
+
+              <label>Email</label>
+              <input id="inEmail" type="email" autocomplete="email" placeholder="intern@gmail.com" />
+
+              <label>Select Batch</label>
+              <select id="inBatch"></select>
+
+              <label>Duration</label>
+              <select id="inDuration">
+                <option>6 Months</option>
+                <option>9 Months</option>
+              </select>
+
+              <button class="btn primary" onclick="createIntern()">Create Intern</button>
+              <div class="small" id="createdInternText"></div>
+
+              <div class="small">
+                <!-- ✅ Intern ko bolo: Index page me password set kare. -->
+              </div>
+            </div>
+
+          </div>
+>>>>>>> 4accfcc52580821ba69af8fd5736127bcd739ae7
+        </section>
+
+        <!-- ✅ PAGE 3: ASSIGN TASK -->
+        <section class="card pageSection" id="assignPage">
+          <div class="pageTop">
+            <div>
+              <h2>📌 Assign Task</h2>
+<<<<<<< HEAD
+=======
+              <!-- <p>Option 1: Batch-wise • Option 2: Individual Task</p> -->
+>>>>>>> 4accfcc52580821ba69af8fd5736127bcd739ae7
+            </div>
+          </div>
+
+          <label>Date</label>
+          <input id="taskDate" type="date" />
+
+          <label>Task Title</label>
+          <input id="taskTitle" placeholder="Day X: Task name" />
+
+          <label>Description</label>
+          <textarea id="taskDesc" placeholder="Write full task details..."></textarea>
+
+          <div class="row2">
+
+            <div>
+              <label>Assign Batch-wise</label>
+              <select id="assignBatch"></select>
+              <button class="btn primary" onclick="assignBatchTask()">Assign Batch Task</button>
+            </div>
+
+            <div>
+              <label>Assign Individual Intern</label>
+              <input id="assignInternId" placeholder="INT0001" />
+              <button class="btn" onclick="assignIndividualTask()">Assign Individual Task</button>
+            </div>
+
+          </div>
+<<<<<<< HEAD
+=======
+
+          <div class="small">
+            <!-- ✅ Individual task assign hote hi intern side “Today’s Task” me show hoga. -->
+          </div>
+>>>>>>> 4accfcc52580821ba69af8fd5736127bcd739ae7
+        </section>
+
+        <!-- ✅ PAGE 4: SUBMISSIONS -->
+        <section class="card pageSection" id="subsPage">
+          <div class="pageTop">
+            <div>
+              <h2>✅ Submissions</h2>
+              <p>Pending submissions check + grade assign</p>
+            </div>
+<<<<<<< HEAD
+=======
+
+>>>>>>> 4accfcc52580821ba69af8fd5736127bcd739ae7
+            <button class="btn" onclick="loadSubmissions()">🔄 Refresh</button>
+          </div>
+
+          <div class="tableWrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>SubmissionID</th>
+                  <th>TaskID</th>
+                  <th>InternID</th>
+                  <th>Link</th>
+                  <th>Details</th>
+                  <th>SubmittedAt</th>
+                  <th>Grade</th>
+                  <th>Remarks</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="subsTable"></tbody>
+            </table>
+          </div>
+<<<<<<< HEAD
+=======
+
+          <!-- <div class="small">✅ Approve/Reject ke baad intern history update ho jayegi.</div> -->
+>>>>>>> 4accfcc52580821ba69af8fd5736127bcd739ae7
+        </section>
+
+        <!-- ✅ PAGE: EDIT REQUESTS -->
+        <section class="card pageSection" id="editRequestsPage">
+
+          <div class="pageTop">
+            <div>
+              <h2>🔐 Edit Permission Requests</h2>
+              <p>Interns requesting submission edit approval</p>
+            </div>
+<<<<<<< HEAD
+=======
+
+>>>>>>> 4accfcc52580821ba69af8fd5736127bcd739ae7
+            <button class="btn" onclick="loadEditRequests()">🔄 Refresh</button>
+          </div>
+
+          <div class="tableWrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>SubmissionID</th>
+                  <th>InternID</th>
+                  <th>TaskID</th>
+                  <th>Requested At</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="editReqTable"></tbody>
+            </table>
+          </div>
+
+        </section>
+
+        <!-- ✅ PAGE: INCOMPLETE STUDENTS -->
+        <section class="card pageSection" id="incompletePage">
+          <div class="pageTop">
+            <div>
+              <h2>⚠️ Incomplete Students</h2>
+              <p>Those who did not submit today's task</p>
+            </div>
+            <button class="btn" onclick="loadIncomplete()">🔄 Refresh</button>
+          </div>
+
+          <div style="
+<<<<<<< HEAD
+            padding:8px 14px;
+            border-radius:12px;
+            background:rgba(255,0,0,0.08);
+            border:1px solid rgba(255,0,0,0.25);
+            font-weight:900;
+            min-width:120px;
+            text-align:center;
+=======
+          padding:8px 14px;
+          border-radius:12px;
+          background:rgba(255,0,0,0.08);
+          border:1px solid rgba(255,0,0,0.25);
+          font-weight:900;
+          min-width:120px;
+          text-align:center;
+>>>>>>> 4accfcc52580821ba69af8fd5736127bcd739ae7
+          ">
+            <span id="incompleteCount">0</span> Students
+          </div>
+
+<<<<<<< HEAD
+=======
+
+>>>>>>> 4accfcc52580821ba69af8fd5736127bcd739ae7
+          <div class="tableWrap" style="margin-top:12px;">
+            <table>
+              <thead>
+                <tr>
+                  <th>InternID</th>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Batch</th>
+                  <th>Pending</th>
+                  <th>Message</th>
+                </tr>
+              </thead>
+              <tbody id="incompleteTable"></tbody>
+            </table>
+          </div>
+
+          <div class="small">
+            ✅ The message will be auto deleted in 48 hours.
+          </div>
+        </section>
+
+<<<<<<< HEAD
+        <!-- ✅ PAGE: ANALYTICS -->
+=======
+>>>>>>> 4accfcc52580821ba69af8fd5736127bcd739ae7
+        <section class="card pageSection" id="analyticsPage">
+
+          <div class="pageTop">
+            <div>
+              <h2>📊 Analytics Dashboard</h2>
+              <p>System insights and performance</p>
+            </div>
+            <button class="btn" onclick="loadAnalytics()">🔄 Refresh</button>
+          </div>
+
+          <div class="kpis" style="grid-template-columns:repeat(7,1fr);">
+<<<<<<< HEAD
+=======
+
+>>>>>>> 4accfcc52580821ba69af8fd5736127bcd739ae7
+            <div class="kpi"><b id="kTotal">0</b><small>Total Interns</small></div>
+            <div class="kpi"><b id="kActive">0</b><small>Active</small></div>
+            <div class="kpi"><b id="kPending">0</b><small>Pending</small></div>
+            <div class="kpi"><b id="kApproved">0</b><small>Approved</small></div>
+            <div class="kpi"><b id="kPercent">0%</b><small>Approval %</small></div>
+<<<<<<< HEAD
+            <div class="kpi"><b id="kAvg">0</b><small>Average Grade</small></div>
+            <div class="kpi"><b id="kDay">-</b><small>Most Active Day</small></div>
+          </div>
+
+          <div class="grid2" style="margin-top:18px; grid-template-columns:1fr 1fr;">
+
+=======
+
+            <!-- NEW -->
+            <div class="kpi"><b id="kAvg">0</b><small>Average Grade</small></div>
+            <div class="kpi"><b id="kDay">-</b><small>Most Active Day</small></div>
+
+          </div>
+
+
+          <div class="grid2" style="margin-top:18px; grid-template-columns:1fr 1fr;">
+
+
+
+>>>>>>> 4accfcc52580821ba69af8fd5736127bcd739ae7
+            <div class="card">
+              <h3>Batch Performance %</h3>
+              <div id="batchPerformanceBox" class="batchPerfBox"></div>
+            </div>
+
+<<<<<<< HEAD
+=======
+
+            <!-- NEW -->
+>>>>>>> 4accfcc52580821ba69af8fd5736127bcd739ae7
+            <div class="card">
+              <h3>Top Interns</h3>
+              <div id="topInternsBox"></div>
+            </div>
+
+          </div>
+
+<<<<<<< HEAD
+        </section>
+
+        <!-- ✅ PAGE: SEND DOCUMENTS -->
+        <section class="card pageSection" id="sendDocsPage">
+
+          <div class="pageTop">
+            <div>
+              <h2>📄 Send Documents</h2>
+              <p>Send internship documents to active interns via email</p>
+            </div>
+            <button class="btn" onclick="loadActiveInterns()">🔄 Refresh</button>
+          </div>
+
+          <!-- Search Bar -->
+          <div style="margin-bottom:14px;">
+            <input id="docSearchInput" placeholder="🔍 Search by name, ID or email..." oninput="filterDocInterns()" style="width:100%;max-width:400px;" />
+          </div>
+
+          <div class="tableWrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Intern ID</th>
+                  <th>Name</th>
+                  <th>Batch</th>
+                  <th style="min-width:260px;">📄 Document Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="activeInternsTable">
+                <tr><td colspan="6"><div class="emptyEnrolled"><span>📋</span>Click Refresh to load active interns</div></td></tr>
+              </tbody>
+            </table>
+          </div>
+
+        </section>
+
+        <!-- ✅ SEND DOCUMENT MODAL -->
+        <div id="sendDocModal" class="modalOverlay">
+          <div class="modalCard" style="width:min(520px,95vw);">
+
+            <!-- Header -->
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:18px;">
+              <div>
+                <div style="font-family:Orbitron,Inter;font-size:16px;font-weight:900;">📄 Send Document</div>
+                <div style="font-size:12px;color:var(--muted);margin-top:5px;" id="docModalMeta">Select documents to send</div>
+              </div>
+              <button class="btn danger" onclick="closeSendDocModal()">Close</button>
+            </div>
+
+            <!-- Intern Info Card -->
+            <div style="display:flex;align-items:center;gap:12px;
+              background:rgba(124,0,255,0.07);border:1px solid rgba(124,0,255,0.20);
+              border-radius:14px;padding:14px;margin-bottom:16px;">
+              <div style="width:40px;height:40px;border-radius:50%;
+                background:rgba(124,0,255,0.15);border:1px solid rgba(124,0,255,0.3);
+                display:flex;align-items:center;justify-content:center;
+                font-size:16px;font-weight:900;color:#B100FF;flex-shrink:0;"
+                id="docInternAvatar">?</div>
+              <div>
+                <div style="font-weight:900;font-size:14px;" id="docInternName">-</div>
+                <div style="font-size:12px;color:var(--muted);" id="docInternEmail">-</div>
+                <div style="font-size:11px;color:var(--muted);margin-top:2px;" id="docInternBatch">-</div>
+              </div>
+            </div>
+
+            <!-- Document Checkboxes: All 6 -->
+            <div style="font-size:13px;font-weight:800;margin-bottom:10px;color:#B100FF;">📋 Select Documents to Send</div>
+
+            <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:18px;">
+
+              <label style="display:flex;align-items:center;gap:12px;cursor:pointer;
+                padding:11px 14px;border-radius:14px;border:1px solid rgba(255,255,255,0.08);
+                background:rgba(255,255,255,0.02);transition:0.2s;" id="docOptLoi">
+                <input type="checkbox" id="chkLoi" onchange="updateDocOpt(this,'docOptLoi')" style="width:16px;height:16px;accent-color:#B100FF;flex-shrink:0;" />
+                <div style="flex:1;">
+                  <div style="font-weight:700;font-size:13px;">📝 Letter of Intent (LOI)</div>
+                  <div style="font-size:11px;color:var(--muted);margin-top:2px;">Internship intent confirmation letter</div>
+                </div>
+                <span id="tickLoi" style="display:none;color:#00FFA8;font-size:18px;">✅</span>
+              </label>
+
+              <label style="display:flex;align-items:center;gap:12px;cursor:pointer;
+                padding:11px 14px;border-radius:14px;border:1px solid rgba(255,255,255,0.08);
+                background:rgba(255,255,255,0.02);transition:0.2s;" id="docOptOfferLetter">
+                <input type="checkbox" id="chkOfferLetter" onchange="updateDocOpt(this,'docOptOfferLetter')" style="width:16px;height:16px;accent-color:#B100FF;flex-shrink:0;" />
+                <div style="flex:1;">
+                  <div style="font-weight:700;font-size:13px;">📄 Offer Letter</div>
+                  <div style="font-size:11px;color:var(--muted);margin-top:2px;">Official internship offer letter</div>
+                </div>
+                <span id="tickOfferLetter" style="display:none;color:#00FFA8;font-size:18px;">✅</span>
+              </label>
+
+              <label style="display:flex;align-items:center;gap:12px;cursor:pointer;
+                padding:11px 14px;border-radius:14px;border:1px solid rgba(255,255,255,0.08);
+                background:rgba(255,255,255,0.02);transition:0.2s;" id="docOptJoiningLetter">
+                <input type="checkbox" id="chkJoiningLetter" onchange="updateDocOpt(this,'docOptJoiningLetter')" style="width:16px;height:16px;accent-color:#B100FF;flex-shrink:0;" />
+                <div style="flex:1;">
+                  <div style="font-weight:700;font-size:13px;">🤝 Joining Letter</div>
+                  <div style="font-size:11px;color:var(--muted);margin-top:2px;">Internship joining confirmation</div>
+                </div>
+                <span id="tickJoiningLetter" style="display:none;color:#00FFA8;font-size:18px;">✅</span>
+              </label>
+
+              <label style="display:flex;align-items:center;gap:12px;cursor:pointer;
+                padding:11px 14px;border-radius:14px;border:1px solid rgba(255,255,255,0.08);
+                background:rgba(255,255,255,0.02);transition:0.2s;" id="docOptCompletion">
+                <input type="checkbox" id="chkCompletion" onchange="updateDocOpt(this,'docOptCompletion')" style="width:16px;height:16px;accent-color:#B100FF;flex-shrink:0;" />
+                <div style="flex:1;">
+                  <div style="font-weight:700;font-size:13px;">📃 Completion Letter</div>
+                  <div style="font-size:11px;color:var(--muted);margin-top:2px;">Official internship completion letter</div>
+                </div>
+                <span id="tickCompletion" style="display:none;color:#00FFA8;font-size:18px;">✅</span>
+              </label>
+
+              <label style="display:flex;align-items:center;gap:12px;cursor:pointer;
+                padding:11px 14px;border-radius:14px;border:1px solid rgba(255,255,255,0.08);
+                background:rgba(255,255,255,0.02);transition:0.2s;" id="docOptCertificate">
+                <input type="checkbox" id="chkCertificate" onchange="updateDocOpt(this,'docOptCertificate')" style="width:16px;height:16px;accent-color:#B100FF;flex-shrink:0;" />
+                <div style="flex:1;">
+                  <div style="font-weight:700;font-size:13px;">🏅 Completion Certificate</div>
+                  <div style="font-size:11px;color:var(--muted);margin-top:2px;">Official certificate of internship completion</div>
+                </div>
+                <span id="tickCertificate" style="display:none;color:#00FFA8;font-size:18px;">✅</span>
+              </label>
+
+              <label style="display:flex;align-items:center;gap:12px;cursor:pointer;
+                padding:11px 14px;border-radius:14px;border:1px solid rgba(255,255,255,0.08);
+                background:rgba(255,255,255,0.02);transition:0.2s;" id="docOptBestPerformer">
+                <input type="checkbox" id="chkBestPerformer" onchange="updateDocOpt(this,'docOptBestPerformer')" style="width:16px;height:16px;accent-color:#B100FF;flex-shrink:0;" />
+                <div style="flex:1;">
+                  <div style="font-weight:700;font-size:13px;">🏆 Best Performer Certificate</div>
+                  <div style="font-size:11px;color:var(--muted);margin-top:2px;">Awarded to top performing interns</div>
+                </div>
+                <span id="tickBestPerformer" style="display:none;color:#00FFA8;font-size:18px;">✅</span>
+              </label>
+
+            </div>
+
+            <!-- Selected Summary -->
+            <div id="docSelectedSummary" style="font-size:12px;color:var(--muted);
+              padding:8px 12px;border-radius:10px;background:rgba(255,255,255,0.02);
+              border:1px solid rgba(255,255,255,0.06);margin-bottom:14px;display:none;">
+              📌 Selected: <span id="docSelectedList" style="color:var(--text);font-weight:700;"></span>
+            </div>
+
+            <!-- Status Message -->
+            <div id="docSendMsg" style="font-size:12px;text-align:center;min-height:18px;margin-bottom:8px;"></div>
+
+            <!-- Send Button -->
+            <button class="btn primary" style="width:100%;padding:14px;font-size:14px;" onclick="submitSendDocs()">
+              📨 Send via Email
+            </button>
+
+            <p class="small" style="text-align:center;margin-top:10px;">PDFs will be generated from your Google Docs templates and emailed to the intern.</p>
+
+          </div>
+        </div>
+
+        <!-- ✅ CHAT MODAL -->
+=======
+
+        </section>
+
+
+        <!-- ✅ CHAT MODAL (Admin ↔ Intern) -->
+>>>>>>> 4accfcc52580821ba69af8fd5736127bcd739ae7
+        <div id="chatModal" class="modalOverlay">
+          <div class="modalCard">
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;">
+              <div>
+                <div style="font-family:Orbitron,Inter;font-size:16px;font-weight:900;">💬 Chat</div>
+                <div style="color:var(--muted);font-size:12px;margin-top:6px;" id="chatMeta">Loading...</div>
+              </div>
+              <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                <button class="btn" onclick="adminClearChat()">🧹 Clear Chat</button>
+                <button class="btn danger" onclick="closeChat()">Close</button>
+              </div>
+            </div>
+
+            <div class="tableWrap" style="margin-top:14px;">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Sender</th>
+                    <th>Message</th>
+                    <th>Time</th>
+                  </tr>
+                </thead>
+                <tbody id="chatTable"></tbody>
+              </table>
+            </div>
+
+            <label style="margin-top:12px;">Send Message</label>
+            <input id="chatMsg" placeholder="Write message..." />
+            <button class="btn primary" onclick="adminSendMsg()">Send</button>
+          </div>
+        </div>
+
+        <!-- ✅ FULL BATCH ANALYSIS MODAL -->
+        <div id="analysisModal" class="modalOverlay">
+          <div class="modalCard">
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <h3>📊 Full Batch Analysis</h3>
+              <button class="btn danger" onclick="closeAnalysis()">Close</button>
+            </div>
+
+            <div class="tableWrap" style="margin-top:12px;">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Rank</th>
+                    <th>Name</th>
+                    <th>Avg Grade</th>
+                    <th>Approved</th>
+                  </tr>
+                </thead>
+                <tbody id="analysisTable"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+<<<<<<< HEAD
+
+        <!-- ✅ ENROLLED STUDENTS REVIEW MODAL -->
+        <div id="enrolledReviewModal" class="modalOverlay">
+          <div class="modalCard" style="width:min(560px,95vw);">
+
+            <!-- Header -->
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:16px;">
+              <div style="font-family:Orbitron,Inter;font-size:16px;font-weight:900;">📋 Review Enrollment</div>
+              <button class="btn danger" onclick="closeEnrolledReview()">Close</button>
+            </div>
+
+            <!-- Student Info -->
+            <div class="reviewSection">
+              <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;">
+                <div class="reviewAvatar" id="reviewAvatar">?</div>
+                <div>
+                  <div style="font-weight:900;font-size:15px;" id="reviewName">-</div>
+                  <div style="font-size:12px;color:var(--muted);" id="reviewEmail">-</div>
+                </div>
+              </div>
+
+              <div class="reviewGrid">
+                <div>
+                  <label>Phone</label>
+                  <div class="reviewMeta" id="reviewPhone">-</div>
+                </div>
+                <div>
+                  <label>Applied Date</label>
+                  <div class="reviewMeta" id="reviewDate">-</div>
+                </div>
+                <div>
+                  <label>Course Interest</label>
+                  <div class="reviewMeta" id="reviewCourse">-</div>
+                </div>
+                <div>
+                  <label>Current Status</label>
+                  <div id="reviewCurrentStatus">-</div>
+                </div>
+              </div>
+
+              <div style="margin-top:10px;">
+                <label>Message / Note from Student</label>
+                <div style="font-size:12px;color:var(--muted);line-height:1.6;" id="reviewNote">-</div>
+              </div>
+            </div>
+
+            <!-- Approval Config -->
+            <div class="reviewSection">
+              <div style="font-size:13px;font-weight:800;margin-bottom:12px;color:#B100FF;">⚙️ Assign to Batch &amp; Duration</div>
+
+              <label>Select Batch</label>
+              <select id="reviewBatchSelect" style="width:100%;"></select>
+
+              <label>Duration</label>
+              <select id="reviewDuration" style="width:100%;margin-top:6px;">
+                <option value="6 Months">6 Months</option>
+                <option value="9 Months">9 Months</option>
+              </select>
+
+              <label style="margin-top:12px;display:block;">Admin Remarks (optional)</label>
+              <input id="reviewRemarks" placeholder="Add a note..." style="width:100%;box-sizing:border-box;" />
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="reviewActions">
+              <button class="btn primary" onclick="submitEnrolledDecision('Approved')">
+                ✅ Approve &amp; Send LOI
+              </button>
+              <button class="btn danger" onclick="submitEnrolledDecision('Rejected')">
+                ❌ Reject &amp; Notify
+              </button>
+            </div>
+
+            <div class="small" id="reviewMsg" style="margin-top:8px;text-align:center;"></div>
+
+          </div>
+        </div>
+
+=======
+>>>>>>> 4accfcc52580821ba69af8fd5736127bcd739ae7
+      </main>
+    </div>
+  </div>
+
+  <!-- ✅ INTERN OVERVIEW MODAL -->
+  <div id="internModal" class="modalOverlay">
+    <div class="modalCard">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;">
+        <div>
+          <div style="font-family:Orbitron,Inter;font-size:16px;font-weight:900;">
+            👨‍🎓 Intern Overview
+          </div>
+          <div style="color:var(--muted);font-size:12px;margin-top:6px;" id="modalMeta">
+            Loading...
+          </div>
+        </div>
+<<<<<<< HEAD
+=======
+
+>>>>>>> 4accfcc52580821ba69af8fd5736127bcd739ae7
+        <button class="btn danger" onclick="closeInternModal()">Close</button>
+      </div>
+
+      <div style="margin-top:14px;border-top:1px solid rgba(255,255,255,0.10);padding-top:14px;">
+        <div class="kpis" style="grid-template-columns:repeat(4,1fr);">
+          <div class="kpi"><b id="mStreak">0</b><small>Streak</small></div>
+          <div class="kpi"><b id="mTotalSub">0</b><small>Total Submissions</small></div>
+          <div class="kpi"><b id="mPending">0</b><small>Pending</small></div>
+          <div class="kpi"><b id="mApproved">0</b><small>Approved</small></div>
+        </div>
+
+        <div style="margin-top:14px;" class="tableWrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Task</th>
+                <th>Status</th>
+                <th>Grade</th>
+                <th>Submission</th>
+              </tr>
+            </thead>
+            <tbody id="modalHistory"></tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Loader + Toast -->
+  <div id="loaderOverlay" class="loaderOverlay">
+    <div class="loaderCard">
+      <div class="spinner"></div>
+      <div id="loaderText">Loading...</div>
+    </div>
+  </div>
+  <div id="toast" class="toast"></div>
+
+  <script src="app.js"></script>
+
+  <script>
+
+    function escapeHTML(str) {
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+<<<<<<< HEAD
+    let currentInternRequestId = 0;
+    let batchChart;
+    let CURRENT_ENROLLED_ID = null;
+=======
+    let currentInternRequestId = 0;   // 🔥 MOVE HERE
+    let batchChart;
+
+>>>>>>> 4accfcc52580821ba69af8fd5736127bcd739ae7
+
+    const visitedAdminPages = {
+      studentsPage: false,
+      batchPage: false,
+      assignPage: false,
+      subsPage: false,
+<<<<<<< HEAD
+      incompletePage: false,
+      sendDocsPage: false
+    };
+
+=======
+      incompletePage: false
+
+    };
+
+
+
+    // const admin = getSession("admin");
+    // if (!admin) window.location.href = "index.html";
+
+>>>>>>> 4accfcc52580821ba69af8fd5736127bcd739ae7
+    const admin = getSession("admin");
+
+    if (!admin || !admin.adminId) {
+      window.location.href = "index.html";
+      throw new Error("Admin session missing");
+    }
+
+<<<<<<< HEAD
+    // ✅ Default date
+    document.getElementById("taskDate").value = new Date().toISOString().slice(0, 10);
+
+=======
+
+    // ✅ Default date
+    document.getElementById("taskDate").value = new Date().toISOString().slice(0, 10);
+
+
+
+>>>>>>> 4accfcc52580821ba69af8fd5736127bcd739ae7
+    // ✅ Switch Page Function
+    async function switchPage(pageId, navEl) {
+      document.querySelectorAll(".pageSection").forEach(s => s.classList.remove("active"));
+      document.getElementById(pageId).classList.add("active");
+
+      document.querySelectorAll("#adminNav a").forEach(a => a.classList.remove("active"));
+      navEl.classList.add("active");
+
+<<<<<<< HEAD
+      const firstTime = !visitedAdminPages[pageId];
+      visitedAdminPages[pageId] = true;
+
+      if (pageId === "studentsPage") await loadInterns(!firstTime);
+      if (pageId === "subsPage") await loadSubmissions(!firstTime);
+      if (pageId === "incompletePage") await loadIncomplete(!firstTime);
+      if (pageId === "batchPage") await loadBatches(!firstTime);
+      if (pageId === "assignPage") await loadBatches(!firstTime);
+      if (pageId === "analyticsPage") await loadAnalytics(!firstTime);
+      if (pageId === "editRequestsPage") await loadEditRequests(!firstTime);
+      if (pageId === "sendDocsPage") await loadActiveInterns(!firstTime);
+    }
+
+    // ✅ Batch Tab Switcher
+    function switchBatchTab(tabId, el) {
+      document.querySelectorAll(".batchTabPanel").forEach(p => p.classList.remove("active"));
+      document.querySelectorAll(".batchTab").forEach(t => t.classList.remove("active"));
+      document.getElementById(tabId).classList.add("active");
+      el.classList.add("active");
+
+      if (tabId === "enrolledTab") loadEnrolledStudents();
+=======
+      // ✅ FIRST VISIT = loader ON, next = silent
+      const firstTime = !visitedAdminPages[pageId];
+      visitedAdminPages[pageId] = true;
+
+      // ✅ Load data based on section
+      if (pageId === "studentsPage") await loadInterns(!firstTime);
+      if (pageId === "subsPage") await loadSubmissions(!firstTime);
+      if (pageId === "incompletePage") await loadIncomplete(!firstTime);
+
+      // ✅ Batch page (optional)
+      if (pageId === "batchPage") await loadBatches(!firstTime);
+
+      // ✅ Assign page (optional - only batches reload)
+      if (pageId === "assignPage") await loadBatches(!firstTime);
+      if (pageId === "analyticsPage") await loadAnalytics(!firstTime);
+      if (pageId === "editRequestsPage") await loadEditRequests(!firstTime);
+>>>>>>> 4accfcc52580821ba69af8fd5736127bcd739ae7
+    }
+
+    // ✅ Init
+    async function init() {
+
+<<<<<<< HEAD
+=======
+      // ✅ Email Auto Gmail Suggestion
+>>>>>>> 4accfcc52580821ba69af8fd5736127bcd739ae7
+      const emailInput = document.getElementById("inEmail");
+
+      if (emailInput) {
+        emailInput.addEventListener("input", function () {
+<<<<<<< HEAD
+          let value = this.value;
+          if (value.endsWith("@")) {
+            this.value = value + "gmail.com";
+          }
+        });
+=======
+
+          let value = this.value;
+
+          if (value.endsWith("@")) {
+            this.value = value + "gmail.com";
+          }
+
+        });
+
+      }
+      if (typeof sendAdminLoginInfo === "function") {
+        // sendAdminLoginInfo();
+>>>>>>> 4accfcc52580821ba69af8fd5736127bcd739ae7
+      }
+
+      const filter = document.getElementById("filterBatch");
+      if (filter) {
+        filter.addEventListener("change", () => {
+          loadInterns();
+        });
+      }
+
+      try {
+        await loadBatches();
+        await loadInterns(true);
+      } catch (e) {
+        console.log("Init load failed");
+      }
+    }
+
+    async function loadBatches(silent = false) {
+      const data = await apiGET({
+        action: "getBatches",
+        adminId: admin.adminId,
+        adminPass: admin.adminPass
+      });
+
+      if (!data.success) { toast(data.message, "error"); return; }
+
+      const list = data.batches || [];
+
+      document.getElementById("filterBatch").innerHTML =
+        `<option value="">All</option>` +
+        list.map(b => `<option value="${b.BatchID}">${b.BatchName} (${b.BatchID})</option>`).join("");
+
+      document.getElementById("inBatch").innerHTML =
+        list.map(b => `<option value="${b.BatchID}">${b.BatchName} (${b.BatchID})</option>`).join("");
+
+      document.getElementById("assignBatch").innerHTML =
+        list.map(b => `<option value="${b.BatchID}">${b.BatchName} (${b.BatchID})</option>`).join("");
+    }
+
+    async function createBatch() {
+      const batchName = document.getElementById("batchName").value.trim();
+
+      const data = await apiPOST({
+        action: "adminCreateBatch",
+        adminId: admin.adminId,
+        adminPass: admin.adminPass,
+        batchName
+      });
+
+      if (data.success) {
+        toast("Batch Created ✅", "success");
+        document.getElementById("batchMsg").innerHTML = `✅ Created: <b>${data.batchName}</b> (${data.batchId})`;
+        document.getElementById("batchName").value = "";
+        loadBatches();
+      } else toast(data.message, "error");
+    }
+
+    async function createIntern() {
+      const name = document.getElementById("inName").value.trim();
+      const email = document.getElementById("inEmail").value.trim();
+      const batchId = document.getElementById("inBatch").value;
+      const duration = document.getElementById("inDuration").value;
+
+      const data = await apiGET({
+        action: "adminCreateInternGET",
+        adminId: admin.adminId,
+        adminPass: admin.adminPass,
+        name, email, batchId, duration
+      });
+
+<<<<<<< HEAD
+=======
+
+>>>>>>> 4accfcc52580821ba69af8fd5736127bcd739ae7
+      if (data.success) {
+        toast("Intern Created ✅", "success");
+        document.getElementById("createdInternText").innerHTML =
+          `✅ InternID: <b>${data.internId}</b> | Batch: <b>${data.batchName}</b>`;
+        loadInterns();
+      } else toast(data.message, "error");
+    }
+
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> 4accfcc52580821ba69af8fd5736127bcd739ae7
+    async function assignBatchTask() {
+      const date = document.getElementById("taskDate").value;
+      const batchId = document.getElementById("assignBatch").value;
+      const title = document.getElementById("taskTitle").value.trim();
+      const description = document.getElementById("taskDesc").value.trim();
+
+      const data = await apiPOST({
+        action: "adminAssignBatchTask",
+        adminId: admin.adminId,
+        adminPass: admin.adminPass,
+        date, batchId, title, description
+      });
+      showLoader(false);
+
+      if (data.success) toast("Batch Task Assigned ✅", "success");
+      else toast(data.message, "error");
+    }
+
+    async function assignIndividualTask() {
+      const date = document.getElementById("taskDate").value;
+      const internId = document.getElementById("assignInternId").value.trim();
+      const title = document.getElementById("taskTitle").value.trim();
+      const description = document.getElementById("taskDesc").value.trim();
+
+      const data = await apiPOST({
+        action: "adminAssignIndividualTask",
+        adminId: admin.adminId,
+        adminPass: admin.adminPass,
+        date, internId, title, description
+      });
+      showLoader(false);
+
+      if (data.success) toast("Individual Task Assigned ✅", "success");
+      else toast(data.message, "error");
+    }
+
+    async function loadSubmissions(silent = false) {
+      const data = await apiGET({
+        action: "getPendingSubmissions",
+        adminId: admin.adminId,
+        adminPass: admin.adminPass
+      });
+      if (!data.success) { toast(data.message, "error"); return; }
+
+      const tb = document.getElementById("subsTable");
+      tb.innerHTML = "";
+
+      if ((data.submissions || []).length === 0) {
+        tb.innerHTML = `<tr><td colspan="9">No pending submissions ✅</td></tr>`;
+        return;
+      }
+
+      data.submissions.forEach(s => {
+        tb.innerHTML += `
+          <tr>
+            <td>${s.SubmissionID}</td>
+            <td class="internCell">
+<<<<<<< HEAD
+              <b>${s.AssignedTaskID}</b>
+              <span class="internTooltip">
+                <b>${s.Title}</b><br/>
+                ${s.Description || ""}
+              </span>
+            </td>
+            <td class="internCell">
+              <b>${s.InternID}</b>
+              <span class="internTooltip">${s.Name}</span>
+            </td>
+=======
+  <b>${s.AssignedTaskID}</b>
+  <span class="internTooltip">
+    <b>${s.Title}</b><br/>
+    ${s.Description || ""}
+  </span>
+</td>
+            <td class="internCell">
+             <b>${s.InternID}</b>
+             <span class="internTooltip">${s.Name}</span>
+          </td>
+
+>>>>>>> 4accfcc52580821ba69af8fd5736127bcd739ae7
+            <td><a href="${s.Link}" target="_blank" style="color:var(--p3);font-weight:900;">Open</a></td>
+            <td>${escapeHTML(s.Details || "-")}</td>
+            <td>${formatDate(s.SubmittedAt)}</td>
+            <td><input id="g_${s.SubmissionID}" placeholder="A / 10"/></td>
+            <td><input id="r_${s.SubmissionID}" placeholder="remarks"/></td>
+            <td style="display:flex;gap:8px;flex-wrap:wrap;">
+              <button class="btn primary" onclick="grade('${s.SubmissionID}','Approved')">Approve</button>
+              <button class="btn danger" onclick="grade('${s.SubmissionID}','Rejected')">Reject</button>
+            </td>
+          </tr>
+        `;
+      });
+    }
+
+    async function grade(submissionId, finalStatus) {
+      const grade = document.getElementById("g_" + submissionId).value.trim();
+      const remarks = document.getElementById("r_" + submissionId).value.trim();
+
+      const data = await apiPOST({
+        action: "adminGradeSubmission",
+        adminId: admin.adminId,
+        adminPass: admin.adminPass,
+        submissionId,
+        finalStatus,
+        grade,
+        remarks
+      });
+      showLoader(false);
+
+      if (data.success) {
+        toast("Graded ✅", "success");
+        loadSubmissions();
+      } else toast(data.message, "error");
+    }
+
+<<<<<<< HEAD
+=======
+    // ✅ Intern Overview Modal (Requires backend GET adminInternOverview)
+>>>>>>> 4accfcc52580821ba69af8fd5736127bcd739ae7
+    function closeInternModal() {
+      document.getElementById("internModal").classList.remove("show");
+    }
+
+    async function openInternOverview(internId) {
+      document.getElementById("internModal").classList.add("show");
+      document.getElementById("modalMeta").innerText = "Loading intern data...";
+      document.getElementById("modalHistory").innerHTML = `<tr><td colspan="5">Loading...</td></tr>`;
+
+      const data = await apiGET({
+        action: "adminInternOverview",
+        adminId: admin.adminId,
+        adminPass: admin.adminPass,
+        internId
+      });
+
+      if (!data.success) {
+        toast(data.message, "error");
+        closeInternModal();
+        return;
+      }
+
+      const I = data.intern;
+      document.getElementById("modalMeta").innerText =
+        `ID: ${I.InternID} | Name: ${escapeHTML(I.Name)} | Email: ${I.Email} | Batch: ${I.BatchName} | Duration: ${I.Duration}`;
+
+      document.getElementById("mStreak").innerText = data.streak || 0;
+      document.getElementById("mTotalSub").innerText = data.submissions.total || 0;
+      document.getElementById("mPending").innerText = data.submissions.pending.length || 0;
+      document.getElementById("mApproved").innerText = data.submissions.approved.length || 0;
+
+      const tb = document.getElementById("modalHistory");
+      tb.innerHTML = "";
+
+      const history = (data.history || []).slice(0, 50);
+
+      if (history.length === 0) {
+        tb.innerHTML = `<tr><td colspan="5">No history found ✅</td></tr>`;
+        return;
+      }
+
+      history.forEach(h => {
+        const subLink = h.SubmissionLink
+          ? `<a href="${h.SubmissionLink}" target="_blank" style="color:var(--p3);font-weight:900;">Open</a>`
+          : "-";
+
+        tb.innerHTML += `
+          <tr>
+<<<<<<< HEAD
+            <td>${formatDate(h.Date)}</td>
+            <td>
+              <b>${h.Title}</b>
+              <div class="taskDesc">${h.Description || ""}</div>
+              ${h.Description ? `<span class="viewBtn" onclick="toggleDesc(this)">View More</span>` : ""}
+            </td>
+=======
+          <td>${formatDate(h.Date)}</td>
+            <td>
+                <b>${h.Title}</b>
+               <div class="taskDesc">
+               ${h.Description || ""}
+               </div>
+
+            ${h.Description ?
+            `<span class="viewBtn" onclick="toggleDesc(this)">View More</span>`
+            : ""
+          }
+          </td>
+>>>>>>> 4accfcc52580821ba69af8fd5736127bcd739ae7
+            <td>${h.Status || "-"}</td>
+            <td><b>${h.Grade || "Not Seen"}</b></td>
+            <td>${subLink}</td>
+          </tr>
+        `;
+      });
+    }
+
+<<<<<<< HEAD
+=======
+    // ✅ default date for incomplete
+    const incDate = document.getElementById("incompleteDate");
+    if (incDate) {
+      incDate.value = new Date().toISOString().slice(0, 10);
+    }
+
+>>>>>>> 4accfcc52580821ba69af8fd5736127bcd739ae7
+    async function loadIncomplete(silent = false) {
+
+      const data = await apiGET({
+        action: "getIncompleteStudents",
+        adminId: admin.adminId,
+        adminPass: admin.adminPass
+      });
+
+<<<<<<< HEAD
+=======
+
+>>>>>>> 4accfcc52580821ba69af8fd5736127bcd739ae7
+      if (!data.success) {
+        toast(data.message, "error");
+        return;
+      }
+
+      const tb = document.getElementById("incompleteTable");
+      tb.innerHTML = "";
+
+      const list = data.students || [];
+
+<<<<<<< HEAD
+=======
+      // ✅ Total Count Set
+>>>>>>> 4accfcc52580821ba69af8fd5736127bcd739ae7
+      document.getElementById("incompleteCount").innerText = list.length;
+
+      if (list.length === 0) {
+        tb.innerHTML = `<tr><td colspan="6">✅ No incomplete students</td></tr>`;
+        return;
+      }
+
+      list.forEach(s => {
+        tb.innerHTML += `
+<<<<<<< HEAD
+          <tr>
+            <td><b>${s.InternID}</b></td>
+            <td>${s.Name}</td>
+            <td>${s.Email}</td>
+            <td>${s.BatchName}</td>
+            <td><b>${s.PendingTasks}</b></td>
+            <td>
+              <button class="btn" onclick="openChat('${s.InternID}','${s.Name}')">💬 Message</button>
+            </td>
+          </tr>
+        `;
+      });
+=======
+      <tr>
+        <td><b>${s.InternID}</b></td>
+        <td>${s.Name}</td>
+        <td>${s.Email}</td>
+        <td>${s.BatchName}</td>
+        <td><b>${s.PendingTasks}</b></td>
+        <td>
+          <button class="btn" onclick="openChat('${s.InternID}','${s.Name}')">💬 Message</button>
+        </td>
+      </tr>
+    `;
+      });
+
+>>>>>>> 4accfcc52580821ba69af8fd5736127bcd739ae7
+    }
+
+    // ✅ Chat state
+    let CURRENT_CHAT_INTERN = "";
+
+    function closeChat() {
+      document.getElementById("chatModal").classList.remove("show");
+      CURRENT_CHAT_INTERN = "";
+    }
+
+    async function openChat(internId, name) {
+      CURRENT_CHAT_INTERN = internId;
+      document.getElementById("chatModal").classList.add("show");
+      document.getElementById("chatMeta").innerText = `Intern: ${name} (${internId}) | Auto delete in 48h`;
+      await loadChatMessages();
+    }
+
+    async function loadChatMessages(silent = false) {
+      const data = await apiGET({
+        action: "getChat",
+        adminId: admin.adminId,
+        adminPass: admin.adminPass,
+        internId: CURRENT_CHAT_INTERN
+      });
+
+      const tb = document.getElementById("chatTable");
+      tb.innerHTML = "";
+
+      if (!data.success) {
+        tb.innerHTML = `<tr><td colspan="3">${data.message}</td></tr>`;
+        return;
+      }
+
+      if ((data.messages || []).length === 0) {
+        tb.innerHTML = `<tr><td colspan="3">No messages ✅</td></tr>`;
+        return;
+      }
+
+      data.messages.forEach(m => {
+        tb.innerHTML += `
+<<<<<<< HEAD
+          <tr>
+            <td><b>${m.Sender}</b></td>
+            <td>${escapeHTML(m.Message)}</td>
+            <td>${formatDate(m.CreatedAt)}</td>
+          </tr>
+        `;
+=======
+      <tr>
+        <td><b>${m.Sender}</b></td>
+        <td>${escapeHTML(m.Message)}</td>
+        <td>${formatDate(m.CreatedAt)}</td>
+      </tr>
+    `;
+>>>>>>> 4accfcc52580821ba69af8fd5736127bcd739ae7
+      });
+    }
+
+    async function adminSendMsg() {
+      const message = document.getElementById("chatMsg").value.trim();
+      if (!message) { toast("Message empty ❌", "error"); return; }
+
+      const data = await apiGET({
+        action: "sendMessageGET",
+        adminId: admin.adminId,
+        adminPass: admin.adminPass,
+        internId: CURRENT_CHAT_INTERN,
+        sender: "Admin",
+        message
+      });
+
+      if (data.success) {
+        toast("Sent ✅", "success");
+        document.getElementById("chatMsg").value = "";
+<<<<<<< HEAD
+        loadChatMessages(true);
+=======
+        loadChatMessages(true); // ✅ reload silently
+>>>>>>> 4accfcc52580821ba69af8fd5736127bcd739ae7
+      } else {
+        toast(data.message, "error");
+      }
+    }
+
+<<<<<<< HEAD
+=======
+
+>>>>>>> 4accfcc52580821ba69af8fd5736127bcd739ae7
+    async function adminClearChat() {
+      const data = await apiGET({
+        action: "clearChatGET",
+        adminId: admin.adminId,
+        adminPass: admin.adminPass,
+        internId: CURRENT_CHAT_INTERN,
+        by: "Admin"
+      });
+
+      if (data.success) {
+        toast("Chat cleared ✅", "success");
+        loadChatMessages();
+      } else toast(data.message, "error");
+    }
+
+<<<<<<< HEAD
+=======
+
+>>>>>>> 4accfcc52580821ba69af8fd5736127bcd739ae7
+    let AUTO_REFRESH_TIMER = null;
+
+    function startAutoRefreshAdmin() {
+      if (AUTO_REFRESH_TIMER) clearInterval(AUTO_REFRESH_TIMER);
+
+      AUTO_REFRESH_TIMER = setInterval(async () => {
+        if (document.hidden) return;
+
+        const activePage = document.querySelector(".pageSection.active")?.id || "";
+
+        if (activePage === "studentsPage") await loadInterns(true);
+<<<<<<< HEAD
+=======
+        // if(activePage === "subsPage") await loadSubmissions(true);
+>>>>>>> 4accfcc52580821ba69af8fd5736127bcd739ae7
+        if (activePage === "incompletePage") await loadIncomplete(true);
+
+        if (document.getElementById("chatModal")?.classList.contains("show")) {
+          await loadChatMessages(true);
+        }
+
+<<<<<<< HEAD
+      }, 4000);
+=======
+      }, 4000); // ✅ 4 sec smooth
+>>>>>>> 4accfcc52580821ba69af8fd5736127bcd739ae7
+    }
+
+    async function loadInterns(silent = false) {
+
+<<<<<<< HEAD
+      const requestId = ++currentInternRequestId;
+
+=======
+      const requestId = ++currentInternRequestId;  // 🔥 new token
+
+
+      // const batchId = document.getElementById("filterBatch").value;
+>>>>>>> 4accfcc52580821ba69af8fd5736127bcd739ae7
+      const filterEl = document.getElementById("filterBatch");
+      const batchId = filterEl ? filterEl.value : "";
+
+      const data = await apiGET({
+        action: "getInternsList",
+        adminId: admin.adminId,
+        adminPass: admin.adminPass,
+        batchId
+      });
+
+<<<<<<< HEAD
+=======
+      // 🔥 If this is NOT latest request → ignore response
+>>>>>>> 4accfcc52580821ba69af8fd5736127bcd739ae7
+      if (requestId !== currentInternRequestId) return;
+
+      if (!data.success) {
+        if (!silent) toast(data.message, "error");
+        return;
+      }
+
+      const tb = document.getElementById("internTable");
+      tb.innerHTML = "";
+
+      const list = data.interns || [];
+
+      document.getElementById("batchCount").innerText = list.length;
+
+      if (list.length === 0) {
+        tb.innerHTML = `<tr><td colspan="6">No interns found ✅</td></tr>`;
+        return;
+      }
+
+      list.forEach(i => {
+        tb.innerHTML += `
+<<<<<<< HEAD
+          <tr>
+            <td><b>${i.InternID}</b></td>
+            <td>${i.Name}</td>
+            <td>${i.Email}</td>
+            <td>${i.BatchName}</td>
+            <td>${i.Duration}</td>
+            <td>
+              <button class="dotBtn" onclick="openInternOverview('${i.InternID}')">⋮</button>
+            </td>
+          </tr>
+        `;
+      });
+    }
+
+    async function loadAnalytics() {
+
+=======
+      <tr>
+        <td><b>${i.InternID}</b></td>
+        <td>${i.Name}</td>
+        <td>${i.Email}</td>
+        <td>${i.BatchName}</td>
+        <td>${i.Duration}</td>
+        <td>
+          <button class="dotBtn" onclick="openInternOverview('${i.InternID}')">⋮</button>
+        </td>
+      </tr>
+    `;
+      });
+    }
+
+
+    async function loadAnalytics() {
+
+
+>>>>>>> 4accfcc52580821ba69af8fd5736127bcd739ae7
+      const data = await apiGET({
+        action: "getAdminAnalytics",
+        adminId: admin.adminId,
+        adminPass: admin.adminPass
+      });
+
+<<<<<<< HEAD
+=======
+
+>>>>>>> 4accfcc52580821ba69af8fd5736127bcd739ae7
+      if (!data.success) {
+        toast(data.message, "error");
+        return;
+      }
+
+      const k = data.kpis;
+
+      document.getElementById("kTotal").innerText = k.totalInterns;
+      document.getElementById("kActive").innerText = k.activeInterns;
+      document.getElementById("kPending").innerText = k.pending;
+      document.getElementById("kApproved").innerText = k.approved;
+      document.getElementById("kPercent").innerText = k.approvalPercent + "%";
+      document.getElementById("kAvg").innerText = k.avgGrade || 0;
+      document.getElementById("kDay").innerText = k.mostActiveDay || "-";
+
+<<<<<<< HEAD
+=======
+
+
+      // ===== BATCH PERFORMANCE COLUMN CHART =====
+>>>>>>> 4accfcc52580821ba69af8fd5736127bcd739ae7
+      const b = data.charts.batch;
+      const box = document.getElementById("batchPerformanceBox");
+
+      box.innerHTML = "";
+
+      b.labels.forEach((label, i) => {
+<<<<<<< HEAD
+        const percent = b.data[i];
+        box.innerHTML += `
+          <div class="colItem">
+            <div class="colPercent">${percent}%</div>
+            <div class="colBarWrap">
+              <div class="colBar" data-height="${percent}"></div>
+            </div>
+            <div class="colLabel">${label}</div>
+          </div>
+        `;
+      });
+
+=======
+
+        const percent = b.data[i];
+
+        box.innerHTML += `
+    <div class="colItem">
+      <div class="colPercent">${percent}%</div>
+      <div class="colBarWrap">
+        <div class="colBar" data-height="${percent}"></div>
+      </div>
+      <div class="colLabel">${label}</div>
+    </div>
+  `;
+      });
+
+      // 🔥 Animate bars
+>>>>>>> 4accfcc52580821ba69af8fd5736127bcd739ae7
+      setTimeout(() => {
+        document.querySelectorAll(".colBar").forEach(bar => {
+          bar.style.height = bar.getAttribute("data-height") + "%";
+        });
+      }, 200);
+
+<<<<<<< HEAD
+=======
+      // 🔥 Animate bars
+>>>>>>> 4accfcc52580821ba69af8fd5736127bcd739ae7
+      setTimeout(() => {
+        document.querySelectorAll(".perfFill").forEach(el => {
+          el.style.width = el.getAttribute("data-width") + "%";
+        });
+      }, 200);
+
+      const topBox = document.getElementById("topInternsBox");
+      topBox.innerHTML = "";
+
+      const topData = data.charts.topInterns || {};
+
+      Object.keys(topData).forEach(batchName => {
+
+        const batchInterns = topData[batchName];
+
+<<<<<<< HEAD
+        let html = `<div class="topBatchBlock"><div class="topBatchTitle">${batchName}</div>`;
+
+        batchInterns.slice(0, 3).forEach((intern, index) => {
+=======
+        let html = `
+    <div class="topBatchBlock">
+      <div class="topBatchTitle">${batchName}</div>
+  `;
+
+        batchInterns.slice(0, 3).forEach((intern, index) => {
+
+>>>>>>> 4accfcc52580821ba69af8fd5736127bcd739ae7
+          let medal = "";
+          if (index === 0) medal = "🥇";
+          else if (index === 1) medal = "🥈";
+          else if (index === 2) medal = "🥉";
+          else medal = `#${index + 1}`;
+
+          html += `
+<<<<<<< HEAD
+            <div class="topInternCard">
+              <div class="topInternLeft">
+                <div class="rankBadge">${medal}</div>
+                <div class="topInternName">${intern.name}</div>
+              </div>
+              <div class="topInternScore">${intern.avg}/100</div>
+            </div>
+          `;
+        });
+
+        html += `
+          <button class="btn ghost"
+            style="margin-top:8px;font-size:11px;"
+            onclick="openFullBatchAnalysis('${batchName}')">
+            View Full Analysis
+          </button>
+        `;
+
+        html += `</div>`;
+        topBox.innerHTML += html;
+      });
+=======
+      <div class="topInternCard">
+        <div class="topInternLeft">
+          <div class="rankBadge">${medal}</div>
+          <div class="topInternName">${intern.name}</div>
+        </div>
+        <div class="topInternScore">
+        ${intern.avg}/100
+        </div>
+      </div>
+    `;
+        });
+
+        html += `
+  <button class="btn ghost" 
+    style="margin-top:8px;font-size:11px;"
+    onclick="openFullBatchAnalysis('${batchName}')">
+    View Full Analysis
+  </button>
+`;
+
+        html += `</div>`;
+        topBox.innerHTML += html;
+
+      });
+
+>>>>>>> 4accfcc52580821ba69af8fd5736127bcd739ae7
+    }
+
+    async function openFullBatchAnalysis(batchName) {
+
+      const data = await apiGET({
+        action: "getAdminAnalytics",
+        adminId: admin.adminId,
+        adminPass: admin.adminPass
+      });
+
+<<<<<<< HEAD
+=======
+
+>>>>>>> 4accfcc52580821ba69af8fd5736127bcd739ae7
+      if (!data.success) {
+        toast(data.message, "error");
+        return;
+      }
+
+      const batchInterns = data.charts.topInterns[batchName] || [];
+
+      const tb = document.getElementById("analysisTable");
+      tb.innerHTML = "";
+
+      batchInterns.forEach((intern, index) => {
+        tb.innerHTML += `
+<<<<<<< HEAD
+          <tr>
+            <td>#${index + 1}</td>
+            <td>${intern.name}</td>
+            <td>${intern.avg}/100</td>
+            <td>${intern.approvedCount}</td>
+          </tr>
+        `;
+=======
+      <tr>
+        <td>#${index + 1}</td>
+        <td>${intern.name}</td>
+        <td>${intern.avg}/100</td>
+        <td>${intern.approvedCount}</td>
+      </tr>
+    `;
+>>>>>>> 4accfcc52580821ba69af8fd5736127bcd739ae7
+      });
+
+      document.getElementById("analysisModal").classList.add("show");
+    }
+
+    function closeAnalysis() {
+      document.getElementById("analysisModal").classList.remove("show");
+    }
+
+<<<<<<< HEAD
+=======
+    function getDeviceInfo() {
+
+      const ua = navigator.userAgent;
+
+      let device = "Desktop";
+      if (/mobile/i.test(ua)) device = "Mobile";
+      if (/tablet/i.test(ua)) device = "Tablet";
+
+      return {
+        device,
+        browser: ua,
+        location: "Unknown",
+        ip: "-"
+      };
+    }
+
+>>>>>>> 4accfcc52580821ba69af8fd5736127bcd739ae7
+    async function loadEditRequests(silent = false) {
+
+      const data = await apiGET({
+        action: "getEditRequests",
+        adminId: admin.adminId,
+        adminPass: admin.adminPass
+      });
+
+      const tb = document.getElementById("editReqTable");
+      tb.innerHTML = "";
+
+      if (!data.success) {
+        toast(data.message, "error");
+        return;
+      }
+
+      const list = data.requests || [];
+
+      if (list.length === 0) {
+        tb.innerHTML = `<tr><td colspan="6">No edit requests ✅</td></tr>`;
+        return;
+      }
+
+      list.forEach(r => {
+        tb.innerHTML += `
+<<<<<<< HEAD
+          <tr>
+            <td><b>${r.SubmissionID}</b></td>
+            <td>${r.InternID}</td>
+            <td>${r.AssignedTaskID}</td>
+            <td>${formatDate(r.RequestedAt)}</td>
+            <td>
+              <span style="
+                padding:4px 8px;
+                border-radius:10px;
+                background:rgba(255,165,0,0.15);
+                border:1px solid rgba(255,165,0,0.3);
+                font-weight:700;
+                font-size:12px;">
+                ${r.EditRequestStatus}
+              </span>
+            </td>
+            <td style="display:flex;gap:8px;">
+              <button class="btn primary" onclick="approveEdit('${r.SubmissionID}', true)">Approve</button>
+              <button class="btn danger" onclick="approveEdit('${r.SubmissionID}', false)">Reject</button>
+            </td>
+          </tr>
+        `;
+=======
+      <tr>
+        <td><b>${r.SubmissionID}</b></td>
+        <td>${r.InternID}</td>
+        <td>${r.AssignedTaskID}</td>
+        <td>${formatDate(r.RequestedAt)}</td>
+        <td>
+          <span style="
+            padding:4px 8px;
+            border-radius:10px;
+            background:rgba(255,165,0,0.15);
+            border:1px solid rgba(255,165,0,0.3);
+            font-weight:700;
+            font-size:12px;">
+            ${r.EditRequestStatus}
+          </span>
+        </td>
+        <td style="display:flex;gap:8px;">
+          <button class="btn primary"
+            onclick="approveEdit('${r.SubmissionID}', true)">
+            Approve
+          </button>
+          <button class="btn danger"
+            onclick="approveEdit('${r.SubmissionID}', false)">
+            Reject
+          </button>
+        </td>
+      </tr>
+    `;
+>>>>>>> 4accfcc52580821ba69af8fd5736127bcd739ae7
+      });
+    }
+
+    async function approveEdit(submissionId, approve) {
+
+      const data = await apiPOST({
+        action: "adminApproveEdit",
+        adminId: admin.adminId,
+        adminPass: admin.adminPass,
+        submissionId,
+        approve
+      });
+
+      if (data.success) {
+        toast("Updated ✅", "success");
+        loadEditRequests(true);
+      } else {
+        toast(data.message, "error");
+      }
+    }
+
+<<<<<<< HEAD
+    // ===============================
+    // ENROLLED STUDENTS FUNCTIONS
+    // ===============================
+
+    async function loadEnrolledStudents(silent = false) {
+
+      const data = await apiGET({
+        action: "getEnrolledStudents",
+        adminId: admin.adminId,
+        adminPass: admin.adminPass
+      });
+
+      const tb = document.getElementById("enrolledTable");
+      tb.innerHTML = "";
+
+      if (!data.success) {
+        tb.innerHTML = `<tr><td colspan="7"><div class="emptyEnrolled"><span>⚠️</span>${escapeHTML(data.message)}</div></td></tr>`;
+        return;
+      }
+
+      const list = data.students || [];
+
+      // Update summary tags
+      const total = list.length;
+      const pending = list.filter(s => s.Status === "Pending").length;
+      const approved = list.filter(s => s.Status === "Approved").length;
+      const rejected = list.filter(s => s.Status === "Rejected").length;
+
+      document.getElementById("tagTotal").innerText = `${total} Total`;
+      document.getElementById("tagPending").innerText = `${pending} Pending`;
+      document.getElementById("tagApproved").innerText = `${approved} Approved`;
+      document.getElementById("tagRejected").innerText = `${rejected} Rejected`;
+
+      if (list.length === 0) {
+        tb.innerHTML = `<tr><td colspan="7"><div class="emptyEnrolled"><span>📋</span>No enrollment requests yet</div></td></tr>`;
+        return;
+      }
+
+      list.forEach((s, idx) => {
+        const statusClass =
+          s.Status === "Approved" ? "approved" :
+          s.Status === "Rejected" ? "rejected" : "pending";
+
+        const canReview = s.Status === "Pending";
+
+        // Safe JSON for onclick
+        const safeJson = escapeHTML(JSON.stringify(s));
+
+        tb.innerHTML += `
+          <tr>
+            <td>${idx + 1}</td>
+            <td><b>${escapeHTML(s.Name)}</b></td>
+            <td>${escapeHTML(s.Email)}</td>
+            <td>${escapeHTML(s.Phone || "-")}</td>
+            <td>${formatDate(s.AppliedDate || s.CreatedAt)}</td>
+            <td><span class="statusPill ${statusClass}">${s.Status}</span></td>
+            <td>
+              ${canReview
+                ? `<button class="btn primary" onclick='openEnrolledReview(${JSON.stringify(JSON.stringify(s))})'>Review</button>`
+                : `<span style="font-size:12px;color:var(--muted);">${s.Status}</span>`
+              }
+            </td>
+          </tr>
+        `;
+      });
+    }
+
+    function openEnrolledReview(studentJson) {
+      const s = typeof studentJson === "string" ? JSON.parse(studentJson) : studentJson;
+      CURRENT_ENROLLED_ID = s.EnrollmentID || s.ID || s.id;
+
+      // Populate info
+      document.getElementById("reviewAvatar").innerText = (s.Name || "?")[0].toUpperCase();
+      document.getElementById("reviewName").innerText = s.Name || "-";
+      document.getElementById("reviewEmail").innerText = s.Email || "-";
+      document.getElementById("reviewPhone").innerText = s.Phone || "-";
+      document.getElementById("reviewDate").innerText = formatDate(s.AppliedDate || s.CreatedAt);
+      document.getElementById("reviewCourse").innerText = s.Course || s.CourseInterest || "-";
+      document.getElementById("reviewNote").innerText = s.Message || s.Note || "No message provided.";
+      document.getElementById("reviewMsg").innerText = "";
+      document.getElementById("reviewRemarks").value = "";
+
+      // Status pill
+      const statusClass = s.Status === "Approved" ? "approved" : s.Status === "Rejected" ? "rejected" : "pending";
+      document.getElementById("reviewCurrentStatus").innerHTML =
+        `<span class="statusPill ${statusClass}">${s.Status}</span>`;
+
+      // Populate batch dropdown from existing inBatch select
+      const batches = document.getElementById("inBatch");
+      document.getElementById("reviewBatchSelect").innerHTML = batches.innerHTML;
+
+      document.getElementById("enrolledReviewModal").classList.add("show");
+    }
+
+    function closeEnrolledReview() {
+      document.getElementById("enrolledReviewModal").classList.remove("show");
+      CURRENT_ENROLLED_ID = null;
+    }
+
+    async function submitEnrolledDecision(decision) {
+      if (!CURRENT_ENROLLED_ID) { toast("No enrollment selected ❌", "error"); return; }
+
+      const batchId = document.getElementById("reviewBatchSelect").value;
+      const duration = document.getElementById("reviewDuration").value;
+      const remarks = document.getElementById("reviewRemarks").value.trim();
+
+      document.getElementById("reviewMsg").innerText = "Processing...";
+
+      const data = await apiPOST({
+        action: "adminReviewEnrollment",
+        adminId: admin.adminId,
+        adminPass: admin.adminPass,
+        enrollmentId: CURRENT_ENROLLED_ID,
+        decision,
+        batchId,
+        duration,
+        remarks
+      });
+
+      if (data.success) {
+        const msg = decision === "Approved"
+          ? "✅ Approved! LOI + Offer Letter sent to intern."
+          : "✅ Rejected. Rejection email sent to intern.";
+
+        toast(msg, "success");
+        document.getElementById("reviewMsg").innerText = msg;
+
+        setTimeout(() => {
+          closeEnrolledReview();
+          loadEnrolledStudents(true);
+        }, 1200);
+
+      } else {
+        document.getElementById("reviewMsg").innerText = "❌ " + data.message;
+        toast(data.message, "error");
+      }
+    }
+
+    // ===============================
+    // UTILITY FUNCTIONS
+    // ===============================
+
+=======
+    async function sendAdminLoginInfo() {
+
+      if (!admin || !admin.adminId) return;
+
+      const info = {
+        action: "adminLoginAlert",
+        adminId: admin.adminId,
+        adminPass: admin.adminPass,
+        device: navigator.userAgent,
+        location: "Unknown",
+        ip: "-"
+      };
+
+      await apiPOST(info);
+    }
+
+
+
+    // Toggle sidebar (mobile)
+>>>>>>> 4accfcc52580821ba69af8fd5736127bcd739ae7
+    function toggleSidebar() {
+      const sidebar = document.querySelector(".sidebar");
+      if (!sidebar) return;
+      sidebar.classList.toggle("show");
+    }
+
+<<<<<<< HEAD
+=======
+
+    // Close sidebar after navigation click (mobile only)
+>>>>>>> 4accfcc52580821ba69af8fd5736127bcd739ae7
+    function closeSidebarMobile() {
+      if (window.innerWidth <= 1000) {
+        const sidebar = document.querySelector(".sidebar");
+        if (sidebar) sidebar.classList.remove("show");
+      }
+    }
+
+<<<<<<< HEAD
+    document.addEventListener("click", function (e) {
+=======
+
+    // Click outside to close (mobile)
+    document.addEventListener("click", function (e) {
+
+>>>>>>> 4accfcc52580821ba69af8fd5736127bcd739ae7
+      if (window.innerWidth > 1000) return;
+
+      const sidebar = document.querySelector(".sidebar");
+      const mobileBtn = document.querySelector(".mobileMenuBtn");
+
+      if (!sidebar || !mobileBtn) return;
+
+      if (!sidebar.contains(e.target) && !mobileBtn.contains(e.target)) {
+        sidebar.classList.remove("show");
+      }
+<<<<<<< HEAD
+=======
+
+>>>>>>> 4accfcc52580821ba69af8fd5736127bcd739ae7
+    });
+
+    function formatDate(dateString) {
+      if (!dateString) return "-";
+<<<<<<< HEAD
+      const d = new Date(dateString);
+      const day = String(d.getDate()).padStart(2, "0");
+      const month = String(d.getMonth() + 1).padStart(2, "0");
+      const year = d.getFullYear();
+=======
+
+      const d = new Date(dateString);
+
+      const day = String(d.getDate()).padStart(2, "0");
+      const month = String(d.getMonth() + 1).padStart(2, "0");
+      const year = d.getFullYear();
+
+>>>>>>> 4accfcc52580821ba69af8fd5736127bcd739ae7
+      return `${day}/${month}/${year}`;
+    }
+
+    function toggleDesc(btn) {
+<<<<<<< HEAD
+      const desc = btn.parentElement.querySelector(".taskDesc");
+      desc.classList.toggle("show");
+      btn.innerText = desc.classList.contains("show") ? "View Less" : "View More";
+    }
+
+    // ===============================
+    // SEND DOCUMENTS FUNCTIONS
+    // ===============================
+
+    let CURRENT_DOC_INTERN = null;
+    let ALL_ACTIVE_INTERNS = [];
+
+    async function loadActiveInterns(silent = false) {
+      const data = await apiGET({
+        action: "getInternsList",
+        adminId: admin.adminId,
+        adminPass: admin.adminPass,
+        batchId: ""
+      }, silent);
+
+      const tb = document.getElementById("activeInternsTable");
+      if (!data.success) {
+        tb.innerHTML = `<tr><td colspan="7"><div class="emptyEnrolled"><span>⚠️</span>${escapeHTML(data.message)}</div></td></tr>`;
+        return;
+      }
+
+      ALL_ACTIVE_INTERNS = data.interns || [];
+      renderDocInternTable(ALL_ACTIVE_INTERNS);
+    }
+
+    function renderDocInternTable(list) {
+      const tb = document.getElementById("activeInternsTable");
+      tb.innerHTML = "";
+
+      if (list.length === 0) {
+        tb.innerHTML = `<tr><td colspan="7"><div class="emptyEnrolled"><span>👨‍💻</span>No active interns found</div></td></tr>`;
+        return;
+      }
+
+      list.forEach((i, idx) => {
+        tb.innerHTML += `
+          <tr>
+            <td>${idx + 1}</td>
+            <td><b>${escapeHTML(i.InternID)}</b></td>
+            <td>${escapeHTML(i.Name)}</td>
+            <td style="color:var(--muted);font-size:12px;">${escapeHTML(i.Email)}</td>
+            <td>${escapeHTML(i.BatchName || "-")}</td>
+            <td>${escapeHTML(i.Duration || "-")}</td>
+            <td>
+              <button class="btn primary" style="font-size:12px;padding:8px 12px;"
+                onclick='openSendDocModal(${JSON.stringify(JSON.stringify(i))})'>
+                📄 Create Document
+              </button>
+            </td>
+          </tr>
+        `;
+      });
+    }
+
+    function filterDocInterns() {
+      const q = document.getElementById("docSearchInput").value.toLowerCase().trim();
+      if (!q) { renderDocInternTable(ALL_ACTIVE_INTERNS); return; }
+      const filtered = ALL_ACTIVE_INTERNS.filter(i =>
+        (i.Name || "").toLowerCase().includes(q) ||
+        (i.InternID || "").toLowerCase().includes(q) ||
+        (i.Email || "").toLowerCase().includes(q)
+      );
+      renderDocInternTable(filtered);
+    }
+
+    function openSendDocModal(internJson) {
+      const i = typeof internJson === "string" ? JSON.parse(internJson) : internJson;
+      CURRENT_DOC_INTERN = i;
+
+      // Reset checkboxes
+      ["chkCompletion","chkCertificate","chkBestPerformer"].forEach(id => {
+        document.getElementById(id).checked = false;
+      });
+      ["docOptCompletion","docOptCertificate","docOptBestPerformer"].forEach(id => {
+        document.getElementById(id).style.borderColor = "rgba(255,255,255,0.08)";
+        document.getElementById(id).style.background = "rgba(255,255,255,0.02)";
+      });
+
+      document.getElementById("docSelectedSummary").style.display = "none";
+      document.getElementById("docSendMsg").innerText = "";
+
+      // Fill intern info
+      document.getElementById("docInternAvatar").innerText = (i.Name || "?")[0].toUpperCase();
+      document.getElementById("docInternName").innerText = i.Name || "-";
+      document.getElementById("docInternEmail").innerText = i.Email || "-";
+      document.getElementById("docInternBatch").innerText = `${i.BatchName || ""} · ${i.Duration || ""} · ID: ${i.InternID}`;
+      document.getElementById("docModalMeta").innerText = `Sending to: ${i.Email}`;
+
+      document.getElementById("sendDocModal").classList.add("show");
+    }
+
+    function closeSendDocModal() {
+      document.getElementById("sendDocModal").classList.remove("show");
+      CURRENT_DOC_INTERN = null;
+    }
+
+    function updateDocOpt(chk, optId) {
+      const el = document.getElementById(optId);
+      if (chk.checked) {
+        el.style.borderColor = "rgba(124,0,255,0.4)";
+        el.style.background = "rgba(124,0,255,0.08)";
+      } else {
+        el.style.borderColor = "rgba(255,255,255,0.08)";
+        el.style.background = "rgba(255,255,255,0.02)";
+      }
+      updateDocSummary();
+    }
+
+    function updateDocSummary() {
+      const selected = [];
+      if (document.getElementById("chkCompletion").checked) selected.push("Completion Letter");
+      if (document.getElementById("chkCertificate").checked) selected.push("Completion Certificate");
+      if (document.getElementById("chkBestPerformer").checked) selected.push("Best Performer Certificate");
+
+      const summaryEl = document.getElementById("docSelectedSummary");
+      if (selected.length > 0) {
+        summaryEl.style.display = "block";
+        document.getElementById("docSelectedList").innerText = selected.join(", ");
+      } else {
+        summaryEl.style.display = "none";
+      }
+    }
+
+    async function submitSendDocs() {
+      if (!CURRENT_DOC_INTERN) { toast("No intern selected ❌", "error"); return; }
+
+      const docs = [];
+      if (document.getElementById("chkCompletion").checked) docs.push("completion");
+      if (document.getElementById("chkCertificate").checked) docs.push("certificate");
+      if (document.getElementById("chkBestPerformer").checked) docs.push("bestPerformer");
+
+      if (docs.length === 0) {
+        toast("Please select at least one document ❌", "error");
+        document.getElementById("docSendMsg").innerText = "⚠️ Select at least one document.";
+        return;
+      }
+
+      document.getElementById("docSendMsg").innerText = "📨 Sending documents...";
+
+      const data = await apiPOST({
+        action: "adminSendDocuments",
+        adminId: admin.adminId,
+        adminPass: admin.adminPass,
+        internId: CURRENT_DOC_INTERN.InternID,
+        documents: docs
+      });
+
+      if (data.success) {
+        const msg = `✅ ${docs.length} document(s) sent to ${CURRENT_DOC_INTERN.Email}`;
+        toast(msg, "success");
+        document.getElementById("docSendMsg").innerText = msg;
+        setTimeout(() => closeSendDocModal(), 1800);
+      } else {
+        document.getElementById("docSendMsg").innerText = "❌ " + data.message;
+        toast(data.message, "error");
+      }
+    }
+
+    // ===============================
+    // END SEND DOCUMENTS FUNCTIONS
+    // ===============================
+
+    init();
+=======
+
+      const desc = btn.parentElement.querySelector(".taskDesc");
+
+      desc.classList.toggle("show");
+
+      btn.innerText = desc.classList.contains("show")
+        ? "View Less"
+        : "View More";
+    }
+
+
+    init();
+    // startAutoRefreshAdmin();
+>>>>>>> 4accfcc52580821ba69af8fd5736127bcd739ae7
+
+    window.addEventListener("beforeunload", function () {
+      if (AUTO_REFRESH_TIMER) clearInterval(AUTO_REFRESH_TIMER);
+    });
+<<<<<<< HEAD
+
+=======
+>>>>>>> 4accfcc52580821ba69af8fd5736127bcd739ae7
+  </script>
+</body>
+
+</html>

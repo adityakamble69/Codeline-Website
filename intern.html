@@ -1,0 +1,2012 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Intern Panel</title>
+  <link rel="stylesheet" href="style.css" />
+
+  <style>
+    /* ================= TASK MODAL ================= */
+
+    .modalOverlay {
+
+      position: fixed;
+      top: 0;
+      left: 0;
+
+      width: 100%;
+      height: 100%;
+
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(6px);
+
+      display: none;
+
+      align-items: center;
+      justify-content: center;
+
+      z-index: 9999;
+
+    }
+
+    /* modal visible */
+
+    .modalOverlay.show {
+      display: flex;
+    }
+
+    /* modal card */
+
+    .modalCard {
+
+      width: 420px;
+      max-width: 90%;
+
+      background: linear-gradient(160deg, #0f0f18, #1a1a2e);
+
+      border: 1px solid #2d2d45;
+
+      border-radius: 16px;
+
+      padding: 24px;
+
+      box-shadow:
+        0 25px 60px rgba(0, 0, 0, .7),
+        0 0 40px rgba(124, 0, 255, .35);
+
+    }
+
+    /* modal title */
+
+    .modalCard h3 {
+
+      font-size: 18px;
+      margin-bottom: 12px;
+
+      color: #b983ff;
+
+    }
+
+    /* task item */
+
+    .modalCard div {
+
+      font-size: 14px;
+      color: #c9c9d1;
+
+    }
+
+    /* close button */
+
+    .modalCard .btn {
+
+      margin-top: 15px;
+
+    }
+
+    /* ================= GENERAL ================= */
+
+    .pageSection {
+      display: none
+    }
+
+    .pageSection.active {
+      display: block
+    }
+
+    .tableWrap table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    .tableWrap th {
+      text-align: left;
+      padding: 12px 10px;
+      background: rgba(255, 255, 255, 0.05);
+      font-weight: 600;
+    }
+
+    .tableWrap td {
+      padding: 14px 10px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .tableWrap tr:hover {
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    /* ================= PROFILE ================= */
+
+    .profileInfo {
+
+      background: linear-gradient(145deg, #111118, #1a1a2e);
+
+      border: 1px solid #26263a;
+
+      border-radius: 14px;
+
+      padding: 20px;
+
+      margin-bottom: 20px;
+
+      box-shadow: 0 10px 25px rgba(0, 0, 0, .6);
+
+    }
+
+    .nameRow {
+
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+    }
+
+    .profileIdText {
+
+      font-size: 13px;
+      color: #aaa;
+
+    }
+
+    .profileBio {
+
+      margin-top: 8px;
+      font-size: 14px;
+      line-height: 1.5;
+      color: #c9c9d1;
+
+    }
+
+    .profileHeader {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0 20px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      margin-bottom: 25px;
+    }
+
+    .profileButtons {
+      display: flex;
+      gap: 12px;
+    }
+
+    .editBtn,
+    .changePassBtn {
+      width: 200px;
+      height: 42px;
+
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      cursor: pointer;
+      transition: .25s;
+    }
+
+    .editBtn {
+      border: 1px solid #7c00ff;
+      background: transparent;
+      color: #b983ff;
+    }
+
+    .editBtn:hover {
+      background: #7c00ff;
+      color: white;
+      box-shadow: 0 0 15px rgba(124, 0, 255, .6);
+    }
+
+    .changePassBtn {
+      border: 1px solid #ffae00;
+      background: transparent;
+      color: #ffae00;
+    }
+
+    .changePassBtn:hover {
+      background: #ffae00;
+      color: black;
+    }
+
+    /* ================= PROFILE AVATAR ================= */
+
+    .profileTopRow {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      margin-bottom: 15px;
+    }
+
+    .avatarCircle {
+
+      width: 90px;
+      height: 90px;
+
+      border-radius: 50%;
+      overflow: hidden;
+
+      background: linear-gradient(135deg, #7c00ff, #b983ff);
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      font-size: 28px;
+      font-weight: 700;
+      color: white;
+
+      cursor: pointer;
+
+      box-shadow: 0 0 20px rgba(124, 0, 255, .6);
+
+      transition: .3s;
+
+    }
+
+    .avatarCircle::after {
+      content: "📷";
+      position: absolute;
+      font-size: 20px;
+      opacity: 0;
+      transition: 0.3s;
+    }
+
+    .avatarCircle:hover::after {
+      opacity: 1;
+    }
+
+    .avatarCircle:hover {
+
+      transform: scale(1.08);
+
+      box-shadow: 0 0 30px rgba(124, 0, 255, .9);
+
+    }
+
+    .avatarCircle img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* ================= BADGE ================= */
+
+    .rankBadge {
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    /* ================= ACHIEVEMENTS ================= */
+
+    #achievementRoadmap div {
+
+      padding: 14px;
+
+      border-radius: 12px;
+
+      margin-bottom: 10px;
+
+      background: #151520;
+
+      border: 1px solid #333;
+
+      transition: .25s;
+
+    }
+
+    #achievementRoadmap div:hover {
+
+      transform: translateY(-3px);
+
+      box-shadow: 0 8px 18px rgba(0, 0, 0, .6);
+
+    }
+
+    #achievementRoadmap div.unlocked {
+      background: linear-gradient(90deg, #153a25, #151520);
+      border: 1px solid #39d353;
+      box-shadow: 0 0 12px rgba(57, 211, 83, .4);
+    }
+
+    /* ================= HEATMAP ================= */
+
+    .heatmapGrid {
+      display: grid;
+      grid-template-columns: repeat(18, 1fr);
+      gap: 6px;
+    }
+
+    .heatCell {
+      height: 18px;
+      border-radius: 4px;
+      background: #1c1c28;
+      transition: .2s;
+    }
+
+    .heatCell:hover {
+      transform: scale(1.2);
+    }
+
+    .level4 {
+      background: #39d353;
+      box-shadow: 0 0 6px #39d353;
+    }
+
+    .streakBox {
+      margin-top: 15px;
+      font-weight: 600;
+      color: #ffae00;
+    }
+
+    /* ================= BATCH CARDS ================= */
+
+    .batchCard {
+
+      background: linear-gradient(145deg, #111118, #1a1a28);
+      border: 1px solid #26263a;
+
+      border-radius: 14px;
+      padding: 20px;
+
+      text-align: center;
+
+      transition: .25s;
+    }
+
+    .batchCard:hover {
+
+      transform: translateY(-6px);
+
+      box-shadow:
+        0 12px 30px rgba(0, 0, 0, .6),
+        0 0 20px rgba(124, 0, 255, .3);
+
+      border-color: #7c00ff;
+    }
+
+    .batchAvatar {
+
+      width: 70px;
+      height: 70px;
+
+      border-radius: 50%;
+      object-fit: cover;
+
+      border: 2px solid #7c00ff;
+
+      box-shadow: 0 0 12px rgba(124, 0, 255, .6);
+
+      margin-bottom: 10px;
+    }
+
+    .batchCard h3 {
+      margin: 6px 0 2px;
+      font-size: 16px;
+    }
+
+    .internId {
+      font-size: 12px;
+      color: #aaa;
+    }
+
+    /* ================= BADGES ================= */
+
+    .badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      margin-top: 6px;
+    }
+
+    .badge-bronze {
+      background: #cd7f32
+    }
+
+    .badge-silver {
+      background: #c0c0c0
+    }
+
+    .badge-gold {
+      background: #ffd700
+    }
+
+    .badge-platinum {
+      background: #00e5ff
+    }
+
+    .badge-diamond {
+      background: #00bfff
+    }
+
+    .badge-master {
+      background: #ff00ff
+    }
+
+    /* ================= APPROVED COUNT ================= */
+
+    .taskCount {
+
+      margin-top: 8px;
+      font-size: 13px;
+
+      background: #0f1f18;
+      border: 1px solid #1d4d37;
+
+      padding: 5px 8px;
+      border-radius: 8px;
+
+      color: #39d353;
+
+      display: inline-block;
+    }
+
+    .glowTitle {
+
+      color: #b983ff;
+
+      text-shadow: 0 0 10px rgba(185, 131, 255, .6);
+
+      margin-bottom: 10px;
+
+    }
+
+    /* ================= CARD BUTTONS ================= */
+
+    .cardBtns {
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+      margin-top: 10px;
+    }
+
+    .cardBtns button {
+
+      padding: 6px 14px;
+
+      background: #7c00ff;
+      border: none;
+
+      color: white;
+
+      border-radius: 8px;
+
+      cursor: pointer;
+
+      font-size: 13px;
+
+      transition: .2s;
+    }
+
+    .cardBtns button:hover {
+      background: #9d32ff;
+      transform: scale(1.05);
+    }
+
+    /* ================= MODAL ================= */
+
+    .modal {
+
+      position: fixed;
+      top: 0;
+      left: 0;
+
+      width: 100%;
+      height: 100%;
+
+      background: rgba(0, 0, 0, .75);
+      backdrop-filter: blur(6px);
+
+      display: none;
+      align-items: center;
+      justify-content: center;
+
+      z-index: 9999;
+    }
+
+    /* ================= MODAL CONTENT ================= */
+
+    .modalContent {
+
+      background: linear-gradient(160deg, #0f0f18, #1a1a2e);
+
+      border: 1px solid #2d2d45;
+
+      width: 380px;
+      padding: 28px;
+
+      border-radius: 16px;
+      text-align: center;
+
+      box-shadow:
+        0 25px 60px rgba(0, 0, 0, .7),
+        0 0 40px rgba(124, 0, 255, .35);
+    }
+
+    .modalContent img {
+
+      width: 90px;
+      height: 90px;
+
+      border-radius: 50%;
+
+      border: 3px solid #7c00ff;
+
+      box-shadow:
+        0 0 10px rgba(124, 0, 255, .6),
+        0 0 25px rgba(124, 0, 255, .3);
+
+      margin-bottom: 10px;
+
+    }
+
+    .modalContent h2 {
+      margin: 6px 0;
+      font-size: 20px;
+    }
+
+    .modalContent p {
+      font-size: 14px;
+      color: #c9c9d1;
+      margin: 3px 0;
+    }
+
+    /* ================= PROJECT LIST ================= */
+
+    .projectItem {
+
+      background: linear-gradient(145deg, #141421, #1c1c2a);
+
+      border: 1px solid rgba(255, 255, 255, 0.08);
+
+      padding: 14px 16px;
+
+      border-radius: 12px;
+
+      margin-top: 10px;
+
+      display: grid;
+
+      grid-template-columns: 1fr auto;
+
+      gap: 10px;
+
+      align-items: center;
+
+      transition: .25s;
+
+    }
+
+    .projectItem:hover {
+
+      border-color: #7c00ff;
+
+      transform: translateY(-2px);
+
+      box-shadow: 0 10px 25px rgba(0, 0, 0, .6);
+
+    }
+
+    .projectItem b {
+
+      font-size: 14px;
+
+      line-height: 1.4;
+
+      font-weight: 600;
+
+    }
+
+    .projectItem a {
+
+      color: #9d7cff;
+
+      font-size: 13px;
+
+      text-decoration: none;
+
+      padding: 6px 12px;
+
+      border-radius: 6px;
+
+      border: 1px solid rgba(157, 124, 255, 0.4);
+
+      transition: .2s;
+
+    }
+
+    .projectItem a:hover {
+
+      background: #7c00ff;
+
+      color: white;
+
+      border-color: #7c00ff;
+
+    }
+
+    /* ================= MODAL BUTTON ================= */
+
+    .modalContent button {
+
+      background: rgba(177, 0, 255, .1);
+      border: 1px solid rgba(177, 0, 255, .5);
+
+      color: white;
+
+      padding: 6px 14px;
+
+      border-radius: 18px;
+
+      cursor: pointer;
+
+      transition: .2s;
+    }
+
+    .modalContent button:hover {
+      background: #b100ff;
+    }
+
+    /* ================= EDIT PROFILE TOGGLE ================= */
+
+    .editProfileBox,
+    .passwordBox {
+
+      margin-top: 20px;
+
+      background: #141421;
+      border: 1px solid rgba(124, 0, 255, 0.3);
+
+      border-radius: 12px;
+
+      padding: 0;
+
+      max-height: 0;
+      overflow: hidden;
+
+      opacity: 0;
+
+      transition: .35s ease;
+    }
+
+    /* SHOW STATE */
+
+    .editProfileBox.active,
+    .passwordBox.active {
+
+      padding: 18px;
+
+      max-height: 400px;
+
+      opacity: 1;
+
+    }
+
+    /* inputs */
+
+    .editProfileBox input,
+    .editProfileBox textarea,
+    .passwordBox input {
+
+      width: 100%;
+
+      margin-top: 6px;
+      margin-bottom: 12px;
+
+      padding: 10px;
+
+      border-radius: 8px;
+
+      border: 1px solid #2b2b3f;
+
+      background: #0d0d16;
+
+      color: white;
+
+    }
+
+    .editActions {
+
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+
+    }
+  </style>
+
+</head>
+
+<body>
+  <div class="container">
+    <div class="appShell">
+
+      <!-- ✅ SIDEBAR -->
+      <aside class="sidebar">
+        <div class="sideTop">
+          <div class="brandBox">
+            <div class="brandLogo">
+              <img src="logo.png" alt="COD Logo">
+            </div>
+            <div class="brandText">
+              <h3>COD PANEL</h3>
+              <p>Intern Dashboard</p>
+            </div>
+          </div>
+
+          <div class="rolePill" id="internPill">INT</div>
+        </div>
+
+        <div class="nav" id="internNav">
+          <a class="active" href="javascript:void(0)" onclick="switchPage('todayPage', this)">📌 Today’s Task</a>
+          <a href="javascript:void(0)" onclick="switchPage('historyPage', this)">📚 Task History</a>
+          <a href="javascript:void(0)" onclick="switchPage('submitPage', this)">📤 Submit Task</a>
+          <a href="javascript:void(0)" onclick="switchPage('messagesPage', this)">💬 Messages</a>
+          <a href="javascript:void(0)" onclick="switchPage('profilePage', this)">👤 Profile</a>
+          <a href="javascript:void(0)" onclick="switchPage('batchPage', this)">👥 My Batch</a>
+        </div>
+
+        <div class="sideFooter">
+          ✅ Submit GitHub/Deploy link<br />
+          ✅ Grade by Admin<br />
+          ✅ Full History Safe
+        </div>
+      </aside>
+
+      <!-- ✅ MAIN -->
+      <main class="main">
+
+        <!-- ✅ TOPBAR -->
+        <div class="topbar">
+          <button class="btn ghost mobileMenuBtn" onclick="toggleSidebar()">☰</button>
+          <div class="titleWrap">
+            <h1>👨‍💻 Intern Panel</h1>
+            <p id="internInfo">Loading...</p>
+          </div>
+          <div class="actions">
+            <button class="btn ghost" onclick="init()">🔄 Refresh</button>
+            <button class="btn danger" onclick="logout()">Logout</button>
+          </div>
+        </div>
+
+        <!-- ✅ 1) TODAY -->
+        <section class="card pageSection active" id="todayPage">
+          <div class="cardHead">
+            <div>
+              <h2>📌 Today’s Task</h2>
+              <span id="todayMeta">Loading...</span>
+            </div>
+          </div>
+
+          <div class="tableWrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>TaskID</th>
+                  <th>Task</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="todayTable"></tbody>
+            </table>
+          </div>
+
+          <div class="small">
+            ✅ Your Tasks Will Show Here.
+          </div>
+        </section>
+
+        <!-- ✅ 2) HISTORY -->
+        <section class="card pageSection" id="historyPage">
+          <div class="cardHead">
+            <div>
+              <h2>📚 Task History</h2>
+              <span>Pending/Completed + Grade</span>
+            </div>
+          </div>
+
+          <div class="tableWrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Title</th>
+                  <th>Status</th>
+                  <th>Grade</th>
+                </tr>
+              </thead>
+              <tbody id="historyTable"></tbody>
+            </table>
+          </div>
+
+          <div class="small">
+            ✅ If the grade is not given, “Note Seen” will be shown.
+          </div>
+        </section>
+
+        <!-- ✅ 3) SUBMIT TASK -->
+        <section class="card pageSection" id="submitPage">
+          <div class="cardHead">
+            <div>
+              <h2>📤 Submit Task</h2>
+              <span>Task auto select (Today tasks)</span>
+            </div>
+          </div>
+
+          <label>Select Today Task</label>
+          <select id="submitTaskSelect"></select>
+
+          <label>Submission Link (GitHub / Deploy)</label>
+          <input id="submitLink" placeholder="https://github.com/..." />
+
+          <label>Details (optional)</label>
+          <textarea id="submitDetails" placeholder="What you did today..."></textarea>
+
+          <button class="btn primary" onclick="submitTask()">Submit</button>
+
+          <div class="small">
+            🔐 Editing requires admin approval.
+          </div>
+
+          <hr style="margin:20px 0; opacity:0.2;">
+
+          <label>Request Edit Permission</label>
+          <input id="requestSubmissionId" placeholder="Enter Submission ID (SUB0001)" />
+
+          <button class="btn ghost" onclick="requestEditPermission()">
+            🔐 Request Admin Permission
+          </button>
+
+        </section>
+
+
+        <!-- ✅ 6) MESSAGES -->
+        <section class="card pageSection" id="messagesPage">
+          <div class="cardHead">
+            <div>
+              <h2>💬 Messages</h2>
+              <span>Admin ↔ Intern </span>
+            </div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;">
+              <button class="btn" onclick="loadMyChat()">🔄 Refresh</button>
+              <button class="btn danger" onclick="internClearChat()">🧹 Clear Chat</button>
+            </div>
+          </div>
+
+          <div class="tableWrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Sender</th>
+                  <th>Message</th>
+                  <th>Time</th>
+                </tr>
+              </thead>
+              <tbody id="internChatTable"></tbody>
+            </table>
+          </div>
+
+          <label style="margin-top:12px;">Send Message to Admin</label>
+          <input id="internChatMsg" placeholder="Type message..." />
+          <button class="btn primary" onclick="internSendMsg()">Send</button>
+
+          <div class="small">
+            ✅ The message will be automatically deleted within 48 hours.
+          </div>
+        </section>
+
+
+        <!-- ✅ PROFILE SECTION -->
+        <section class="card pageSection" id="profilePage">
+
+          <div class="profileHeader">
+            <div>
+              <h2>👤 My Profile</h2>
+              <span>Level up your journey 🚀</span>
+            </div>
+
+            <!-- ✅ Button Wrapper -->
+            <div class="profileButtons">
+              <button class="editBtn" onclick="toggleEditProfile()">
+                ✏ Edit Profile
+              </button>
+
+              <button class="changePassBtn" onclick="togglePasswordBox()">
+                🔒 Change Password
+              </button>
+            </div>
+          </div>
+
+          <!-- EDIT TOGGLE PANEL -->
+          <div id="editProfileBox" class="editProfileBox">
+            <h3>✏ Edit Profile</h3>
+
+            <label>Full Name</label>
+            <input id="editName" />
+
+            <label>Bio</label>
+            <textarea id="editBio"></textarea>
+
+            <div class="editActions">
+              <button class="btn ghost" onclick="toggleEditProfile()">Cancel</button>
+              <button class="btn primary" onclick="updateProfile()">Save</button>
+            </div>
+          </div>
+
+          <!-- 👇 YEH HEADER KE BAHAR HOGA -->
+
+          <div class="profileSecurity">
+            <div id="passwordBox" class="passwordBox">
+
+              <label>Old Password</label>
+              <input type="password" id="editOldPass" placeholder="Enter old password">
+
+              <label>New Password</label>
+              <input type="password" id="editNewPass" placeholder="Enter new password">
+
+              <label>OTP</label>
+              <input type="text" id="otpInput" placeholder="Enter OTP">
+
+              <button class="btn ghost" onclick="requestPasswordOTP()">
+                Send OTP
+              </button>
+
+              <div class="editActions">
+                <button class="btn ghost" onclick="togglePasswordBox()">Cancel</button>
+
+                <button class="btn danger" onclick="verifyPasswordOTP()">
+                  Verify OTP & Change Password
+                </button>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- BASIC INFO -->
+          <div class="profileInfo">
+
+            <div class="profileTopRow">
+
+              <div class="avatarCircle" onclick="triggerPhotoUpload()">
+
+                <img id="profileAvatarImg" src="" style="display:none;" />
+
+                <span id="avatarFallback"></span>
+
+                <input type="file" id="photoUpload" accept="image/*" hidden />
+
+              </div>
+
+              <div class="profileTextBlock">
+                <div class="nameRow">
+                  <h3 id="profileName"></h3>
+                  <span id="rankBadge" class="rankBadge">Bronze</span>
+                </div>
+
+                <p class="profileIdText">
+                  ID: <span id="profileId"></span>
+                </p>
+              </div>
+
+            </div>
+
+            <p class="bioLabel">Bio:</p>
+            <p id="profileBio" class="profileBio"></p>
+
+          </div>
+
+          <!-- ROADMAP -->
+          <h3 class="sectionTitle glowTitle">🎮 Achievement Roadmap</h3>
+          <div id="achievementRoadmap"></div>
+
+          <!-- ACTIVITY MAP -->
+          <h3 class="sectionTitle">📅 Activity Map</h3>
+          <div id="heatmap" class="heatmapGrid"></div>
+          <div id="streakBox" class="streakBox"></div>
+
+
+
+        </section>
+
+        <!-- ✅ MY BATCH PAGE -->
+        <section class="card pageSection" id="batchPage">
+
+          <div class="cardHead">
+            <div>
+              <h2>👥 My Batch Interns</h2>
+              <span id="batchTitle"></span>
+            </div>
+          </div>
+
+          <div id="batchInternContainer" style="display:grid;
+              grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+              gap:15px;
+              margin-top:15px;">
+          </div>
+
+        </section>
+
+        <div id="taskModal" class="modalOverlay">
+          <div class="modalCard" style="display: flex; flex-direction: column;">
+            <div style="display:flex; justify-content:space-between; align-items: center;">
+              <h3 id="modalTaskTitle" style="font-size: 16px; margin: 0;"></h3>
+            </div>
+
+            <div style="margin-top:15px; color:var(--muted); font-size: 14px;" id="modalTaskDesc"></div>
+
+            <div style="display: flex; justify-content: flex-end;">
+              <button class="btn danger" onclick="closeTaskModal()">Close</button>
+            </div>
+          </div>
+        </div>
+
+
+      </main>
+    </div>
+  </div>
+
+  <!-- Loader + Toast -->
+  <div id="loaderOverlay" class="loaderOverlay">
+    <div class="loaderCard">
+      <div class="spinner"></div>
+      <div id="loaderText">Loading...</div>
+    </div>
+  </div>
+  <div id="toast" class="toast"></div>
+
+  <div id="profileModal" class="modal">
+
+    <div class="modalContent">
+
+      <div style="display:flex;justify-content:flex-end;">
+        <button class="btn ghost" onclick="closeProfile()">Close</button>
+      </div>
+
+      <div id="profileData" style="margin-top:10px;"></div>
+
+      <h3 class="glowTitle" style="margin-top:20px;">🚀 Projects</h3>
+
+      <div id="profileProjects" style="margin-top:10px;"></div>
+
+    </div>
+
+  </div>
+
+  <script src="app.js"></script>
+
+  <script>
+
+
+    const intern = getSession("intern");
+    if (!intern) window.location.href = "index.html";
+
+    document.getElementById("internPill").innerText = intern.InternID;
+    document.getElementById("internInfo").innerText =
+      `Welcome, ${intern.Name} • Batch: ${intern.Batch} • Duration: ${intern.Duration}`;
+
+
+    function pill(status) {
+      const s = (status || "").toLowerCase();
+      if (s.includes("approved")) return `<span class="pill ok">${status}</span>`;
+      if (s.includes("rejected")) return `<span class="pill bad">${status}</span>`;
+      if (s.includes("submitted") || s.includes("pending")) return `<span class="pill warn">${status}</span>`;
+      return `<span class="pill">${status || "-"}</span>`;
+    }
+
+    async function loadToday(silent = false) {
+
+      showLoader(true, "Loading Pending Tasks...", silent);
+
+      const data = await apiGET({
+        action: "getInternPendingTasks",
+        internId: intern.InternID
+      }, silent);
+
+      showLoader(false, "", silent);
+
+      if (!data.success) {
+        toast(data.message, "error");
+        return;
+      }
+
+      const tasks = data.tasks || [];
+
+      // 🔥 Meta Text
+      document.getElementById("todayMeta").innerText =
+        "All Pending Tasks (Old + Today)";
+
+      // ===============================
+      // ✅ TABLE RENDER
+      // ===============================
+      const tb = document.getElementById("todayTable");
+      tb.innerHTML = "";
+
+      if (tasks.length === 0) {
+        tb.innerHTML = `
+      <tr>
+        <td colspan="3">No pending tasks ✅</td>
+      </tr>
+    `;
+      } else {
+
+        tasks.forEach(t => {
+
+          const safeTitle = (t.Title || t.TaskTitle || "Task").replace(/'/g, "");
+          const safeDesc = (t.Description || "").replace(/'/g, "");
+          const link = t.SubmissionLink || "";
+
+          tb.innerHTML += `
+    <tr>
+      <td><b>${t.AssignedTaskID}</b></td>
+
+      <td>
+  <div style="display:flex; flex-direction:column; gap:6px;">
+
+    <!-- ✅ TITLE BOLD -->
+    <div style="
+      font-weight:700;
+      font-size:15px;
+      color:white;
+    ">
+      ${safeTitle}
+    </div>
+
+    <!-- ✅ DESCRIPTION -->
+    <div class="taskDesc">
+
+      <span class="shortText">
+        ${safeDesc.length > 120 ? safeDesc.substring(0, 120) + "..." : safeDesc}
+      </span>
+
+      ${safeDesc.length > 120 ? `
+        <span class="fullText" style="display:none;">
+          ${safeDesc}
+        </span>
+        <a href="javascript:void(0)" 
+           onclick="toggleDesc(this)">View More</a>
+      ` : ""}
+
+    </div>
+
+    ${link ? `
+      <a href="${link}" target="_blank" class="btn ghost">
+        🔗 Open Submission
+      </a>
+    ` : ""}
+
+  </div>
+</td>
+
+      <td>${pill(t.Status || "Pending")}</td>
+    </tr>
+  `;
+        });
+
+      }
+
+      // ===============================
+      // ✅ SUBMIT DROPDOWN RENDER
+      // ===============================
+      const sel = document.getElementById("submitTaskSelect");
+
+      if (tasks.length === 0) {
+
+        sel.innerHTML = `
+      <option value="">No pending task</option>
+    `;
+
+      } else {
+
+        sel.innerHTML = `
+      <option value="">Select Pending Task</option>
+      ${tasks.map(t => `
+        <option value="${t.AssignedTaskID}">
+          ${t.Title} (${t.AssignedTaskID})
+        </option>
+      `).join("")}
+    `;
+      }
+    }
+
+
+    function openTaskModal(id, title, desc) {
+      document.getElementById("modalTaskTitle").innerText =
+        id + " - " + title;
+
+      document.getElementById("modalTaskDesc").innerText =
+        desc || "No Description";
+
+      document.getElementById("taskModal")
+        .classList.add("show");
+    }
+
+    function closeTaskModal() {
+      document.getElementById("taskModal").classList.remove("show");
+    }
+
+
+    async function loadHistory(silent = false) {
+      showLoader(true, "Loading History...", silent);
+      const data = await apiGET({
+        action: "getInternHistory",
+        internId: intern.InternID
+      }, silent);
+      showLoader(false, "", silent);
+
+      if (!data.success) { toast(data.message, "error"); return; }
+
+      const tb = document.getElementById("historyTable");
+      tb.innerHTML = "";
+
+      if ((data.history || []).length === 0) {
+        tb.innerHTML = `<tr><td colspan="4">No history ✅</td></tr>`;
+        return;
+      }
+      data.history.slice(0, 50).forEach(h => {
+
+        const safeTitle = (h.Title || "").replace(/`/g, "");
+        const safeDesc = (h.Description || "").replace(/`/g, "");
+        const link = h.SubmissionLink || "";
+
+        tb.innerHTML += `
+    <tr>
+      <td>${formatDate(h.Date)}</td>
+
+      <td>
+        <b>${safeTitle}</b><br/>
+
+        <button class="btn ghost"
+          onclick="openTaskModal(
+            '${h.AssignedTaskID || ""}',
+            \`${safeTitle}\`,
+            \`${safeDesc}\`
+          )">
+          🔘 Open
+        </button>
+
+        ${link ? `
+          <br/>
+          <a href="${link}" target="_blank" class="btn ghost" style="margin-top:6px;">
+            🔗 Open Submission
+          </a>
+        ` : ""}
+      </td>
+
+      <td>${pill(h.Status || "Pending")}</td>
+
+      <td><b>${h.Grade || "Not Seen"}</b></td>
+    </tr>
+  `;
+      });
+
+    }
+
+    function formatDate(dateStr) {
+
+      if (!dateStr) return "-";
+
+      const d = new Date(dateStr);
+
+      if (isNaN(d)) return dateStr; // agar already simple date ho
+
+      const day = String(d.getDate()).padStart(2, "0");
+      const month = String(d.getMonth() + 1).padStart(2, "0");
+      const year = d.getFullYear();
+
+      return `${day}/${month}/${year}`;
+    }
+
+    async function submitTask() {
+      const assignedTaskId = document.getElementById("submitTaskSelect").value;
+      const link = document.getElementById("submitLink").value.trim();
+      const details = document.getElementById("submitDetails").value.trim();
+
+      if (!assignedTaskId) { toast("Select task first ❌", "error"); return; }
+      if (!link) { toast("Submission link required ❌", "error"); return; }
+
+      showLoader(true, "Submitting...");
+      const data = await apiPOST({
+        action: "internSubmitTask",
+        internId: intern.InternID,
+        assignedTaskId,
+        link,
+        details
+      });
+      showLoader(false);
+
+      if (data.success) {
+        toast("Submitted ✅", "success");
+        loadToday();
+        loadHistory();
+        loadProfile();
+      } else toast(data.message, "error");
+    }
+
+    async function editSubmission() {
+      const submissionId = document.getElementById("editSubmissionId").value.trim();
+      const link = document.getElementById("submitLink").value.trim();
+      const details = document.getElementById("submitDetails").value.trim();
+
+      if (!submissionId) { toast("SubmissionID required ❌", "error"); return; }
+
+      showLoader(true, "Editing (5 min rule)...");
+      const data = await apiPOST({
+        action: "internEditSubmission",
+        internId: intern.InternID,
+        submissionId,
+        link,
+        details
+      });
+      showLoader(false);
+
+      if (data.success) {
+        toast("Edited ✅", "success");
+        loadHistory();
+      } else toast(data.message, "error");
+    }
+
+    async function requestEditPermission() {
+
+      const submissionId =
+        document.getElementById("requestSubmissionId").value.trim();
+
+      if (!submissionId) {
+        toast("Enter Submission ID ❌", "error");
+        return;
+      }
+
+      showLoader(true, "Sending Request...");
+
+      const data = await apiPOST({
+        action: "internRequestEditPermission",
+        internId: intern.InternID,
+        submissionId
+      });
+
+      showLoader(false);
+
+      if (data.success) {
+        toast("Edit Request Sent ✅", "success");
+        document.getElementById("requestSubmissionId").value = "";
+      } else {
+        toast(data.message, "error");
+      }
+    }
+    async function changePassword() {
+      const oldPassword = document.getElementById("oldPass").value.trim();
+      const newPassword = document.getElementById("newPass").value.trim();
+
+      if (!oldPassword || !newPassword) {
+        toast("Fill both passwords ❌", "error"); return;
+      }
+
+      showLoader(true, "Changing Password...");
+      const data = await apiPOST({
+        action: "internChangePassword",
+        internId: intern.InternID,
+        oldPassword,
+        newPassword
+      });
+      showLoader(false);
+
+      if (data.success) {
+        toast("Password Changed ✅", "success");
+        document.getElementById("oldPass").value = "";
+        document.getElementById("newPass").value = "";
+      } else toast(data.message, "error");
+    }
+
+    async function init() {
+
+      const activePage =
+        document.querySelector(".pageSection.active")?.id;
+
+      if (activePage === "todayPage") await loadToday();
+      if (activePage === "historyPage") await loadHistory();
+      if (activePage === "messagesPage") await loadMyChat();
+      if (activePage === "profilePage") await loadProfile();
+
+    }
+
+    async function loadProfile() {
+
+      showLoader(true, "Loading Profile...");
+
+      const data = await apiGET({
+        action: "getInternPerformance",
+        internId: intern.InternID
+      });
+
+      showLoader(false);
+
+      if (!data.success) {
+        toast(data.message, "error");
+        return;
+      }
+
+
+      // Basic Info
+      document.getElementById("profileName").innerText = intern.Name;
+      document.getElementById("profileId").innerText = intern.InternID;
+      document.getElementById("profileBio").innerText =
+        intern.Bio || "No bio added yet.";
+
+      // Edit Fields Fill
+      document.getElementById("editName").value = intern.Name;
+      document.getElementById("editBio").value = intern.Bio || "";
+
+      const avatarImg = document.getElementById("profileAvatarImg");
+      const fallback = document.getElementById("avatarFallback");
+
+      if (intern.Photo && intern.Photo !== "") {
+
+        const avatarImg = document.getElementById("profileAvatarImg");
+        const fallback = document.getElementById("avatarFallback");
+
+        avatarImg.src = intern.Photo + "?t=" + Date.now();
+
+        avatarImg.onload = function () {
+          avatarImg.style.display = "block";
+          fallback.style.display = "none";
+        };
+
+        avatarImg.onerror = function () {
+          avatarImg.style.display = "none";
+          fallback.style.display = "block";
+        };
+
+      } else {
+
+        avatarImg.style.display = "none";
+        fallback.style.display = "block";
+
+        fallback.innerText =
+          (intern.Name || "U").charAt(0).toUpperCase();
+
+      }
+
+      // Dynamic Rank Logic
+      function getRank(total) {
+        if (total >= 30) return "Master";
+        if (total >= 20) return "Diamond";
+        if (total >= 16) return "Platinum";
+        if (total >= 12) return "Gold";
+        if (total >= 8) return "Silver";
+        return "Bronze";
+      }
+
+      const rank = getRank(data.submissionCount || 0);
+
+      document.getElementById("rankBadge").innerText = rank;
+
+      // Badge color change
+      const badge = document.getElementById("rankBadge");
+
+      const rankColors = {
+        Bronze: "#cd7f32",
+        Silver: "#c0c0c0",
+        Gold: "#ffd700",
+        Platinum: "#00e5ff",
+        Diamond: "#00bfff",
+        Master: "#ff3df0"
+      };
+
+      badge.style.background = rankColors[rank];
+      badge.style.color = "black";
+
+      renderGamingRoadmap(data.submissionCount || 0);
+      renderHeatmap(data.activityMap || {}, data.createdAt, data.highestStreak || 0);
+    }
+
+    async function updateProfile() {
+
+      const newName = document.getElementById("editName").value.trim();
+      const newBio = document.getElementById("editBio").value.trim();
+
+      if (!newName) {
+        toast("Name required ❌", "error");
+        return;
+      }
+
+      showLoader(true, "Updating Profile...");
+
+      const data = await apiPOST({
+        action: "updateInternProfile",
+        internId: intern.InternID,
+        name: newName,
+        bio: newBio
+      });
+
+      showLoader(false);
+
+      if (data.success) {
+
+        intern.Name = newName;
+        intern.Bio = newBio;
+        saveSession("intern", intern);
+
+        toast("Profile Updated ✅", "success");
+
+        toggleEditProfile();
+        loadProfile();
+
+      } else {
+        toast(data.message, "error");
+      }
+    }
+
+
+    async function loadMyChat(silent = false) {
+      showLoader(true, "Loading Messages...", silent);
+      const data = await apiGET({
+        action: "internGetChat",
+        internId: intern.InternID
+      }, silent);
+      showLoader(false, "", silent);
+
+      const tb = document.getElementById("internChatTable");
+      tb.innerHTML = "";
+
+      if (!data.success) {
+        tb.innerHTML = `<tr><td colspan="3">${data.message}</td></tr>`;
+        return;
+      }
+
+      if ((data.messages || []).length === 0) {
+        tb.innerHTML = `<tr><td colspan="3">No messages ✅</td></tr>`;
+        return;
+      }
+
+      data.messages.forEach(m => {
+        tb.innerHTML += `
+      <tr>
+        <td><b>${m.Sender}</b></td>
+        <td>${m.Message}</td>
+        <td>${m.CreatedAt}</td>
+      </tr>
+    `;
+      });
+    }
+
+    async function internSendMsg() {
+      const message = document.getElementById("internChatMsg").value.trim();
+      if (!message) { toast("Message empty ❌", "error"); return; }
+
+      showLoader(true, "Sending...");
+      const data = await apiGET({
+        action: "sendMessageGET",
+        internId: intern.InternID,
+        sender: "Intern",
+        message
+      });
+      showLoader(false);
+
+      if (data.success) {
+        toast("Sent ✅", "success");
+        document.getElementById("internChatMsg").value = "";
+        loadMyChat();
+      } else toast(data.message, "error");
+    }
+
+
+    async function internClearChat() {
+      showLoader(true, "Clearing Chat...");
+      const data = await apiGET({
+        action: "clearChatGET",
+        internId: intern.InternID,
+        by: "Intern"
+      });
+      showLoader(false);
+
+      if (data.success) {
+        toast("Chat cleared ✅", "success");
+        loadMyChat();
+      } else toast(data.message, "error");
+    }
+
+    let INTERN_AUTO_TIMER = null;
+
+    function startAutoRefreshIntern() {
+      if (INTERN_AUTO_TIMER) clearInterval(INTERN_AUTO_TIMER);
+
+      INTERN_AUTO_TIMER = setInterval(async () => {
+        if (document.hidden) return;
+
+        const activePage = document.querySelector(".pageSection.active")?.id || "";
+
+        if (activePage === "todayPage") await loadToday(true);
+        if (activePage === "historyPage") await loadHistory(true);
+        if (activePage === "messagesPage") await loadMyChat(true);
+
+
+      }, 60000);
+    }
+
+
+    function renderGamingRoadmap(totalSubmissions) {
+
+      const levels = [
+        { name: "🥉 Bronze", min: 4 },
+        { name: "🥈 Silver", min: 8 },
+        { name: "🥇 Gold", min: 12 },
+        { name: "💎 Platinum", min: 16 },
+        { name: "🔷 Diamond", min: 20 },
+        { name: "👑 Master", min: 30 }
+      ];
+
+      const box = document.getElementById("achievementRoadmap");
+      box.innerHTML = "";
+
+      levels.forEach(level => {
+
+        const unlocked = totalSubmissions >= level.min;
+
+        const div = document.createElement("div");
+        div.className = unlocked ? "unlocked" : "";
+
+        div.innerHTML = `
+      <strong>${level.name}</strong><br/>
+      ${unlocked ? "UNLOCKED 🏆" : `Need ${level.min - totalSubmissions} more tasks`}
+    `;
+
+        box.appendChild(div);
+      });
+    }
+
+    function renderHeatmap(activityMap, createdAt, highestStreak) {
+
+      const grid = document.getElementById("heatmap");
+      const streakBox = document.getElementById("streakBox");
+
+      grid.innerHTML = "";
+
+      if (!createdAt) return;
+
+      const startDate = new Date(createdAt);
+      const today = new Date();
+      const totalDays = 180;
+
+      for (let i = 0; i < totalDays; i++) {
+
+        const d = new Date(startDate);
+        d.setDate(startDate.getDate() + i);
+
+        if (d > today) break;
+
+        const formatted = d.getFullYear() + "-" +
+          String(d.getMonth() + 1).padStart(2, "0") + "-" +
+          String(d.getDate()).padStart(2, "0");
+
+        const cell = document.createElement("div");
+        cell.className = "heatCell";
+
+        if (activityMap[formatted]) {
+          cell.classList.add("level4");
+          cell.onclick = () => openDayTasks(activityMap[formatted]);
+        }
+
+        grid.appendChild(cell);
+      }
+
+      streakBox.innerHTML = `🔥 Highest Streak: ${highestStreak} days`;
+    }
+
+    function toggleEditProfile() {
+
+      const editBox = document.getElementById("editProfileBox");
+      const passBox = document.getElementById("passwordBox");
+
+      // password box close
+      passBox.classList.remove("active");
+
+      // edit toggle
+      editBox.classList.toggle("active");
+
+    }
+
+    function openDayTasks(tasks) {
+
+      let content = "";
+
+      tasks.forEach(t => {
+        content += `
+      <div style="margin-bottom:10px;">
+        <b>${t.taskId}</b><br/>
+        ${t.link ? `<a href="${t.link}" target="_blank">Open Submission</a>` : ""}
+      </div>
+    `;
+      });
+
+      document.getElementById("modalTaskTitle").innerText = "Tasks Completed";
+      document.getElementById("modalTaskDesc").innerHTML = content;
+
+      document.getElementById("taskModal").classList.add("show");
+    }
+
+    // ✅ Sidebar dikhane ya chhupane ka logic
+    // ✅ Ye function sidebar toggle karega
+    // Sidebar toggle logic
+    // ✅ 1. Sidebar ko Open/Close karne wala function
+    function toggleSidebar() {
+      const sidebar = document.querySelector('.sidebar');
+      if (sidebar) {
+        sidebar.classList.toggle('show');
+      }
+    }
+
+    function togglePasswordBox() {
+
+      const passBox = document.getElementById("passwordBox");
+      const editBox = document.getElementById("editProfileBox");
+
+      // edit box close
+      editBox.classList.remove("active");
+
+      // password toggle
+      passBox.classList.toggle("active");
+
+    }
+
+    async function changePasswordInsideProfile() {
+
+      const oldPassword = document.getElementById("editOldPass").value.trim();
+      const newPassword = document.getElementById("editNewPass").value.trim();
+
+      if (!oldPassword || !newPassword) {
+        toast("Fill both password fields ❌", "error");
+        return;
+      }
+
+      showLoader(true, "Updating Password...");
+
+      const data = await apiPOST({
+        action: "internChangePassword",
+        internId: intern.InternID,
+        oldPassword,
+        newPassword
+      });
+
+      showLoader(false);
+
+      if (data.success) {
+        toast("Password Updated ✅", "success");
+        document.getElementById("editOldPass").value = "";
+        document.getElementById("editNewPass").value = "";
+        togglePasswordBox();
+      } else {
+        toast(data.message, "error");
+      }
+    }
+
+    // ✅ 2. Sections Switch karne wala logic (Isme Sidebar Auto-Close add kiya hai)
+    async function switchPage(pageId, navEl) {
+      // Saare sections hide karo
+      document.querySelectorAll(".pageSection").forEach(s => s.classList.remove("active"));
+
+      // Chuninda section dikhao
+      const target = document.getElementById(pageId);
+      if (target) target.classList.add("active");
+
+      // Nav links highlight fix
+      document.querySelectorAll(".nav a").forEach(a => a.classList.remove("active"));
+      if (navEl) navEl.classList.add("active");
+
+      // 🔥 MOBILE FIX: Section badalte hi sidebar apne aap band ho jaye
+      if (window.innerWidth <= 1000) {
+        const sidebar = document.querySelector('.sidebar');
+        if (sidebar) sidebar.classList.remove('show');
+      }
+
+      // Aapke purane data load functions yahan call hote rahenge
+      if (pageId === "todayPage") loadToday();
+      if (pageId === "historyPage") loadHistory();
+      if (pageId === "profilePage") loadProfile();
+      if (pageId === "messagesPage") loadMyChat();
+      if (pageId === "batchPage") loadMyBatchInterns();
+    }
+
+    // ✅ 3. Sidebar ke bahar click karne par band karne ka option (Best for Mobile)
+    document.addEventListener('click', (e) => {
+      const sidebar = document.querySelector('.sidebar');
+      const menuBtn = document.querySelector('.mobileMenuBtn');
+      if (sidebar && sidebar.classList.contains('show')) {
+        if (!sidebar.contains(e.target) && !menuBtn.contains(e.target)) {
+          sidebar.classList.remove('show');
+        }
+      }
+    });
+
+    function toggleDesc(el) {
+
+      const container = el.parentElement;
+      const shortText = container.querySelector(".shortText");
+      const fullText = container.querySelector(".fullText");
+
+      if (fullText.style.display === "none") {
+        shortText.style.display = "none";
+        fullText.style.display = "inline";
+        el.innerText = "View Less";
+      } else {
+        shortText.style.display = "inline";
+        fullText.style.display = "none";
+        el.innerText = "View More";
+      }
+    }
+
+    async function loadMyBatchInterns() {
+
+      showLoader(true, "Loading Batch Interns...");
+
+      const data = await apiGET({
+        action: "getMyBatchInterns",
+        internId: intern.InternID
+      });
+
+      showLoader(false);
+
+      if (!data.success) {
+        toast(data.message, "error");
+        return;
+      }
+
+      document.getElementById("batchTitle").innerText =
+        "Batch: " + data.batchName;
+
+      const container = document.getElementById("batchInternContainer");
+      container.innerHTML = "";
+
+      window.batchInternCache = data.interns;
+
+      data.interns.forEach(i => {
+        container.innerHTML += `
+<div class="batchCard">
+
+  <img src="${i.Photo || 'logo.png'}" class="batchAvatar">
+
+  <h3>${i.Name}</h3>
+
+  <p class="internId">${i.InternID}</p>
+
+  <span class="badge badge-${i.badge.toLowerCase()}">
+    ${i.badge}
+  </span>
+
+  <div class="taskCount">
+    ✅ ${i.approved} Approved
+  </div>
+
+  <div class="cardBtns">
+
+    <button onclick="openProfile('${i.InternID}')">
+      Profile
+    </button>
+
+  </div>
+
+</div>
+`;
+      });
+
+    }
+
+    function openProfile(id) {
+
+      if (!window.batchInternCache) return;
+
+      const intern = window.batchInternCache.find(x => x.InternID === id);
+
+      if (!intern) return;
+
+      /* BASIC INFO */
+
+      document.getElementById("profileData").innerHTML = `
+
+<img src="${intern.Photo || 'logo.png'}"
+style="
+width:90px;
+height:90px;
+border-radius:50%;
+border:3px solid #7c00ff;
+box-shadow:0 0 15px rgba(124,0,255,.6);
+margin-bottom:10px;
+">
+
+<h2 style="margin:5px 0;">${intern.Name}</h2>
+
+<p style="color:#aaa;font-size:13px;">Intern ID: ${intern.InternID}</p>
+
+<p style="margin-top:6px;">
+${intern.Bio || "No profile description added"}
+</p>
+
+<div class="taskCount">
+✅ ${intern.approved} Approved Tasks
+</div>
+
+`;
+
+      /* PROJECTS */
+
+      const projectBox = document.getElementById("profileProjects");
+
+      projectBox.innerHTML = "";
+
+      (intern.projects || []).forEach(p => {
+
+        projectBox.innerHTML += `
+
+<div class="projectItem">
+
+<div class="projectTitle">
+${p.title}
+</div>
+
+<a href="${p.link}" target="_blank">
+View Project
+</a>
+
+</div>
+
+`;
+
+      });
+
+      document.getElementById("profileModal").style.display = "flex";
+
+    }
+
+    function closeProfile() {
+
+      document.getElementById("profileModal").style.display = "none";
+
+    }
+
+
+    document.getElementById("profileModal").addEventListener("click", function (e) {
+
+      if (e.target.id === "profileModal") {
+        closeProfile();
+      }
+
+    });
+
+    async function requestPasswordOTP() {
+
+      const data = await apiGET({
+        action: "sendPasswordOTP",
+        internId: intern.InternID
+      });
+
+      toast(data.message);
+    }
+
+    async function verifyPasswordOTP() {
+
+      const otp = document.getElementById("otpInput").value;
+      const newPassword = document.getElementById("editNewPass").value;
+
+      const data = await apiGET({
+        action: "verifyPasswordOTP",
+        internId: intern.InternID,
+        otp: otp,
+        newPassword: newPassword
+      });
+
+      toast(data.message);
+    }
+
+    init();
+    startAutoRefreshIntern();
+
+
+  </script>
+</body>
+
+</html>

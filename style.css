@@ -1,0 +1,579 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800&family=Inter:wght@400;500;600;700&display=swap');
+
+:root{
+  --bg:#05050A;
+  --panel: rgba(255,255,255,0.04);
+  --panel2: rgba(255,255,255,0.03);
+  --border: rgba(255,255,255,0.10);
+
+  --text:#F3F4FF;
+  --muted: rgba(243,244,255,0.65);
+
+  /* COD Purple */
+  --p1:#7C00FF;
+  --p2:#B100FF;
+  --p3:#FF2DF7;
+
+  --danger:#FF4D6D;
+  --ok:#00FFA8;
+
+  --shadow: 0 25px 80px rgba(0,0,0,0.60);
+  --radius:22px;
+}
+
+*{box-sizing:border-box;margin:0;padding:0;font-family:Inter,system-ui,Arial;}
+body{
+  min-height:100vh;
+  color:var(--text);
+  background:
+    radial-gradient(900px 600px at 15% 10%, rgba(124,0,255,0.25), transparent 60%),
+    radial-gradient(800px 550px at 85% 18%, rgba(177,0,255,0.18), transparent 60%),
+    radial-gradient(700px 500px at 50% 95%, rgba(255,45,247,0.12), transparent 60%),
+    var(--bg);
+}
+
+a{color:inherit;text-decoration:none}
+
+.container{
+  max-width:1320px;
+  margin:0 auto;
+  padding:26px;
+}
+
+.appShell{
+  display:grid;
+  grid-template-columns: 300px 1fr;
+  gap:18px;
+  min-height: calc(100vh - 52px);
+}
+
+/* SIDEBAR */
+.sidebar{
+  border:1px solid var(--border);
+  background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+  border-radius: var(--radius);
+  padding:18px;
+  box-shadow: var(--shadow);
+  position: sticky;
+  top: 26px;
+  height: fit-content;
+  overflow:hidden;
+}
+
+/* neon border glow line */
+.sidebar::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius: var(--radius);
+  pointer-events:none;
+  box-shadow: 0 0 0 1px rgba(124,0,255,0.18), 0 0 60px rgba(124,0,255,0.10);
+}
+
+.sideTop{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:14px;
+}
+
+.brandBox{
+  display:flex;
+  gap:10px;
+  align-items:center;
+}
+
+.brandLogo{
+  width:52px;height:52px;
+  border-radius:16px;
+  border:1px solid rgba(255,255,255,0.10);
+  background: rgba(255,255,255,0.02);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+  box-shadow: 0 0 40px rgba(124,0,255,0.10);
+}
+.brandLogo img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.brandText h3{
+  font-family: Orbitron, Inter, Arial;
+  font-size:16px;
+  letter-spacing:0.8px;
+}
+.brandText p{
+  margin-top:4px;
+  color:var(--muted);
+  font-size:12px;
+}
+
+.rolePill{
+  font-size:12px;
+  color:var(--muted);
+  padding:6px 10px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,0.10);
+  background: rgba(255,255,255,0.03);
+}
+
+.nav{
+  display:flex;flex-direction:column;gap:9px;
+  margin-top:12px;
+}
+.nav a{
+  padding:12px 12px;
+  border-radius:18px;
+  border:1px solid transparent;
+  background: rgba(255,255,255,0.02);
+  color:var(--muted);
+  font-weight:700;
+  transition: 0.2s;
+}
+.nav a:hover{
+  background: rgba(255,255,255,0.05);
+  color: var(--text);
+  border-color: rgba(124,0,255,0.25);
+  box-shadow: 0 0 22px rgba(124,0,255,0.15);
+}
+.nav a.active{
+  color: var(--text);
+  border:1px solid rgba(124,0,255,0.32);
+  background: linear-gradient(135deg, rgba(124,0,255,0.20), rgba(255,45,247,0.12));
+  box-shadow: 0 0 35px rgba(124,0,255,0.15);
+}
+
+.sideFooter{
+  margin-top:16px;
+  border-top:1px solid rgba(255,255,255,0.08);
+  padding-top:14px;
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.55;
+}
+
+/* MAIN */
+.main{
+  display:flex;
+  flex-direction:column;
+  gap:18px;
+}
+
+.topbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  border:1px solid rgba(255,255,255,0.10);
+  border-radius: var(--radius);
+  padding:18px 18px;
+  background: rgba(255,255,255,0.03);
+  box-shadow: var(--shadow);
+  overflow:hidden;
+  position:relative;
+}
+
+/* topbar glow */
+.topbar::after{
+  content:"";
+  position:absolute;
+  left:-40px;top:-60px;
+  width:220px;height:220px;
+  background: radial-gradient(circle, rgba(124,0,255,0.30), transparent 70%);
+  filter: blur(2px);
+  pointer-events:none;
+}
+
+.titleWrap h1{
+  font-family: Orbitron, Inter, Arial;
+  font-size:18px;
+  font-weight:800;
+  letter-spacing:0.6px;
+}
+.titleWrap p{
+  margin-top:6px;
+  color:var(--muted);
+  font-size:13px;
+}
+
+.actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
+
+.btn{
+  padding:11px 14px;
+  border-radius:18px;
+  cursor:pointer;
+  border:1px solid rgba(255,255,255,0.10);
+  background: rgba(255,255,255,0.03);
+  color: var(--text);
+  font-weight:800;
+  transition:0.2s;
+}
+.btn:hover{
+  transform: translateY(-1px);
+  background: rgba(255,255,255,0.05);
+  box-shadow: 0 0 30px rgba(124,0,255,0.12);
+}
+.btn.primary{
+  color:#0b0313;
+  border-color: rgba(255,255,255,0.10);
+  background: linear-gradient(135deg, var(--p1), var(--p2));
+  box-shadow: 0 0 35px rgba(124,0,255,0.20);
+}
+.btn.primary:hover{
+  box-shadow: 0 0 55px rgba(124,0,255,0.26);
+}
+.btn.danger{
+  border-color: rgba(255,77,109,0.25);
+  color: #ffd2da;
+  background: rgba(255,77,109,0.10);
+}
+.btn.ghost{
+  background: transparent;
+}
+
+.grid2{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap:18px;
+}
+
+.card{
+  border:1px solid rgba(255,255,255,0.10);
+  border-radius: var(--radius);
+  background: rgba(255,255,255,0.03);
+  box-shadow: var(--shadow);
+  padding:16px;
+}
+
+.cardHead{
+  display:flex;justify-content:space-between;align-items:flex-start;gap:10px;
+  margin-bottom:12px;
+}
+.cardHead h2{
+  font-size:15px;font-weight:900;
+  letter-spacing:0.2px;
+}
+.cardHead span{
+  font-size:12px;color:var(--muted);
+}
+
+.kpis{
+  display:grid;
+  grid-template-columns: repeat(3,1fr);
+  gap:12px;
+}
+.kpi{
+  border:1px solid rgba(124,0,255,0.18);
+  background: linear-gradient(180deg, rgba(124,0,255,0.14), rgba(255,255,255,0.02));
+  border-radius: 18px;
+  padding:14px;
+  box-shadow: 0 0 50px rgba(124,0,255,0.10);
+}
+.kpi b{font-size:20px;}
+.kpi small{display:block;color:var(--muted);margin-top:6px;}
+
+label{
+  display:block;margin-top:10px;margin-bottom:6px;
+  color:var(--muted);font-size:12px;font-weight:700;
+}
+input,select,textarea{
+  width:100%;
+  padding:12px 12px;
+  border-radius:18px;
+  border:1px solid rgba(255,255,255,0.10);
+  outline:none;
+  background: rgba(0,0,0,0.20);
+  color: var(--text);
+}
+textarea{min-height:92px;resize:vertical;}
+.row2{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap:12px;
+}
+
+/* TABLE */
+.tableWrap{
+  border:1px solid rgba(255,255,255,0.10);
+  border-radius: 18px;
+  overflow:auto;
+  background: rgba(0,0,0,0.18);
+}
+table{width:100%;border-collapse:collapse;min-width: 920px;}
+th,td{
+  padding:12px 12px;
+  border-bottom:1px solid rgba(255,255,255,0.07);
+  font-size:13px;
+  vertical-align:top;
+}
+th{
+  color:var(--muted);
+  font-weight:800;
+  background: rgba(255,255,255,0.02);
+  position: sticky;
+  top: 0;
+  backdrop-filter: blur(10px);
+}
+tr:hover td{background: rgba(124,0,255,0.06);}
+
+/* STATUS PILL */
+.pill{
+  padding:6px 10px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:900;
+  display:inline-block;
+  border:1px solid rgba(255,255,255,0.10);
+}
+.pill.ok{background: rgba(0,255,168,0.12); color:#caffdf; border-color: rgba(0,255,168,0.24);}
+.pill.warn{background: rgba(255,45,247,0.10); color:#ffd6fe; border-color: rgba(255,45,247,0.22);}
+.pill.bad{background: rgba(255,77,109,0.12); color:#ffd2da; border-color: rgba(255,77,109,0.24);}
+
+.small{
+  margin-top:10px;
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.55;
+}
+
+/* Toast */
+.toast{
+  position:fixed;
+  right:18px;bottom:18px;
+  padding:12px 14px;
+  border-radius: 18px;
+  background: rgba(10,8,18,0.92);
+  border:1px solid rgba(124,0,255,0.22);
+  box-shadow: var(--shadow);
+  transform: translateY(18px);
+  opacity:0;
+  transition:0.2s;
+  max-width:340px;
+  font-size:13px;
+}
+.toast.show{transform: translateY(0);opacity:1;}
+.toast.success{border-color: rgba(0,255,168,0.20);}
+.toast.error{border-color: rgba(255,77,109,0.25);}
+
+/* Loader */
+.loaderOverlay{
+  position:fixed;inset:0;
+  background: rgba(0,0,0,0.62);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:9999;
+}
+.loaderOverlay.show{display:flex;}
+.loaderCard{
+  width:320px;
+  border-radius: 22px;
+  border:1px solid rgba(124,0,255,0.28);
+  background: rgba(10,8,18,0.92);
+  box-shadow: var(--shadow);
+  padding:18px;
+  text-align:center;
+}
+.spinner{
+  width:36px;height:36px;border-radius:50%;
+  border:3px solid rgba(255,255,255,0.18);
+  border-top-color: rgba(177,0,255,0.95);
+  animation: spin 0.8s linear infinite;
+  margin: 0 auto 10px auto;
+}
+@keyframes spin { to { transform: rotate(360deg);} }
+
+@media(max-width:1000px){
+  .appShell{grid-template-columns:1fr;}
+  .sidebar{position:relative;top:0;}
+  .grid2{grid-template-columns:1fr;}
+  .kpis{grid-template-columns:1fr;}
+}
+
+
+/* =========================================================
+   ✅ MOBILE RESPONSIVE MEDIA QUERIES (ADD AT END OF style.css)
+   Matches COD Premium Theme + Your Current Layout
+   ========================================================= */
+
+/* ✅ 1) Tablet + Small Laptop (<= 1000px)
+   - Sidebar top me aa jayega
+   - Layout single column ho jayega
+*/
+@media (max-width: 1000px){
+
+  /* Main layout: sidebar + main -> single column */
+  .appShell{
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Sidebar sticky off + full width */
+  .sidebar{
+    position: relative !important;
+    top: auto !important;
+    height: auto !important;
+    margin-bottom: 14px;
+  }
+
+  /* Topbar wrap (title + actions) */
+  .topbar{
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .actions{
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  /* Grid helpers -> single column */
+  .grid2,
+  .row2,
+  .miniGrid{
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Modals fit screen */
+  .modalCard{
+    width: 96vw !important;
+    max-height: 88vh !important;
+  }
+
+  /* Table horizontal scroll safe */
+  .tableWrap{
+    overflow-x: auto !important;
+  }
+}
+
+
+/* ✅ 2) Mobile (<= 600px)
+   - Buttons full width
+   - Inputs comfortable spacing
+   - Sidebar menu 2-column (compact)
+*/
+@media (max-width: 600px){
+
+  /* Container padding */
+  .container{
+    width: 94vw !important;
+    margin: 12px auto !important;
+  }
+
+  /* Sidebar compact */
+  .sidebar{
+    padding: 12px !important;
+  }
+
+  /* Brand + header compact */
+  .brandBox{
+    padding: 10px !important;
+    gap: 10px !important;
+  }
+
+  .brandLogo{
+    width: 46px !important;
+    height: 46px !important;
+    border-radius: 16px !important;
+  }
+
+  .brandText h3{
+    font-size: 14px !important;
+  }
+
+  .brandText p{
+    font-size: 11px !important;
+  }
+
+  /* Nav as 2-column grid so scroll kam hoga */
+  .nav{
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 10px !important;
+  }
+
+  .nav a{
+    padding: 10px 10px !important;
+    border-radius: 14px !important;
+    font-size: 12px !important;
+    text-align: center !important;
+  }
+
+  /* Topbar text resize */
+  .titleWrap h1{
+    font-size: 16px !important;
+  }
+
+  .titleWrap p{
+    font-size: 11px !important;
+  }
+
+  /* Buttons full width */
+  .actions{
+    width: 100% !important;
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 10px !important;
+  }
+
+  .btn{
+    width: 100% !important;
+    padding: 10px 12px !important;
+    border-radius: 14px !important;
+  }
+
+  /* Cards spacing */
+  .card{
+    padding: 12px !important;
+    border-radius: 18px !important;
+  }
+
+  /* Inputs + textarea */
+  input,
+  select,
+  textarea{
+    padding: 11px 12px !important;
+    border-radius: 14px !important;
+    font-size: 14px !important;
+  }
+
+  /* Loader card fit */
+  .loaderCard{
+    width: 92vw !important;
+  }
+
+  /* Toast fit */
+  .toast{
+    right: 12px !important;
+    left: 12px !important;
+    bottom: 12px !important;
+    max-width: unset !important;
+  }
+
+  /* Table scrolling stable */
+  table{
+    min-width: 720px !important;
+  }
+}
+
+
+/* ✅ 3) Extra Small Mobile (<= 420px)
+   - Actions 1 column
+   - Nav 1 column (very small screens)
+*/
+@media (max-width: 420px){
+
+  .actions{
+    grid-template-columns: 1fr !important;
+  }
+
+  .nav{
+    grid-template-columns: 1fr !important;
+  }
+
+  .nav a{
+    text-align: left !important;
+  }
+}
