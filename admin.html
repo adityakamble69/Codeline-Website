@@ -1001,15 +1001,15 @@
           </div>
 
           <div class="tableWrap">
-            <table>
+            <table style="min-width:unset;">
               <thead>
                 <tr>
-                  <th>#</th>
-                  <th>Intern ID</th>
-                  <th>Name</th>
-                  <th>Batch</th>
-                  <th style="min-width:260px;">📄 Document Status</th>
-                  <th>Action</th>
+                  <th style="width:40px;">#</th>
+                  <th>Name<br><span style="font-weight:400;color:var(--muted);font-size:11px;">Intern ID</span></th>
+                  <th>Email</th>
+                  <th>Batch<br><span style="font-weight:400;color:var(--muted);font-size:11px;">Batch</span></th>
+                  <th>Duration<br><span style="font-weight:400;color:var(--muted);font-size:11px;">Duration</span></th>
+                  <th style="text-align:center;">Action<br><span style="font-weight:400;color:var(--muted);font-size:11px;">Create Document</span></th>
                 </tr>
               </thead>
               <tbody id="activeInternsTable">
@@ -1019,21 +1019,43 @@
           </div>
         </section>
 
-        <!-- SEND DOCUMENT MODAL -->
+        <!-- SEND DOCUMENT MODAL — 3-Step Wizard -->
         <div id="sendDocModal" class="modalOverlay">
-          <div class="modalCard" style="width:min(520px,95vw);">
+          <div class="modalCard" style="width:min(540px,95vw);">
 
-            <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:18px;">
+            <!-- Modal Header -->
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:16px;">
               <div>
                 <div style="font-family:Orbitron,Inter;font-size:16px;font-weight:900;">📄 Send Document</div>
                 <div style="font-size:12px;color:var(--muted);margin-top:5px;" id="docModalMeta">Select documents to send</div>
               </div>
-              <button class="btn danger" onclick="closeSendDocModal()">Close</button>
+              <button class="btn danger" onclick="closeSendDocModal()">✕ Close</button>
             </div>
 
+            <!-- Step Progress Bar -->
+            <div style="display:flex;align-items:center;gap:0;margin-bottom:20px;">
+              <div id="stepPill1" style="flex:1;text-align:center;padding:7px 0;font-size:11px;font-weight:800;
+                border-radius:12px 0 0 12px;border:1px solid rgba(124,0,255,0.4);
+                background:linear-gradient(135deg,rgba(124,0,255,0.25),rgba(177,0,255,0.15));color:#fff;
+                letter-spacing:0.3px;transition:0.3s;">
+                1 · Create
+              </div>
+              <div id="stepPill2" style="flex:1;text-align:center;padding:7px 0;font-size:11px;font-weight:800;
+                border-top:1px solid rgba(255,255,255,0.10);border-bottom:1px solid rgba(255,255,255,0.10);
+                background:rgba(255,255,255,0.02);color:var(--muted);transition:0.3s;">
+                2 · Link
+              </div>
+              <div id="stepPill3" style="flex:1;text-align:center;padding:7px 0;font-size:11px;font-weight:800;
+                border-radius:0 12px 12px 0;border:1px solid rgba(255,255,255,0.10);
+                background:rgba(255,255,255,0.02);color:var(--muted);transition:0.3s;">
+                3 · Share
+              </div>
+            </div>
+
+            <!-- Intern Info Card -->
             <div style="display:flex;align-items:center;gap:12px;
               background:rgba(124,0,255,0.07);border:1px solid rgba(124,0,255,0.20);
-              border-radius:14px;padding:14px;margin-bottom:16px;">
+              border-radius:14px;padding:12px 14px;margin-bottom:16px;">
               <div style="width:40px;height:40px;border-radius:50%;
                 background:rgba(124,0,255,0.15);border:1px solid rgba(124,0,255,0.3);
                 display:flex;align-items:center;justify-content:center;
@@ -1046,91 +1068,194 @@
               </div>
             </div>
 
-            <div style="font-size:13px;font-weight:800;margin-bottom:10px;color:#B100FF;">📋 Select Documents to Send</div>
+            <!-- ═══════════════════════════════════ -->
+            <!-- STEP 1: Create / Select Documents   -->
+            <!-- ═══════════════════════════════════ -->
+            <div id="docStep1">
+              <div style="font-size:13px;font-weight:800;margin-bottom:10px;color:#B100FF;">📋 Select Documents to Create</div>
 
-            <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:18px;">
+              <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px;">
 
-              <label style="display:flex;align-items:center;gap:12px;cursor:pointer;
-                padding:11px 14px;border-radius:14px;border:1px solid rgba(255,255,255,0.08);
-                background:rgba(255,255,255,0.02);transition:0.2s;" id="docOptLoi">
-                <input type="checkbox" id="chkLoi" onchange="updateDocOpt(this,'docOptLoi')" style="width:16px;height:16px;accent-color:#B100FF;flex-shrink:0;" />
-                <div style="flex:1;">
-                  <div style="font-weight:700;font-size:13px;">📝 Letter of Intent (LOI)</div>
-                  <div style="font-size:11px;color:var(--muted);margin-top:2px;">Internship intent confirmation letter</div>
-                </div>
-                <span id="tickLoi" style="display:none;color:#00FFA8;font-size:18px;">✅</span>
-              </label>
+                <label style="display:flex;align-items:center;gap:12px;cursor:pointer;
+                  padding:11px 14px;border-radius:14px;border:1px solid rgba(255,255,255,0.08);
+                  background:rgba(255,255,255,0.02);transition:0.2s;" id="docOptLoi">
+                  <input type="checkbox" id="chkLoi" onchange="updateDocOpt(this,'docOptLoi')" style="width:16px;height:16px;accent-color:#B100FF;flex-shrink:0;" />
+                  <div style="flex:1;">
+                    <div style="font-weight:700;font-size:13px;">📝 Letter of Intent (LOI)</div>
+                    <div style="font-size:11px;color:var(--muted);margin-top:2px;">Internship intent confirmation letter</div>
+                  </div>
+                </label>
 
-              <label style="display:flex;align-items:center;gap:12px;cursor:pointer;
-                padding:11px 14px;border-radius:14px;border:1px solid rgba(255,255,255,0.08);
-                background:rgba(255,255,255,0.02);transition:0.2s;" id="docOptOfferLetter">
-                <input type="checkbox" id="chkOfferLetter" onchange="updateDocOpt(this,'docOptOfferLetter')" style="width:16px;height:16px;accent-color:#B100FF;flex-shrink:0;" />
-                <div style="flex:1;">
-                  <div style="font-weight:700;font-size:13px;">📄 Offer Letter</div>
-                  <div style="font-size:11px;color:var(--muted);margin-top:2px;">Official internship offer letter</div>
-                </div>
-                <span id="tickOfferLetter" style="display:none;color:#00FFA8;font-size:18px;">✅</span>
-              </label>
+                <label style="display:flex;align-items:center;gap:12px;cursor:pointer;
+                  padding:11px 14px;border-radius:14px;border:1px solid rgba(255,255,255,0.08);
+                  background:rgba(255,255,255,0.02);transition:0.2s;" id="docOptOfferLetter">
+                  <input type="checkbox" id="chkOfferLetter" onchange="updateDocOpt(this,'docOptOfferLetter')" style="width:16px;height:16px;accent-color:#B100FF;flex-shrink:0;" />
+                  <div style="flex:1;">
+                    <div style="font-weight:700;font-size:13px;">📄 Offer Letter</div>
+                    <div style="font-size:11px;color:var(--muted);margin-top:2px;">Official internship offer letter</div>
+                  </div>
+                </label>
 
-              <label style="display:flex;align-items:center;gap:12px;cursor:pointer;
-                padding:11px 14px;border-radius:14px;border:1px solid rgba(255,255,255,0.08);
-                background:rgba(255,255,255,0.02);transition:0.2s;" id="docOptJoiningLetter">
-                <input type="checkbox" id="chkJoiningLetter" onchange="updateDocOpt(this,'docOptJoiningLetter')" style="width:16px;height:16px;accent-color:#B100FF;flex-shrink:0;" />
-                <div style="flex:1;">
-                  <div style="font-weight:700;font-size:13px;">🤝 Joining Letter</div>
-                  <div style="font-size:11px;color:var(--muted);margin-top:2px;">Internship joining confirmation</div>
-                </div>
-                <span id="tickJoiningLetter" style="display:none;color:#00FFA8;font-size:18px;">✅</span>
-              </label>
+                <label style="display:flex;align-items:center;gap:12px;cursor:pointer;
+                  padding:11px 14px;border-radius:14px;border:1px solid rgba(255,255,255,0.08);
+                  background:rgba(255,255,255,0.02);transition:0.2s;" id="docOptJoiningLetter">
+                  <input type="checkbox" id="chkJoiningLetter" onchange="updateDocOpt(this,'docOptJoiningLetter')" style="width:16px;height:16px;accent-color:#B100FF;flex-shrink:0;" />
+                  <div style="flex:1;">
+                    <div style="font-weight:700;font-size:13px;">🤝 Joining Letter</div>
+                    <div style="font-size:11px;color:var(--muted);margin-top:2px;">Internship joining confirmation</div>
+                  </div>
+                </label>
 
-              <label style="display:flex;align-items:center;gap:12px;cursor:pointer;
-                padding:11px 14px;border-radius:14px;border:1px solid rgba(255,255,255,0.08);
-                background:rgba(255,255,255,0.02);transition:0.2s;" id="docOptCompletion">
-                <input type="checkbox" id="chkCompletion" onchange="updateDocOpt(this,'docOptCompletion')" style="width:16px;height:16px;accent-color:#B100FF;flex-shrink:0;" />
-                <div style="flex:1;">
-                  <div style="font-weight:700;font-size:13px;">📃 Completion Letter</div>
-                  <div style="font-size:11px;color:var(--muted);margin-top:2px;">Official internship completion letter</div>
-                </div>
-                <span id="tickCompletion" style="display:none;color:#00FFA8;font-size:18px;">✅</span>
-              </label>
+                <label style="display:flex;align-items:center;gap:12px;cursor:pointer;
+                  padding:11px 14px;border-radius:14px;border:1px solid rgba(255,255,255,0.08);
+                  background:rgba(255,255,255,0.02);transition:0.2s;" id="docOptCompletion">
+                  <input type="checkbox" id="chkCompletion" onchange="updateDocOpt(this,'docOptCompletion')" style="width:16px;height:16px;accent-color:#B100FF;flex-shrink:0;" />
+                  <div style="flex:1;">
+                    <div style="font-weight:700;font-size:13px;">📃 Completion Letter</div>
+                    <div style="font-size:11px;color:var(--muted);margin-top:2px;">Official internship completion letter</div>
+                  </div>
+                </label>
 
-              <label style="display:flex;align-items:center;gap:12px;cursor:pointer;
-                padding:11px 14px;border-radius:14px;border:1px solid rgba(255,255,255,0.08);
-                background:rgba(255,255,255,0.02);transition:0.2s;" id="docOptCertificate">
-                <input type="checkbox" id="chkCertificate" onchange="updateDocOpt(this,'docOptCertificate')" style="width:16px;height:16px;accent-color:#B100FF;flex-shrink:0;" />
-                <div style="flex:1;">
-                  <div style="font-weight:700;font-size:13px;">🏅 Completion Certificate</div>
-                  <div style="font-size:11px;color:var(--muted);margin-top:2px;">Official certificate of internship completion</div>
-                </div>
-                <span id="tickCertificate" style="display:none;color:#00FFA8;font-size:18px;">✅</span>
-              </label>
+                <label style="display:flex;align-items:center;gap:12px;cursor:pointer;
+                  padding:11px 14px;border-radius:14px;border:1px solid rgba(255,255,255,0.08);
+                  background:rgba(255,255,255,0.02);transition:0.2s;" id="docOptCertificate">
+                  <input type="checkbox" id="chkCertificate" onchange="updateDocOpt(this,'docOptCertificate')" style="width:16px;height:16px;accent-color:#B100FF;flex-shrink:0;" />
+                  <div style="flex:1;">
+                    <div style="font-weight:700;font-size:13px;">🏅 Completion Certificate</div>
+                    <div style="font-size:11px;color:var(--muted);margin-top:2px;">Official certificate of internship completion</div>
+                  </div>
+                </label>
 
-              <label style="display:flex;align-items:center;gap:12px;cursor:pointer;
-                padding:11px 14px;border-radius:14px;border:1px solid rgba(255,255,255,0.08);
-                background:rgba(255,255,255,0.02);transition:0.2s;" id="docOptBestPerformer">
-                <input type="checkbox" id="chkBestPerformer" onchange="updateDocOpt(this,'docOptBestPerformer')" style="width:16px;height:16px;accent-color:#B100FF;flex-shrink:0;" />
-                <div style="flex:1;">
-                  <div style="font-weight:700;font-size:13px;">🏆 Best Performer Certificate</div>
-                  <div style="font-size:11px;color:var(--muted);margin-top:2px;">Awarded to top performing interns</div>
-                </div>
-                <span id="tickBestPerformer" style="display:none;color:#00FFA8;font-size:18px;">✅</span>
-              </label>
+                <label style="display:flex;align-items:center;gap:12px;cursor:pointer;
+                  padding:11px 14px;border-radius:14px;border:1px solid rgba(255,255,255,0.08);
+                  background:rgba(255,255,255,0.02);transition:0.2s;" id="docOptBestPerformer">
+                  <input type="checkbox" id="chkBestPerformer" onchange="updateDocOpt(this,'docOptBestPerformer')" style="width:16px;height:16px;accent-color:#B100FF;flex-shrink:0;" />
+                  <div style="flex:1;">
+                    <div style="font-weight:700;font-size:13px;">🏆 Best Performer Certificate</div>
+                    <div style="font-size:11px;color:var(--muted);margin-top:2px;">Awarded to top performing interns</div>
+                  </div>
+                </label>
 
+              </div>
+
+              <!-- Selected Summary -->
+              <div id="docSelectedSummary" style="font-size:12px;color:var(--muted);
+                padding:8px 12px;border-radius:10px;background:rgba(255,255,255,0.02);
+                border:1px solid rgba(255,255,255,0.06);margin-bottom:14px;display:none;">
+                📌 Selected: <span id="docSelectedList" style="color:var(--text);font-weight:700;"></span>
+              </div>
+
+              <div id="docStep1Msg" style="font-size:12px;text-align:center;min-height:18px;color:var(--danger);margin-bottom:8px;"></div>
+
+              <button class="btn primary" style="width:100%;padding:14px;font-size:14px;" onclick="docGoToStep2()">
+                ⚡ Create Documents → Get Link
+              </button>
             </div>
 
-            <div id="docSelectedSummary" style="font-size:12px;color:var(--muted);
-              padding:8px 12px;border-radius:10px;background:rgba(255,255,255,0.02);
-              border:1px solid rgba(255,255,255,0.06);margin-bottom:14px;display:none;">
-              📌 Selected: <span id="docSelectedList" style="color:var(--text);font-weight:700;"></span>
+            <!-- ═══════════════════════════════════ -->
+            <!-- STEP 2: Generated Link              -->
+            <!-- ═══════════════════════════════════ -->
+            <div id="docStep2" style="display:none;">
+              <div style="font-size:13px;font-weight:800;margin-bottom:14px;color:#B100FF;">🔗 Document Link Generated</div>
+
+              <!-- Doc list summary -->
+              <div id="docLinkDocList" style="display:flex;flex-direction:column;gap:6px;margin-bottom:16px;"></div>
+
+              <!-- Link Box -->
+              <div style="font-size:12px;color:var(--muted);font-weight:700;margin-bottom:6px;">Shareable Link</div>
+              <div style="display:flex;gap:8px;align-items:center;margin-bottom:16px;">
+                <input id="docGeneratedLink" readonly style="flex:1;font-size:12px;
+                  background:rgba(0,0,0,0.3);border:1px solid rgba(124,0,255,0.25);
+                  border-radius:12px;padding:10px 12px;color:var(--text);" />
+                <button class="btn" style="flex-shrink:0;padding:10px 14px;" onclick="copyDocLink()">📋 Copy</button>
+              </div>
+
+              <!-- Sharing Options -->
+              <div style="font-size:13px;font-weight:800;margin-bottom:10px;color:#B100FF;">🔐 Sharing Options</div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px;">
+
+                <label style="display:flex;align-items:center;gap:10px;cursor:pointer;
+                  padding:10px 12px;border-radius:12px;border:1px solid rgba(255,255,255,0.08);
+                  background:rgba(255,255,255,0.02);transition:0.2s;" id="shareOptPublic">
+                  <input type="radio" name="shareOpt" value="public" checked onchange="updateShareOpt()"
+                    style="accent-color:#B100FF;flex-shrink:0;" />
+                  <div>
+                    <div style="font-weight:700;font-size:12px;">🌐 Public Link</div>
+                    <div style="font-size:10px;color:var(--muted);margin-top:1px;">Anyone with link can view</div>
+                  </div>
+                </label>
+
+                <label style="display:flex;align-items:center;gap:10px;cursor:pointer;
+                  padding:10px 12px;border-radius:12px;border:1px solid rgba(255,255,255,0.08);
+                  background:rgba(255,255,255,0.02);transition:0.2s;" id="shareOptRestricted">
+                  <input type="radio" name="shareOpt" value="restricted" onchange="updateShareOpt()"
+                    style="accent-color:#B100FF;flex-shrink:0;" />
+                  <div>
+                    <div style="font-weight:700;font-size:12px;">🔒 Restricted</div>
+                    <div style="font-size:10px;color:var(--muted);margin-top:1px;">Only intern's email can open</div>
+                  </div>
+                </label>
+
+              </div>
+
+              <div id="shareOptMsg" style="font-size:11px;padding:8px 12px;border-radius:10px;
+                background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);
+                color:var(--muted);margin-bottom:16px;">
+                🌐 Public — Anyone with the link can view and download the documents.
+              </div>
+
+              <div style="display:flex;gap:10px;">
+                <button class="btn ghost" style="flex:0 0 auto;padding:12px 16px;" onclick="docGoToStep1()">← Back</button>
+                <button class="btn primary" style="flex:1;padding:13px;font-size:14px;" onclick="docGoToStep3()">
+                  📤 Choose How to Send →
+                </button>
+              </div>
             </div>
 
-            <div id="docSendMsg" style="font-size:12px;text-align:center;min-height:18px;margin-bottom:8px;"></div>
+            <!-- ═══════════════════════════════════ -->
+            <!-- STEP 3: Send via Mail / WhatsApp    -->
+            <!-- ═══════════════════════════════════ -->
+            <div id="docStep3" style="display:none;">
+              <div style="font-size:13px;font-weight:800;margin-bottom:14px;color:#B100FF;">📤 Send Documents To Intern</div>
 
-            <button class="btn primary" style="width:100%;padding:14px;font-size:14px;" onclick="submitSendDocs()">
-              📨 Send via Email
-            </button>
+              <!-- Summary pill -->
+              <div id="docStep3Summary" style="font-size:12px;color:var(--muted);
+                padding:8px 12px;border-radius:10px;background:rgba(255,255,255,0.02);
+                border:1px solid rgba(255,255,255,0.06);margin-bottom:16px;">
+              </div>
 
-            <p class="small" style="text-align:center;margin-top:10px;">PDFs will be generated from your Google Docs templates and emailed to the intern.</p>
+              <!-- Email Section -->
+              <div style="border:1px solid rgba(255,255,255,0.08);border-radius:14px;
+                padding:14px;margin-bottom:12px;background:rgba(255,255,255,0.02);">
+                <div style="font-size:13px;font-weight:800;margin-bottom:10px;">📧 Send via Email</div>
+                <div style="display:flex;gap:8px;align-items:center;">
+                  <input id="docEmailTo" style="flex:1;font-size:13px;" placeholder="Recipient email..." />
+                  <button class="btn primary" style="flex-shrink:0;padding:11px 16px;" onclick="submitSendDocs()">Send</button>
+                </div>
+                <div style="font-size:11px;color:var(--muted);margin-top:8px;">
+                  📎 PDFs will be generated from your Google Docs templates and emailed to the intern.
+                </div>
+              </div>
+
+              <!-- WhatsApp Section -->
+              <div style="border:1px solid rgba(255,255,255,0.08);border-radius:14px;
+                padding:14px;margin-bottom:16px;background:rgba(255,255,255,0.02);">
+                <div style="font-size:13px;font-weight:800;margin-bottom:10px;">💬 Send via WhatsApp</div>
+                <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px;">
+                  <input id="docWhatsappNum" style="flex:1;font-size:13px;" placeholder="Phone number with country code (e.g. +91...)" />
+                  <button class="btn" style="flex-shrink:0;padding:11px 14px;
+                    background:linear-gradient(135deg,#25d366,#128c7e);border-color:rgba(37,211,102,0.3);
+                    color:#fff;" onclick="sendViaWhatsApp()">Send</button>
+                </div>
+                <div style="font-size:11px;color:var(--muted);">
+                  🔗 Opens WhatsApp with the document link pre-filled in the message.
+                </div>
+              </div>
+
+              <div id="docSendMsg" style="font-size:12px;text-align:center;min-height:18px;margin-bottom:8px;"></div>
+
+              <button class="btn ghost" style="width:100%;padding:11px;" onclick="docGoToStep2()">← Back to Link</button>
+            </div>
 
           </div>
         </div>
@@ -2160,11 +2285,13 @@
     }
 
     // ===============================
-    // SEND DOCUMENTS FUNCTIONS
+    // SEND DOCUMENTS — 3-STEP WIZARD
     // ===============================
 
     let CURRENT_DOC_INTERN = null;
     let ALL_ACTIVE_INTERNS = [];
+    let GENERATED_DOC_LINK = "";
+    let SELECTED_DOCS = [];
 
     async function loadActiveInterns(silent = false) {
       const data = await apiGET({
@@ -2189,21 +2316,27 @@
       tb.innerHTML = "";
 
       if (list.length === 0) {
-        tb.innerHTML = `<tr><td colspan="7"><div class="emptyEnrolled"><span>👨‍💻</span>No active interns found</div></td></tr>`;
+        tb.innerHTML = `<tr><td colspan="6"><div class="emptyEnrolled"><span>👨‍💻</span>No active interns found</div></td></tr>`;
         return;
       }
 
       list.forEach((i, idx) => {
         tb.innerHTML += `
           <tr>
-            <td>${idx + 1}</td>
-            <td><b>${escapeHTML(i.InternID)}</b></td>
-            <td>${escapeHTML(i.Name)}</td>
-            <td style="color:var(--muted);font-size:12px;">${escapeHTML(i.Email)}</td>
-            <td>${escapeHTML(i.BatchName || "-")}</td>
-            <td>${escapeHTML(i.Duration || "-")}</td>
+            <td style="color:var(--muted);font-size:12px;">${idx + 1}</td>
             <td>
-              <button class="btn primary" style="font-size:12px;padding:8px 12px;"
+              <div style="font-weight:800;font-size:13px;">${escapeHTML(i.Name)}</div>
+              <div style="font-size:11px;color:var(--muted);margin-top:3px;">${escapeHTML(i.InternID)}</div>
+            </td>
+            <td style="font-size:12px;color:var(--muted);">${escapeHTML(i.Email)}</td>
+            <td>
+              <div style="font-weight:700;font-size:13px;">${escapeHTML(i.BatchName || "-")}</div>
+            </td>
+            <td>
+              <div style="font-weight:700;font-size:13px;">${escapeHTML(i.Duration || "-")}</div>
+            </td>
+            <td style="text-align:center;">
+              <button class="btn primary" style="font-size:12px;padding:8px 14px;"
                 onclick='openSendDocModal(${JSON.stringify(JSON.stringify(i))})'>
                 📄 Create Document
               </button>
@@ -2224,27 +2357,57 @@
       renderDocInternTable(filtered);
     }
 
+    // ── Wizard step navigation helpers ──
+    function _showDocStep(n) {
+      [1,2,3].forEach(s => {
+        document.getElementById("docStep" + s).style.display = s === n ? "block" : "none";
+      });
+      // Update progress pills
+      const pillStyles = {
+        active: "background:linear-gradient(135deg,rgba(124,0,255,0.28),rgba(177,0,255,0.18));border:1px solid rgba(124,0,255,0.45);color:#fff;",
+        done:   "background:rgba(0,255,168,0.08);border:1px solid rgba(0,255,168,0.22);color:#caffdf;",
+        idle:   "background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.10);color:var(--muted);"
+      };
+      const states = n === 1 ? ["active","idle","idle"]
+                   : n === 2 ? ["done","active","idle"]
+                   :           ["done","done","active"];
+      ["stepPill1","stepPill2","stepPill3"].forEach((id, i) => {
+        document.getElementById(id).style.cssText +=
+          ";flex:1;text-align:center;padding:7px 0;font-size:11px;font-weight:800;letter-spacing:0.3px;transition:0.3s;" +
+          pillStyles[states[i]];
+        if (states[i] === "done") document.getElementById(id).innerHTML = ["✅ Create","✅ Link","✅ Share"][i];
+        else document.getElementById(id).innerHTML = ["1 · Create","2 · Link","3 · Share"][i];
+      });
+    }
+
     function openSendDocModal(internJson) {
       const i = typeof internJson === "string" ? JSON.parse(internJson) : internJson;
       CURRENT_DOC_INTERN = i;
+      GENERATED_DOC_LINK = "";
+      SELECTED_DOCS = [];
 
-      ["chkCompletion","chkCertificate","chkBestPerformer"].forEach(id => {
-        document.getElementById(id).checked = false;
+      // Reset checkboxes
+      ["chkLoi","chkOfferLetter","chkJoiningLetter","chkCompletion","chkCertificate","chkBestPerformer"].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.checked = false;
       });
-      ["docOptCompletion","docOptCertificate","docOptBestPerformer"].forEach(id => {
-        document.getElementById(id).style.borderColor = "rgba(255,255,255,0.08)";
-        document.getElementById(id).style.background = "rgba(255,255,255,0.02)";
+      ["docOptLoi","docOptOfferLetter","docOptJoiningLetter","docOptCompletion","docOptCertificate","docOptBestPerformer"].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) { el.style.borderColor = "rgba(255,255,255,0.08)"; el.style.background = "rgba(255,255,255,0.02)"; }
       });
 
       document.getElementById("docSelectedSummary").style.display = "none";
+      document.getElementById("docStep1Msg").innerText = "";
       document.getElementById("docSendMsg").innerText = "";
 
       document.getElementById("docInternAvatar").innerText = (i.Name || "?")[0].toUpperCase();
       document.getElementById("docInternName").innerText = i.Name || "-";
       document.getElementById("docInternEmail").innerText = i.Email || "-";
       document.getElementById("docInternBatch").innerText = `${i.BatchName || ""} · ${i.Duration || ""} · ID: ${i.InternID}`;
-      document.getElementById("docModalMeta").innerText = `Sending to: ${i.Email}`;
+      document.getElementById("docModalMeta").innerText = `Intern: ${i.Email}`;
+      document.getElementById("docEmailTo").value = i.Email || "";
 
+      _showDocStep(1);
       document.getElementById("sendDocModal").classList.add("show");
     }
 
@@ -2266,11 +2429,15 @@
     }
 
     function updateDocSummary() {
-      const selected = [];
-      if (document.getElementById("chkCompletion").checked) selected.push("Completion Letter");
-      if (document.getElementById("chkCertificate").checked) selected.push("Completion Certificate");
-      if (document.getElementById("chkBestPerformer").checked) selected.push("Best Performer Certificate");
-
+      const map = [
+        { id: "chkLoi",           label: "LOI" },
+        { id: "chkOfferLetter",   label: "Offer Letter" },
+        { id: "chkJoiningLetter", label: "Joining Letter" },
+        { id: "chkCompletion",    label: "Completion Letter" },
+        { id: "chkCertificate",   label: "Completion Certificate" },
+        { id: "chkBestPerformer", label: "Best Performer Certificate" }
+      ];
+      const selected = map.filter(m => document.getElementById(m.id)?.checked).map(m => m.label);
       const summaryEl = document.getElementById("docSelectedSummary");
       if (selected.length > 0) {
         summaryEl.style.display = "block";
@@ -2280,19 +2447,95 @@
       }
     }
 
+    // ── STEP 1 → STEP 2: Generate Link ──
+    async function docGoToStep2() {
+      const map = [
+        { id: "chkLoi",           key: "loi",           label: "📝 Letter of Intent (LOI)" },
+        { id: "chkOfferLetter",   key: "offerLetter",   label: "📄 Offer Letter" },
+        { id: "chkJoiningLetter", key: "joiningLetter", label: "🤝 Joining Letter" },
+        { id: "chkCompletion",    key: "completion",    label: "📃 Completion Letter" },
+        { id: "chkCertificate",   key: "certificate",   label: "🏅 Completion Certificate" },
+        { id: "chkBestPerformer", key: "bestPerformer", label: "🏆 Best Performer Certificate" }
+      ];
+      SELECTED_DOCS = map.filter(m => document.getElementById(m.id)?.checked);
+
+      if (SELECTED_DOCS.length === 0) {
+        document.getElementById("docStep1Msg").innerText = "⚠️ Please select at least one document.";
+        return;
+      }
+      document.getElementById("docStep1Msg").innerText = "";
+
+      // Call backend to create documents and get link
+      showLoader(true, "Creating Documents...");
+      const data = await apiPOST({
+        action: "adminCreateDocuments",
+        adminId: admin.adminId,
+        adminPass: admin.adminPass,
+        internId: CURRENT_DOC_INTERN.InternID,
+        documents: SELECTED_DOCS.map(m => m.key)
+      });
+      showLoader(false);
+
+      // Use returned link or build a fallback placeholder
+      GENERATED_DOC_LINK = (data.success && data.docLink)
+        ? data.docLink
+        : `https://codeline.ai/docs/${CURRENT_DOC_INTERN.InternID}?docs=${SELECTED_DOCS.map(m=>m.key).join(",")}`;
+
+      // Populate step 2 UI
+      document.getElementById("docGeneratedLink").value = GENERATED_DOC_LINK;
+
+      const listEl = document.getElementById("docLinkDocList");
+      listEl.innerHTML = SELECTED_DOCS.map(m => `
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;
+          border-radius:10px;background:rgba(255,255,255,0.02);
+          border:1px solid rgba(255,255,255,0.06);">
+          <span style="font-size:16px;">✅</span>
+          <span style="font-size:13px;font-weight:700;">${m.label}</span>
+        </div>
+      `).join("");
+
+      _showDocStep(2);
+    }
+
+    function docGoToStep1() { _showDocStep(1); }
+
+    function updateShareOpt() {
+      const val = document.querySelector("input[name='shareOpt']:checked")?.value || "public";
+      document.getElementById("shareOptMsg").innerText = val === "public"
+        ? "🌐 Public — Anyone with the link can view and download the documents."
+        : `🔒 Restricted — Only ${CURRENT_DOC_INTERN?.Email || "intern's email"} can open this link.`;
+    }
+
+    function copyDocLink() {
+      if (!GENERATED_DOC_LINK) return;
+      navigator.clipboard.writeText(GENERATED_DOC_LINK).then(() => {
+        toast("Link copied ✅", "success");
+      }).catch(() => {
+        document.getElementById("docGeneratedLink").select();
+        document.execCommand("copy");
+        toast("Link copied ✅", "success");
+      });
+    }
+
+    // ── STEP 2 → STEP 3 ──
+    function docGoToStep3() {
+      const docNames = SELECTED_DOCS.map(m => m.label).join(", ");
+      document.getElementById("docStep3Summary").innerText =
+        `📋 ${SELECTED_DOCS.length} document(s) ready: ${docNames}`;
+      _showDocStep(3);
+    }
+
+    function docGoToStep2FromStep3() { _showDocStep(2); }
+
+    // ── STEP 3: Send via Email ──
     async function submitSendDocs() {
       if (!CURRENT_DOC_INTERN) { toast("No intern selected ❌", "error"); return; }
 
-      const docs = [];
-      if (document.getElementById("chkCompletion").checked) docs.push("completion");
-      if (document.getElementById("chkCertificate").checked) docs.push("certificate");
-      if (document.getElementById("chkBestPerformer").checked) docs.push("bestPerformer");
+      const emailTo = document.getElementById("docEmailTo").value.trim();
+      if (!emailTo) { toast("Enter recipient email ❌", "error"); return; }
 
-      if (docs.length === 0) {
-        toast("Please select at least one document ❌", "error");
-        document.getElementById("docSendMsg").innerText = "⚠️ Select at least one document.";
-        return;
-      }
+      const docs = SELECTED_DOCS.map(m => m.key);
+      if (docs.length === 0) { toast("No documents selected ❌", "error"); return; }
 
       document.getElementById("docSendMsg").innerText = "📨 Sending documents...";
 
@@ -2301,11 +2544,13 @@
         adminId: admin.adminId,
         adminPass: admin.adminPass,
         internId: CURRENT_DOC_INTERN.InternID,
-        documents: docs
+        documents: docs,
+        emailTo,
+        docLink: GENERATED_DOC_LINK
       });
 
       if (data.success) {
-        const msg = `✅ ${docs.length} document(s) sent to ${CURRENT_DOC_INTERN.Email}`;
+        const msg = `✅ ${docs.length} document(s) sent to ${emailTo}`;
         toast(msg, "success");
         document.getElementById("docSendMsg").innerText = msg;
         setTimeout(() => closeSendDocModal(), 1800);
@@ -2313,6 +2558,25 @@
         document.getElementById("docSendMsg").innerText = "❌ " + data.message;
         toast(data.message, "error");
       }
+    }
+
+    // ── STEP 3: Send via WhatsApp ──
+    function sendViaWhatsApp() {
+      if (!GENERATED_DOC_LINK) { toast("No document link available ❌", "error"); return; }
+
+      let phone = document.getElementById("docWhatsappNum").value.trim().replace(/\s+/g, "");
+      if (!phone) { toast("Enter phone number ❌", "error"); return; }
+      // Strip leading + for wa.me URL
+      phone = phone.replace(/^\+/, "");
+
+      const docNames = SELECTED_DOCS.map(m => m.label).join(", ");
+      const msg = encodeURIComponent(
+        `Hello ${CURRENT_DOC_INTERN?.Name || ""},\n\nYour internship document(s) are ready:\n${docNames}\n\n🔗 Download Link:\n${GENERATED_DOC_LINK}\n\n— CODELINE.AI Team`
+      );
+
+      const waUrl = `https://wa.me/${phone}?text=${msg}`;
+      window.open(waUrl, "_blank");
+      toast("WhatsApp opened ✅", "success");
     }
 
     // ===============================
