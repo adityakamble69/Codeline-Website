@@ -606,7 +606,7 @@
   </style>
 </head>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 
 <body>
   <div class="container">
@@ -725,7 +725,8 @@
 
           <!-- Tab Switcher -->
           <div class="batchTabs">
-            <button class="batchTab active" onclick="switchBatchTab('createTab', this)">🧩 Create Batch &amp; Intern</button>
+            <button class="batchTab active" onclick="switchBatchTab('createTab', this)">🧩 Create Batch &amp;
+              Intern</button>
             <button class="batchTab" onclick="switchBatchTab('enrolledTab', this)">📋 Enrolled Students</button>
           </div>
 
@@ -997,7 +998,8 @@
           </div>
 
           <div style="margin-bottom:14px;">
-            <input id="docSearchInput" placeholder="🔍 Search by name, ID or email..." oninput="filterDocInterns()" style="width:100%;max-width:400px;" />
+            <input id="docSearchInput" placeholder="🔍 Search by name, ID or email..." oninput="filterDocInterns()"
+              style="width:100%;max-width:400px;" />
           </div>
 
           <div class="tableWrap">
@@ -1009,11 +1011,16 @@
                   <th>Email</th>
                   <th>Batch<br><span style="font-weight:400;color:var(--muted);font-size:11px;">Batch</span></th>
                   <th>Duration<br><span style="font-weight:400;color:var(--muted);font-size:11px;">Duration</span></th>
-                  <th style="text-align:center;">Action<br><span style="font-weight:400;color:var(--muted);font-size:11px;">Create Document</span></th>
+                  <th style="text-align:center;">Action<br><span
+                      style="font-weight:400;color:var(--muted);font-size:11px;">Create Document</span></th>
                 </tr>
               </thead>
               <tbody id="activeInternsTable">
-                <tr><td colspan="6"><div class="emptyEnrolled"><span>📋</span>Click Refresh to load active interns</div></td></tr>
+                <tr>
+                  <td colspan="6">
+                    <div class="emptyEnrolled"><span>📋</span>Click Refresh to load active interns</div>
+                  </td>
+                </tr>
               </tbody>
             </table>
           </div>
@@ -1027,7 +1034,8 @@
             <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:16px;">
               <div>
                 <div style="font-family:Orbitron,Inter;font-size:16px;font-weight:900;">📄 Send Document</div>
-                <div style="font-size:12px;color:var(--muted);margin-top:5px;" id="docModalMeta">Select documents to send</div>
+                <div style="font-size:12px;color:var(--muted);margin-top:5px;" id="docModalMeta">Select documents to
+                  send</div>
               </div>
               <button class="btn danger" onclick="closeSendDocModal()">✕ Close</button>
             </div>
@@ -1059,8 +1067,7 @@
               <div style="width:40px;height:40px;border-radius:50%;
                 background:rgba(124,0,255,0.15);border:1px solid rgba(124,0,255,0.3);
                 display:flex;align-items:center;justify-content:center;
-                font-size:16px;font-weight:900;color:#B100FF;flex-shrink:0;"
-                id="docInternAvatar">?</div>
+                font-size:16px;font-weight:900;color:#B100FF;flex-shrink:0;" id="docInternAvatar">?</div>
               <div>
                 <div style="font-weight:900;font-size:14px;" id="docInternName">-</div>
                 <div style="font-size:12px;color:var(--muted);" id="docInternEmail">-</div>
@@ -1072,34 +1079,40 @@
             <!-- STEP 1: Create / Select Documents   -->
             <!-- ═══════════════════════════════════ -->
             <div id="docStep1">
-              <div style="font-size:13px;font-weight:800;margin-bottom:10px;color:#B100FF;">📋 Select Documents to Create</div>
+              <div style="font-size:13px;font-weight:800;margin-bottom:10px;color:#B100FF;">📋 Select Documents to
+                Create</div>
 
               <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px;">
 
                 <label style="display:flex;align-items:center;gap:12px;cursor:pointer;
                   padding:11px 14px;border-radius:14px;border:1px solid rgba(255,255,255,0.08);
                   background:rgba(255,255,255,0.02);transition:0.2s;" id="docOptLoi">
-                  <input type="checkbox" id="chkLoi" onchange="updateDocOpt(this,'docOptLoi')" style="width:16px;height:16px;accent-color:#B100FF;flex-shrink:0;" />
+                  <input type="checkbox" id="chkLoi" onchange="updateDocOpt(this,'docOptLoi')"
+                    style="width:16px;height:16px;accent-color:#B100FF;flex-shrink:0;" />
                   <div style="flex:1;">
                     <div style="font-weight:700;font-size:13px;">📝 Letter of Intent (LOI)</div>
-                    <div style="font-size:11px;color:var(--muted);margin-top:2px;">Internship intent confirmation letter</div>
+                    <div style="font-size:11px;color:var(--muted);margin-top:2px;">Internship intent confirmation letter
+                    </div>
                   </div>
                 </label>
 
                 <label style="display:flex;align-items:center;gap:12px;cursor:pointer;
                   padding:11px 14px;border-radius:14px;border:1px solid rgba(255,255,255,0.08);
                   background:rgba(255,255,255,0.02);transition:0.2s;" id="docOptOfferLetter">
-                  <input type="checkbox" id="chkOfferLetter" onchange="updateDocOpt(this,'docOptOfferLetter')" style="width:16px;height:16px;accent-color:#B100FF;flex-shrink:0;" />
+                  <input type="checkbox" id="chkOfferLetter" onchange="updateDocOpt(this,'docOptOfferLetter')"
+                    style="width:16px;height:16px;accent-color:#B100FF;flex-shrink:0;" />
                   <div style="flex:1;">
                     <div style="font-weight:700;font-size:13px;">📄 Offer Letter</div>
-                    <div style="font-size:11px;color:var(--muted);margin-top:2px;">Official internship offer letter</div>
+                    <div style="font-size:11px;color:var(--muted);margin-top:2px;">Official internship offer letter
+                    </div>
                   </div>
                 </label>
 
                 <label style="display:flex;align-items:center;gap:12px;cursor:pointer;
                   padding:11px 14px;border-radius:14px;border:1px solid rgba(255,255,255,0.08);
                   background:rgba(255,255,255,0.02);transition:0.2s;" id="docOptJoiningLetter">
-                  <input type="checkbox" id="chkJoiningLetter" onchange="updateDocOpt(this,'docOptJoiningLetter')" style="width:16px;height:16px;accent-color:#B100FF;flex-shrink:0;" />
+                  <input type="checkbox" id="chkJoiningLetter" onchange="updateDocOpt(this,'docOptJoiningLetter')"
+                    style="width:16px;height:16px;accent-color:#B100FF;flex-shrink:0;" />
                   <div style="flex:1;">
                     <div style="font-weight:700;font-size:13px;">🤝 Joining Letter</div>
                     <div style="font-size:11px;color:var(--muted);margin-top:2px;">Internship joining confirmation</div>
@@ -1109,30 +1122,36 @@
                 <label style="display:flex;align-items:center;gap:12px;cursor:pointer;
                   padding:11px 14px;border-radius:14px;border:1px solid rgba(255,255,255,0.08);
                   background:rgba(255,255,255,0.02);transition:0.2s;" id="docOptCompletion">
-                  <input type="checkbox" id="chkCompletion" onchange="updateDocOpt(this,'docOptCompletion')" style="width:16px;height:16px;accent-color:#B100FF;flex-shrink:0;" />
+                  <input type="checkbox" id="chkCompletion" onchange="updateDocOpt(this,'docOptCompletion')"
+                    style="width:16px;height:16px;accent-color:#B100FF;flex-shrink:0;" />
                   <div style="flex:1;">
                     <div style="font-weight:700;font-size:13px;">📃 Completion Letter</div>
-                    <div style="font-size:11px;color:var(--muted);margin-top:2px;">Official internship completion letter</div>
+                    <div style="font-size:11px;color:var(--muted);margin-top:2px;">Official internship completion letter
+                    </div>
                   </div>
                 </label>
 
                 <label style="display:flex;align-items:center;gap:12px;cursor:pointer;
                   padding:11px 14px;border-radius:14px;border:1px solid rgba(255,255,255,0.08);
                   background:rgba(255,255,255,0.02);transition:0.2s;" id="docOptCertificate">
-                  <input type="checkbox" id="chkCertificate" onchange="updateDocOpt(this,'docOptCertificate')" style="width:16px;height:16px;accent-color:#B100FF;flex-shrink:0;" />
+                  <input type="checkbox" id="chkCertificate" onchange="updateDocOpt(this,'docOptCertificate')"
+                    style="width:16px;height:16px;accent-color:#B100FF;flex-shrink:0;" />
                   <div style="flex:1;">
                     <div style="font-weight:700;font-size:13px;">🏅 Completion Certificate</div>
-                    <div style="font-size:11px;color:var(--muted);margin-top:2px;">Official certificate of internship completion</div>
+                    <div style="font-size:11px;color:var(--muted);margin-top:2px;">Official certificate of internship
+                      completion</div>
                   </div>
                 </label>
 
                 <label style="display:flex;align-items:center;gap:12px;cursor:pointer;
                   padding:11px 14px;border-radius:14px;border:1px solid rgba(255,255,255,0.08);
                   background:rgba(255,255,255,0.02);transition:0.2s;" id="docOptBestPerformer">
-                  <input type="checkbox" id="chkBestPerformer" onchange="updateDocOpt(this,'docOptBestPerformer')" style="width:16px;height:16px;accent-color:#B100FF;flex-shrink:0;" />
+                  <input type="checkbox" id="chkBestPerformer" onchange="updateDocOpt(this,'docOptBestPerformer')"
+                    style="width:16px;height:16px;accent-color:#B100FF;flex-shrink:0;" />
                   <div style="flex:1;">
                     <div style="font-weight:700;font-size:13px;">🏆 Best Performer Certificate</div>
-                    <div style="font-size:11px;color:var(--muted);margin-top:2px;">Awarded to top performing interns</div>
+                    <div style="font-size:11px;color:var(--muted);margin-top:2px;">Awarded to top performing interns
+                    </div>
                   </div>
                 </label>
 
@@ -1145,7 +1164,8 @@
                 📌 Selected: <span id="docSelectedList" style="color:var(--text);font-weight:700;"></span>
               </div>
 
-              <div id="docStep1Msg" style="font-size:12px;text-align:center;min-height:18px;color:var(--danger);margin-bottom:8px;"></div>
+              <div id="docStep1Msg"
+                style="font-size:12px;text-align:center;min-height:18px;color:var(--danger);margin-bottom:8px;"></div>
 
               <button class="btn primary" style="width:100%;padding:14px;font-size:14px;" onclick="docGoToStep2()">
                 ⚡ Create Documents → Get Link
@@ -1156,7 +1176,8 @@
             <!-- STEP 2: Generated Link              -->
             <!-- ═══════════════════════════════════ -->
             <div id="docStep2" style="display:none;">
-              <div style="font-size:13px;font-weight:800;margin-bottom:14px;color:#B100FF;">🔗 Document Link Generated</div>
+              <div style="font-size:13px;font-weight:800;margin-bottom:14px;color:#B100FF;">🔗 Document Link Generated
+              </div>
 
               <!-- Doc list summary -->
               <div id="docLinkDocList" style="display:flex;flex-direction:column;gap:6px;margin-bottom:16px;"></div>
@@ -1205,7 +1226,8 @@
               </div>
 
               <div style="display:flex;gap:10px;">
-                <button class="btn ghost" style="flex:0 0 auto;padding:12px 16px;" onclick="docGoToStep1()">← Back</button>
+                <button class="btn ghost" style="flex:0 0 auto;padding:12px 16px;" onclick="docGoToStep1()">←
+                  Back</button>
                 <button class="btn primary" style="flex:1;padding:13px;font-size:14px;" onclick="docGoToStep3()">
                   📤 Choose How to Send →
                 </button>
@@ -1216,7 +1238,8 @@
             <!-- STEP 3: Send via Mail / WhatsApp    -->
             <!-- ═══════════════════════════════════ -->
             <div id="docStep3" style="display:none;">
-              <div style="font-size:13px;font-weight:800;margin-bottom:14px;color:#B100FF;">📤 Send Documents To Intern</div>
+              <div style="font-size:13px;font-weight:800;margin-bottom:14px;color:#B100FF;">📤 Send Documents To Intern
+              </div>
 
               <!-- Summary pill -->
               <div id="docStep3Summary" style="font-size:12px;color:var(--muted);
@@ -1230,7 +1253,8 @@
                 <div style="font-size:13px;font-weight:800;margin-bottom:10px;">📧 Send via Email</div>
                 <div style="display:flex;gap:8px;align-items:center;">
                   <input id="docEmailTo" style="flex:1;font-size:13px;" placeholder="Recipient email..." />
-                  <button class="btn primary" style="flex-shrink:0;padding:11px 16px;" onclick="submitSendDocs()">Send</button>
+                  <button class="btn primary" style="flex-shrink:0;padding:11px 16px;"
+                    onclick="submitSendDocs()">Send</button>
                 </div>
                 <div style="font-size:11px;color:var(--muted);margin-top:8px;">
                   📎 PDFs will be generated from your Google Docs templates and emailed to the intern.
@@ -1242,7 +1266,8 @@
                 padding:14px;margin-bottom:16px;background:rgba(255,255,255,0.02);">
                 <div style="font-size:13px;font-weight:800;margin-bottom:10px;">💬 Send via WhatsApp</div>
                 <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px;">
-                  <input id="docWhatsappNum" style="flex:1;font-size:13px;" placeholder="Phone number with country code (e.g. +91...)" />
+                  <input id="docWhatsappNum" style="flex:1;font-size:13px;"
+                    placeholder="Phone number with country code (e.g. +91...)" />
                   <button class="btn" style="flex-shrink:0;padding:11px 14px;
                     background:linear-gradient(135deg,#25d366,#128c7e);border-color:rgba(37,211,102,0.3);
                     color:#fff;" onclick="sendViaWhatsApp()">Send</button>
@@ -1254,7 +1279,8 @@
 
               <div id="docSendMsg" style="font-size:12px;text-align:center;min-height:18px;margin-bottom:8px;"></div>
 
-              <button class="btn ghost" style="width:100%;padding:11px;" onclick="docGoToStep2()">← Back to Link</button>
+              <button class="btn ghost" style="width:100%;padding:11px;" onclick="docGoToStep2()">← Back to
+                Link</button>
             </div>
 
           </div>
@@ -1322,7 +1348,8 @@
           <div class="modalCard" style="width:min(560px,95vw);">
 
             <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:16px;">
-              <div style="font-family:Orbitron,Inter;font-size:16px;font-weight:900;">📋 Review Enrollment</div>
+              <div style="font-family:Orbitron,Inter;font-size:16px;font-weight:900;" id="reviewModalTitle">📋 Review
+                Application</div>
               <button class="btn danger" onclick="closeEnrolledReview()">Close</button>
             </div>
 
@@ -1341,11 +1368,11 @@
                   <div class="reviewMeta" id="reviewPhone">-</div>
                 </div>
                 <div>
-                  <label>Applied Date</label>
+                  <label>Joining Date</label>
                   <div class="reviewMeta" id="reviewDate">-</div>
                 </div>
                 <div>
-                  <label>Course Interest</label>
+                  <label>Duration</label>
                   <div class="reviewMeta" id="reviewCourse">-</div>
                 </div>
                 <div>
@@ -1354,39 +1381,60 @@
                 </div>
               </div>
 
-              <div style="margin-top:10px;">
-                <label>Message / Note from Student</label>
-                <div style="font-size:12px;color:var(--muted);line-height:1.6;" id="reviewNote">-</div>
+              <div style="margin-top:12px;">
+                <label>Uploaded Documents</label>
+                <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:6px;" id="reviewNote">-</div>
+                <a id="reviewCVLink" href="#" target="_blank" class="btn"
+                  style="font-size:12px;padding:7px 14px;display:none;margin-top:4px;">📄 View CV</a>
+                <a id="reviewLetterLink" href="#" target="_blank" class="btn"
+                  style="font-size:12px;padding:7px 14px;display:none;margin-top:4px;margin-left:8px;">📝 View
+                  Letter</a>
               </div>
             </div>
 
-            <div class="reviewSection">
-              <div style="font-size:13px;font-weight:800;margin-bottom:12px;color:#B100FF;">⚙️ Assign to Batch &amp; Duration</div>
-
-              <label>Select Batch</label>
-              <select id="reviewBatchSelect" style="width:100%;"></select>
-
-              <label>Duration</label>
-              <select id="reviewDuration" style="width:100%;margin-top:6px;">
-                <option value="6 Months">6 Months</option>
-                <option value="9 Months">9 Months</option>
-              </select>
-
-              <label style="margin-top:12px;display:block;">Admin Remarks (optional)</label>
-              <input id="reviewRemarks" placeholder="Add a note..." style="width:100%;box-sizing:border-box;" />
+            <!-- ACCEPT PANEL: batch selector -->
+            <div id="acceptPanel" style="display:none;margin-top:14px;">
+              <div
+                style="background:rgba(0,200,100,0.06);border:1px solid rgba(0,200,100,0.25);border-radius:14px;padding:14px;">
+                <div style="font-size:13px;font-weight:800;color:#00c864;margin-bottom:10px;">✅ Accept & Add to Batch
+                </div>
+                <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:6px;">Select Batch</label>
+                <select id="reviewBatchSelect" style="width:100%;margin-bottom:12px;"></select>
+                <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:6px;">Duration</label>
+                <select id="reviewDurationSelect" style="width:100%;margin-bottom:12px;">
+                  <option>6 Months</option>
+                  <option>9 Months</option>
+                </select>
+                <button class="btn primary" style="width:100%;padding:12px;font-weight:800;" onclick="confirmAccept()">
+                  ✅ Confirm Accept & Create Intern
+                </button>
+              </div>
             </div>
 
-            <div class="reviewActions">
-              <button class="btn primary" onclick="submitEnrolledDecision('Approved')">
-                ✅ Approve &amp; Send LOI
-              </button>
-              <button class="btn danger" onclick="submitEnrolledDecision('Rejected')">
-                ❌ Reject &amp; Notify
-              </button>
+            <!-- REJECT PANEL -->
+            <div id="rejectPanel" style="display:none;margin-top:14px;">
+              <div
+                style="background:rgba(255,60,60,0.06);border:1px solid rgba(255,60,60,0.25);border-radius:14px;padding:14px;">
+                <div style="font-size:13px;font-weight:800;color:#ff4444;margin-bottom:10px;">❌ Reject Application</div>
+                <div style="font-size:12px;color:var(--muted);margin-bottom:12px;">A rejection email will be sent to the
+                  applicant automatically.</div>
+                <button class="btn danger" style="width:100%;padding:12px;font-weight:800;" onclick="confirmReject()">
+                  ❌ Confirm Reject & Send Email
+                </button>
+              </div>
+            </div>
+
+            <!-- Default action buttons (shown when opened without pre-set action) -->
+            <div id="reviewDefaultActions" style="display:none;">
+              <div class="reviewActions">
+                <button class="btn primary"
+                  style="background:rgba(0,200,100,0.15);border-color:rgba(0,200,100,0.4);color:#00c864;"
+                  onclick="switchReviewAction('accept')">✅ Accept</button>
+                <button class="btn danger" onclick="switchReviewAction('reject')">❌ Reject</button>
+              </div>
             </div>
 
             <div class="small" id="reviewMsg" style="margin-top:8px;text-align:center;"></div>
-
           </div>
         </div>
       </main>
@@ -2160,10 +2208,11 @@
     async function loadEnrolledStudents(silent = false) {
 
       const data = await apiGET({
-        action: "getEnrolledStudents",
+        action: "getJoiningInterns",
         adminId: admin.adminId,
-        adminPass: admin.adminPass
-      });
+        adminPass: admin.adminPass,
+        status: ""
+      }, silent);
 
       const tb = document.getElementById("enrolledTable");
       tb.innerHTML = "";
@@ -2173,71 +2222,229 @@
         return;
       }
 
-      const list = data.students || [];
+      // Backend returns joiningInterns array
+      const raw = data.joiningInterns || [];
+
+      // Normalize: build a consistent object from sheet columns
+      const list = raw.map(s => ({
+        FullName: s.FullName || [s["First Name"], s["Middle Name"], s["Last Name"]].filter(Boolean).join(" ") || "-",
+        FirstName: s["First Name"] || "",
+        MiddleName: s["Middle Name"] || "",
+        LastName: s["Last Name"] || "",
+        Email: s["Email"] || s.Email || "-",
+        Phone: s["Phone"] || s.Phone || "-",
+        Duration: s["Duration"] || s.Duration || "-",
+        JoiningDate: s["Joining Date"] || s.JoiningDate || "",
+        CVLink: s["CV Link"] || s.CVLink || "",
+        LetterLink: s["Letter Link"] || s.LetterLink || "",
+        Status: s["Status"] || s.Status || "Pending",
+        _raw: s   // keep original for review modal
+      }));
 
       const total = list.length;
       const pending = list.filter(s => s.Status === "Pending").length;
-      const approved = list.filter(s => s.Status === "Approved").length;
-      const rejected = list.filter(s => s.Status === "Rejected").length;
+      const accepted = list.filter(s => s.Status === "Accepted").length;
+      const declined = list.filter(s => s.Status === "Declined").length;
 
       document.getElementById("tagTotal").innerText = `${total} Total`;
       document.getElementById("tagPending").innerText = `${pending} Pending`;
-      document.getElementById("tagApproved").innerText = `${approved} Approved`;
-      document.getElementById("tagRejected").innerText = `${rejected} Rejected`;
+      document.getElementById("tagApproved").innerText = `${accepted} Accepted`;
+      document.getElementById("tagRejected").innerText = `${declined} Declined`;
 
       if (list.length === 0) {
-        tb.innerHTML = `<tr><td colspan="7"><div class="emptyEnrolled"><span>📋</span>No enrollment requests yet</div></td></tr>`;
+        tb.innerHTML = `<tr><td colspan="7"><div class="emptyEnrolled"><span>📋</span>No joining form submissions yet</div></td></tr>`;
         return;
       }
 
       list.forEach((s, idx) => {
         const statusClass =
-          s.Status === "Approved" ? "approved" :
-          s.Status === "Rejected" ? "rejected" : "pending";
+          s.Status === "Accepted" ? "approved" :
+            s.Status === "Declined" ? "rejected" : "pending";
 
-        const canReview = s.Status === "Pending";
+        const cvBtn = s.CVLink ? `<a href="${escapeHTML(s.CVLink)}"     target="_blank" class="btn" style="font-size:11px;padding:5px 10px;">📄 CV</a>` : "";
+        const letterBtn = s.LetterLink ? `<a href="${escapeHTML(s.LetterLink)}" target="_blank" class="btn" style="font-size:11px;padding:5px 10px;">📝 Letter</a>` : "";
 
         tb.innerHTML += `
           <tr>
-            <td>${idx + 1}</td>
-            <td><b>${escapeHTML(s.Name)}</b></td>
-            <td>${escapeHTML(s.Email)}</td>
-            <td>${escapeHTML(s.Phone || "-")}</td>
-            <td>${formatDate(s.AppliedDate || s.CreatedAt)}</td>
-            <td><span class="statusPill ${statusClass}">${s.Status}</span></td>
+            <td style="color:var(--muted);font-size:12px;">${idx + 1}</td>
             <td>
-              ${canReview
-                ? `<button class="btn primary" onclick='openEnrolledReview(${JSON.stringify(JSON.stringify(s))})'>Review</button>`
-                : `<span style="font-size:12px;color:var(--muted);">${s.Status}</span>`
-              }
+              <div style="font-weight:800;font-size:13px;">${escapeHTML(s.FullName)}</div>
+              <div style="font-size:11px;color:var(--muted);margin-top:2px;">${escapeHTML(s.Duration)}</div>
+            </td>
+            <td style="font-size:12px;">${escapeHTML(s.Email)}</td>
+            <td style="font-size:12px;">${escapeHTML(s.Phone)}</td>
+            <td style="font-size:12px;">${formatDate(s.JoiningDate)}</td>
+            <td><span class="statusPill ${statusClass}">${escapeHTML(s.Status)}</span></td>
+            <td>
+              <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;">
+                ${cvBtn}${letterBtn}
+                <button class="btn primary" style="font-size:11px;padding:5px 10px;background:rgba(0,200,100,0.15);border-color:rgba(0,200,100,0.4);color:#00c864;"
+  onclick='openEnrolledReview(${JSON.stringify(JSON.stringify(s._raw))}, "accept")'>
+  ✅ Accept
+</button>
+<button class="btn danger" style="font-size:11px;padding:5px 10px;"
+  onclick='openEnrolledReview(${JSON.stringify(JSON.stringify(s._raw))}, "reject")'>
+  ❌ Reject
+</button>
+              </div>
             </td>
           </tr>
         `;
       });
     }
 
-    function openEnrolledReview(studentJson) {
+    function openEnrolledReview(studentJson, action) {
       const s = typeof studentJson === "string" ? JSON.parse(studentJson) : studentJson;
-      CURRENT_ENROLLED_ID = s.EnrollmentID || s.ID || s.id;
 
-      document.getElementById("reviewAvatar").innerText = (s.Name || "?")[0].toUpperCase();
-      document.getElementById("reviewName").innerText = s.Name || "-";
-      document.getElementById("reviewEmail").innerText = s.Email || "-";
-      document.getElementById("reviewPhone").innerText = s.Phone || "-";
-      document.getElementById("reviewDate").innerText = formatDate(s.AppliedDate || s.CreatedAt);
-      document.getElementById("reviewCourse").innerText = s.Course || s.CourseInterest || "-";
-      document.getElementById("reviewNote").innerText = s.Message || s.Note || "No message provided.";
+      const fullName = s.FullName ||
+        [s["First Name"], s["Middle Name"], s["Last Name"]].filter(Boolean).join(" ") || "-";
+      const email = s["Email"] || s.Email || "-";
+      const phone = s["Phone"] || s.Phone || "-";
+      const duration = s["Duration"] || s.Duration || "-";
+      const joiningDate = s["Joining Date"] || s.JoiningDate || "";
+      const status = s["Status"] || s.Status || "Pending";
+      const cvLink = s["CV Link"] || s.CVLink || "";
+      const letterLink = s["Letter Link"] || s.LetterLink || "";
+
+      CURRENT_ENROLLED_ID = { email, joiningDate };
+
+      document.getElementById("reviewAvatar").innerText = (fullName || "?")[0].toUpperCase();
+      document.getElementById("reviewName").innerText = fullName;
+      document.getElementById("reviewEmail").innerText = email;
+      document.getElementById("reviewPhone").innerText = phone;
+      document.getElementById("reviewDate").innerText = formatDate(joiningDate);
+      document.getElementById("reviewCourse").innerText = duration;
+      document.getElementById("reviewNote").innerText = cvLink || letterLink
+        ? "Documents attached — use buttons below to open." : "No documents uploaded.";
       document.getElementById("reviewMsg").innerText = "";
-      document.getElementById("reviewRemarks").value = "";
 
-      const statusClass = s.Status === "Approved" ? "approved" : s.Status === "Rejected" ? "rejected" : "pending";
+      const cvEl = document.getElementById("reviewCVLink");
+      const letterEl = document.getElementById("reviewLetterLink");
+      if (cvEl) { cvEl.href = cvLink || "#"; cvEl.style.display = cvLink ? "inline-block" : "none"; }
+      if (letterEl) { letterEl.href = letterLink || "#"; letterEl.style.display = letterLink ? "inline-block" : "none"; }
+
+      const statusClass = status === "Accepted" ? "approved" : status === "Declined" ? "rejected" : "pending";
       document.getElementById("reviewCurrentStatus").innerHTML =
-        `<span class="statusPill ${statusClass}">${s.Status}</span>`;
+        `<span class="statusPill ${statusClass}">${status}</span>`;
 
+      // Populate batch dropdown
       const batches = document.getElementById("inBatch");
       document.getElementById("reviewBatchSelect").innerHTML = batches.innerHTML;
 
+      // Set duration to match applicant's chosen duration
+      const durSelect = document.getElementById("reviewDurationSelect");
+      for (let i = 0; i < durSelect.options.length; i++) {
+        if (durSelect.options[i].value === duration) { durSelect.selectedIndex = i; break; }
+      }
+
+      // Show/hide panels based on action
+      document.getElementById("acceptPanel").style.display = "none";
+      document.getElementById("rejectPanel").style.display = "none";
+      document.getElementById("reviewDefaultActions").style.display = "none";
+
+      if (action === "accept") {
+        document.getElementById("reviewModalTitle").innerText = "✅ Accept Application";
+        document.getElementById("acceptPanel").style.display = "block";
+      } else if (action === "reject") {
+        document.getElementById("reviewModalTitle").innerText = "❌ Reject Application";
+        document.getElementById("rejectPanel").style.display = "block";
+      } else {
+        document.getElementById("reviewModalTitle").innerText = "📋 Review Application";
+        document.getElementById("reviewDefaultActions").style.display = "block";
+      }
+
       document.getElementById("enrolledReviewModal").classList.add("show");
+    }
+
+    function switchReviewAction(action) {
+      document.getElementById("reviewDefaultActions").style.display = "none";
+      if (action === "accept") {
+        document.getElementById("reviewModalTitle").innerText = "✅ Accept Application";
+        document.getElementById("acceptPanel").style.display = "block";
+      } else {
+        document.getElementById("reviewModalTitle").innerText = "❌ Reject Application";
+        document.getElementById("rejectPanel").style.display = "block";
+      }
+    }
+
+    async function confirmAccept() {
+      if (!CURRENT_ENROLLED_ID) { toast("No enrollment selected ❌", "error"); return; }
+
+      const batchId = document.getElementById("reviewBatchSelect").value;
+      const duration = document.getElementById("reviewDurationSelect").value;
+      const name = document.getElementById("reviewName").innerText;
+      const email = CURRENT_ENROLLED_ID.email;
+
+      if (!batchId) { toast("Please select a batch ❌", "error"); return; }
+
+      document.getElementById("reviewMsg").innerText = "Processing...";
+
+      // 1. Update joining status to Accepted
+      const statusData = await apiPOST({
+        action: "updateJoiningStatus",
+        adminId: admin.adminId,
+        adminPass: admin.adminPass,
+        email,
+        joiningDate: CURRENT_ENROLLED_ID.joiningDate,
+        status: "Accepted"
+      });
+
+      if (!statusData.success) {
+        document.getElementById("reviewMsg").innerText = "❌ " + statusData.message;
+        toast(statusData.message, "error");
+        return;
+      }
+
+      // 2. Create intern in the system
+      const internData = await apiGET({
+        action: "adminCreateInternGET",
+        adminId: admin.adminId,
+        adminPass: admin.adminPass,
+        name,
+        email,
+        batchId,
+        duration
+      });
+
+      if (internData.success) {
+        toast(`✅ Accepted! Intern ID: ${internData.internId} created`, "success");
+        document.getElementById("reviewMsg").innerText =
+          `✅ Accepted! Intern ID: ${internData.internId} added to batch.`;
+        setTimeout(() => {
+          closeEnrolledReview();
+          loadEnrolledStudents(true);
+        }, 1800);
+      } else {
+        document.getElementById("reviewMsg").innerText = "Status updated but intern creation failed: " + internData.message;
+        toast(internData.message, "error");
+      }
+    }
+
+    async function confirmReject() {
+      if (!CURRENT_ENROLLED_ID) { toast("No enrollment selected ❌", "error"); return; }
+
+      document.getElementById("reviewMsg").innerText = "Processing...";
+
+      const data = await apiPOST({
+        action: "updateJoiningStatus",
+        adminId: admin.adminId,
+        adminPass: admin.adminPass,
+        email: CURRENT_ENROLLED_ID.email,
+        joiningDate: CURRENT_ENROLLED_ID.joiningDate,
+        status: "Declined"
+      });
+
+      if (data.success) {
+        toast("✅ Application Declined. Rejection email sent.", "success");
+        document.getElementById("reviewMsg").innerText = "✅ Rejected. Email sent to applicant.";
+        setTimeout(() => {
+          closeEnrolledReview();
+          loadEnrolledStudents(true);
+        }, 1400);
+      } else {
+        document.getElementById("reviewMsg").innerText = "❌ " + data.message;
+        toast(data.message, "error");
+      }
     }
 
     function closeEnrolledReview() {
@@ -2248,27 +2455,25 @@
     async function submitEnrolledDecision(decision) {
       if (!CURRENT_ENROLLED_ID) { toast("No enrollment selected ❌", "error"); return; }
 
-      const batchId = document.getElementById("reviewBatchSelect").value;
-      const duration = document.getElementById("reviewDuration").value;
-      const remarks = document.getElementById("reviewRemarks").value.trim();
+      // Map Approved → Accepted, Rejected → Declined to match backend allowed values
+      const statusMap = { "Approved": "Accepted", "Rejected": "Declined" };
+      const newStatus = statusMap[decision] || decision;
 
       document.getElementById("reviewMsg").innerText = "Processing...";
 
       const data = await apiPOST({
-        action: "adminReviewEnrollment",
+        action: "updateJoiningStatus",
         adminId: admin.adminId,
         adminPass: admin.adminPass,
-        enrollmentId: CURRENT_ENROLLED_ID,
-        decision,
-        batchId,
-        duration,
-        remarks
+        email: CURRENT_ENROLLED_ID.email,
+        joiningDate: CURRENT_ENROLLED_ID.joiningDate,
+        status: newStatus
       });
 
       if (data.success) {
-        const msg = decision === "Approved"
-          ? "✅ Approved! LOI + Offer Letter sent to intern."
-          : "✅ Rejected. Rejection email sent to intern.";
+        const msg = newStatus === "Accepted"
+          ? "✅ Application Accepted!"
+          : "✅ Application Declined.";
 
         toast(msg, "success");
         document.getElementById("reviewMsg").innerText = msg;
@@ -2359,24 +2564,24 @@
 
     // ── Wizard step navigation helpers ──
     function _showDocStep(n) {
-      [1,2,3].forEach(s => {
+      [1, 2, 3].forEach(s => {
         document.getElementById("docStep" + s).style.display = s === n ? "block" : "none";
       });
       // Update progress pills
       const pillStyles = {
         active: "background:linear-gradient(135deg,rgba(124,0,255,0.28),rgba(177,0,255,0.18));border:1px solid rgba(124,0,255,0.45);color:#fff;",
-        done:   "background:rgba(0,255,168,0.08);border:1px solid rgba(0,255,168,0.22);color:#caffdf;",
-        idle:   "background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.10);color:var(--muted);"
+        done: "background:rgba(0,255,168,0.08);border:1px solid rgba(0,255,168,0.22);color:#caffdf;",
+        idle: "background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.10);color:var(--muted);"
       };
-      const states = n === 1 ? ["active","idle","idle"]
-                   : n === 2 ? ["done","active","idle"]
-                   :           ["done","done","active"];
-      ["stepPill1","stepPill2","stepPill3"].forEach((id, i) => {
+      const states = n === 1 ? ["active", "idle", "idle"]
+        : n === 2 ? ["done", "active", "idle"]
+          : ["done", "done", "active"];
+      ["stepPill1", "stepPill2", "stepPill3"].forEach((id, i) => {
         document.getElementById(id).style.cssText +=
           ";flex:1;text-align:center;padding:7px 0;font-size:11px;font-weight:800;letter-spacing:0.3px;transition:0.3s;" +
           pillStyles[states[i]];
-        if (states[i] === "done") document.getElementById(id).innerHTML = ["✅ Create","✅ Link","✅ Share"][i];
-        else document.getElementById(id).innerHTML = ["1 · Create","2 · Link","3 · Share"][i];
+        if (states[i] === "done") document.getElementById(id).innerHTML = ["✅ Create", "✅ Link", "✅ Share"][i];
+        else document.getElementById(id).innerHTML = ["1 · Create", "2 · Link", "3 · Share"][i];
       });
     }
 
@@ -2387,11 +2592,11 @@
       SELECTED_DOCS = [];
 
       // Reset checkboxes
-      ["chkLoi","chkOfferLetter","chkJoiningLetter","chkCompletion","chkCertificate","chkBestPerformer"].forEach(id => {
+      ["chkLoi", "chkOfferLetter", "chkJoiningLetter", "chkCompletion", "chkCertificate", "chkBestPerformer"].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.checked = false;
       });
-      ["docOptLoi","docOptOfferLetter","docOptJoiningLetter","docOptCompletion","docOptCertificate","docOptBestPerformer"].forEach(id => {
+      ["docOptLoi", "docOptOfferLetter", "docOptJoiningLetter", "docOptCompletion", "docOptCertificate", "docOptBestPerformer"].forEach(id => {
         const el = document.getElementById(id);
         if (el) { el.style.borderColor = "rgba(255,255,255,0.08)"; el.style.background = "rgba(255,255,255,0.02)"; }
       });
@@ -2430,11 +2635,11 @@
 
     function updateDocSummary() {
       const map = [
-        { id: "chkLoi",           label: "LOI" },
-        { id: "chkOfferLetter",   label: "Offer Letter" },
+        { id: "chkLoi", label: "LOI" },
+        { id: "chkOfferLetter", label: "Offer Letter" },
         { id: "chkJoiningLetter", label: "Joining Letter" },
-        { id: "chkCompletion",    label: "Completion Letter" },
-        { id: "chkCertificate",   label: "Completion Certificate" },
+        { id: "chkCompletion", label: "Completion Letter" },
+        { id: "chkCertificate", label: "Completion Certificate" },
         { id: "chkBestPerformer", label: "Best Performer Certificate" }
       ];
       const selected = map.filter(m => document.getElementById(m.id)?.checked).map(m => m.label);
@@ -2447,14 +2652,14 @@
       }
     }
 
-    // ── STEP 1 → STEP 2: Generate Link ──
-    async function docGoToStep2() {
+    // ── STEP 1 → STEP 2: Preview selected docs ──
+    function docGoToStep2() {
       const map = [
-        { id: "chkLoi",           key: "loi",           label: "📝 Letter of Intent (LOI)" },
-        { id: "chkOfferLetter",   key: "offerLetter",   label: "📄 Offer Letter" },
+        { id: "chkLoi", key: "loi", label: "📝 Letter of Intent (LOI)" },
+        { id: "chkOfferLetter", key: "offerLetter", label: "📄 Offer Letter" },
         { id: "chkJoiningLetter", key: "joiningLetter", label: "🤝 Joining Letter" },
-        { id: "chkCompletion",    key: "completion",    label: "📃 Completion Letter" },
-        { id: "chkCertificate",   key: "certificate",   label: "🏅 Completion Certificate" },
+        { id: "chkCompletion", key: "completion", label: "📃 Completion Letter" },
+        { id: "chkCertificate", key: "certificate", label: "🏅 Completion Certificate" },
         { id: "chkBestPerformer", key: "bestPerformer", label: "🏆 Best Performer Certificate" }
       ];
       SELECTED_DOCS = map.filter(m => document.getElementById(m.id)?.checked);
@@ -2465,34 +2670,24 @@
       }
       document.getElementById("docStep1Msg").innerText = "";
 
-      // Call backend to create documents and get link
-      showLoader(true, "Creating Documents...");
-      const data = await apiPOST({
-        action: "adminCreateDocuments",
-        adminId: admin.adminId,
-        adminPass: admin.adminPass,
-        internId: CURRENT_DOC_INTERN.InternID,
-        documents: SELECTED_DOCS.map(m => m.key)
-      });
-      showLoader(false);
+      // No backend call needed here — documents are generated at send time
+      // Set a placeholder link (will be populated after actual send)
+      GENERATED_DOC_LINK = "";
+      const linkEl = document.getElementById("docGeneratedLink");
+      if (linkEl) linkEl.value = "Document link will be available after sending via email.";
 
-      // Use returned link or build a fallback placeholder
-      GENERATED_DOC_LINK = (data.success && data.docLink)
-        ? data.docLink
-        : `https://codeline.ai/docs/${CURRENT_DOC_INTERN.InternID}?docs=${SELECTED_DOCS.map(m=>m.key).join(",")}`;
-
-      // Populate step 2 UI
-      document.getElementById("docGeneratedLink").value = GENERATED_DOC_LINK;
-
+      // Populate step 2 doc list UI
       const listEl = document.getElementById("docLinkDocList");
-      listEl.innerHTML = SELECTED_DOCS.map(m => `
-        <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;
-          border-radius:10px;background:rgba(255,255,255,0.02);
-          border:1px solid rgba(255,255,255,0.06);">
-          <span style="font-size:16px;">✅</span>
-          <span style="font-size:13px;font-weight:700;">${m.label}</span>
-        </div>
-      `).join("");
+      if (listEl) {
+        listEl.innerHTML = SELECTED_DOCS.map(m => `
+          <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;
+            border-radius:10px;background:rgba(255,255,255,0.02);
+            border:1px solid rgba(255,255,255,0.06);">
+            <span style="font-size:16px;">✅</span>
+            <span style="font-size:13px;font-weight:700;">${m.label}</span>
+          </div>
+        `).join("");
+      }
 
       _showDocStep(2);
     }
