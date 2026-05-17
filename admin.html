@@ -706,6 +706,7 @@
                   <th>Email</th>
                   <th>Batch</th>
                   <th>Duration</th>
+                  <th>Joining Date</th>
                   <th>Action</th>
                 </tr>
               </thead>
@@ -1982,7 +1983,7 @@
       document.getElementById("batchCount").innerText = list.length;
 
       if (list.length === 0) {
-        tb.innerHTML = `<tr><td colspan="6">No interns found ✅</td></tr>`;
+        tb.innerHTML = `<tr><td colspan="7">No interns found ✅</td></tr>`;
         return;
       }
 
@@ -1994,6 +1995,7 @@
             <td>${i.Email}</td>
             <td>${i.BatchName}</td>
             <td>${i.Duration}</td>
+            <td>${i.CreatedAt ? formatDate(i.CreatedAt) : "-"}</td>
             <td>
               <button class="dotBtn" onclick="openInternOverview('${i.InternID}')">⋮</button>
             </td>
@@ -2278,6 +2280,7 @@
             <td>
               <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;">
                 ${cvBtn}${letterBtn}
+                ${s.Status === "Pending" ? `
                 <button class="btn primary" style="font-size:11px;padding:5px 10px;background:rgba(0,200,100,0.15);border-color:rgba(0,200,100,0.4);color:#00c864;"
   onclick='openEnrolledReview(${JSON.stringify(JSON.stringify(s._raw))}, "accept")'>
   ✅ Accept
@@ -2285,7 +2288,7 @@
 <button class="btn danger" style="font-size:11px;padding:5px 10px;"
   onclick='openEnrolledReview(${JSON.stringify(JSON.stringify(s._raw))}, "reject")'>
   ❌ Reject
-</button>
+</button>` : `<span style="font-size:11px;color:var(--muted);font-style:italic;">—</span>`}
               </div>
             </td>
           </tr>
