@@ -2409,13 +2409,15 @@
         JoiningDate: s["Joining Date"] || s.JoiningDate || "",
         CVLink: s["CV Link"] || s.CVLink || "",
         LetterLink: s["Letter Link"] || s.LetterLink || "",
-        Status: s["Status"] || s.Status || "Pending",
+        Status:        s["Status"]         || s.Status        || "Pending",
+        RemovalReason: s["Removal Reason"] || s.RemovalReason || "",
+        RemovedAt:     s["Removed At"]     || s.RemovedAt     || "",
         _raw: s   // keep original for review modal
       }));
 
       const total = list.length;
       const pending = list.filter(s => s.Status === "Pending").length;
-      const accepted = list.filter(s => s.Status === "Accepted").length;
+      const accepted = list.filter(s => s.Status === "Accepted" || s.Status === "Removed").length;
       const declined = list.filter(s => s.Status === "Declined").length;
 
       document.getElementById("tagTotal").innerText = `${total} Total`;
@@ -2436,6 +2438,28 @@
         const cvBtn = s.CVLink ? `<a href="${escapeHTML(s.CVLink)}"     target="_blank" class="btn" style="font-size:11px;padding:5px 10px;">📄 CV</a>` : "";
         const letterBtn = s.LetterLink ? `<a href="${escapeHTML(s.LetterLink)}" target="_blank" class="btn" style="font-size:11px;padding:5px 10px;">📝 Letter</a>` : "";
 
+        // Status cell — sheet se aaya data use karo (localStorage nahi)
+        let statusCell = "";
+        if (s.Status === "Removed") {
+          statusCell = `
+            <div style="display:inline-flex;flex-direction:column;gap:5px;">
+              <span style="display:inline-flex;align-items:center;gap:5px;
+                padding:4px 10px;border-radius:20px;font-size:11px;font-weight:800;
+                letter-spacing:0.4px;text-transform:uppercase;
+                background:rgba(255,60,60,0.14);border:1px solid rgba(255,60,60,0.40);color:#ff4444;">
+                🗑️ Removed
+              </span>
+              <div style="background:rgba(255,60,60,0.08);border:1px solid rgba(255,60,60,0.22);
+                border-radius:8px;padding:5px 9px;min-width:140px;">
+                <div style="font-size:10px;font-weight:800;color:#ff6060;margin-bottom:2px;">Reason</div>
+                <div style="font-size:11px;color:var(--muted);line-height:1.4;">${escapeHTML(s.RemovalReason || "-")}</div>
+                ${s.RemovedAt ? `<div style="font-size:10px;color:var(--muted);opacity:0.6;margin-top:2px;">${escapeHTML(s.RemovedAt)}</div>` : ""}
+              </div>
+            </div>`;
+        } else {
+          statusCell = `<span class="statusPill ${statusClass}">${escapeHTML(s.Status)}</span>`;
+        }
+
         tb.innerHTML += `
           <tr>
             <td style="color:var(--muted);font-size:12px;">${idx + 1}</td>
@@ -2446,7 +2470,7 @@
             <td style="font-size:12px;">${escapeHTML(s.Email)}</td>
             <td style="font-size:12px;">${escapeHTML(s.Phone)}</td>
             <td style="font-size:12px;">${formatDate(s.JoiningDate)}</td>
-            <td><span class="statusPill ${statusClass}">${escapeHTML(s.Status)}</span></td>
+            <td>${statusCell}</td>
             <td>
               <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;">
                 ${cvBtn}${letterBtn}
@@ -3125,7 +3149,15 @@
         return;
       }
 
-      const reason = document.getElementById("removeReason").value;
+      const reasonVal = document.getElementById("removeReason").value;
+      const reasonLabels = {
+        absent:     "🚫 Consistent Absence / No Show",
+        incomplete: "📋 Failed to Complete Projects",
+        late:       "⏰ Repeated Late Submissions",
+        conduct:    "⚠️ Code of Conduct Violation",
+        voluntary:  "✋ Voluntary Exit / Resigned"
+      };
+      const reasonText = reasonLabels[reasonVal] || reasonVal;
       msgEl.innerText = "🗑️ Removing intern data...";
 
       const data = await apiPOST({
@@ -3133,7 +3165,7 @@
         adminId: admin.adminId,
         adminPass: admin.adminPass,
         internId: CURRENT_REMOVE_INTERN.InternID,
-        reason
+        reason: reasonVal
       });
 
       if (data.success) {
