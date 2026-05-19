@@ -2117,14 +2117,14 @@
         action: "getPendingSubmissions",
         adminId: admin.adminId,
         adminPass: admin.adminPass
-      });
-      if (!data.success) { toast(data.message, "error"); return; }
+      }, silent);
+      if (!data.success) { if (!silent) toast(data.message, "error"); return; }
 
       const tb = document.getElementById("subsTable");
       tb.innerHTML = "";
 
       if ((data.submissions || []).length === 0) {
-        tb.innerHTML = `<tr><td colspan="9">No pending submissions ✅</td></tr>`;
+        tb.innerHTML = `<tr><td colspan="9" style="text-align:center;padding:30px;color:var(--muted);">✅ No pending submissions — sab review ho gaye!</td></tr>`;
         return;
       }
 
@@ -2158,8 +2158,14 @@
     }
 
     async function grade(submissionId, finalStatus) {
-      const grade = document.getElementById("g_" + submissionId).value.trim();
-      const remarks = document.getElementById("r_" + submissionId).value.trim();
+      const gradeVal = document.getElementById("g_" + submissionId).value.trim();
+      const remarks  = document.getElementById("r_" + submissionId).value.trim();
+
+      // Visually mark the row as processing
+      const approveBtn = document.querySelector(`button[onclick="grade('${submissionId}','Approved')"]`);
+      const rejectBtn  = document.querySelector(`button[onclick="grade('${submissionId}','Rejected')"]`);
+      if (approveBtn) { approveBtn.disabled = true; approveBtn.innerText = "..."; }
+      if (rejectBtn)  { rejectBtn.disabled  = true; rejectBtn.innerText  = "..."; }
 
       const data = await apiPOST({
         action: "adminGradeSubmission",
@@ -2167,15 +2173,34 @@
         adminPass: admin.adminPass,
         submissionId,
         finalStatus,
-        grade,
+        grade: gradeVal,
         remarks
       });
-      showLoader(false);
 
       if (data.success) {
-        toast("Graded ✅", "success");
-        loadSubmissions();
-      } else toast(data.message, "error");
+        toast(finalStatus === "Approved" ? "Approved ✅" : "Rejected ❌", "success");
+
+        // Animate row out, then reload
+        const row = approveBtn ? approveBtn.closest("tr") : null;
+        if (row) {
+          row.style.transition = "opacity 0.4s, transform 0.4s";
+          row.style.opacity = "0";
+          row.style.transform = "translateX(30px)";
+          setTimeout(async () => {
+            await loadSubmissions(true);
+            cacheInvalidate("submissions");
+            await fetchNotifications();
+          }, 400);
+        } else {
+          await loadSubmissions(true);
+          cacheInvalidate("submissions");
+          await fetchNotifications();
+        }
+      } else {
+        toast(data.message || "Failed ❌", "error");
+        if (approveBtn) { approveBtn.disabled = false; approveBtn.innerText = "Approve"; }
+        if (rejectBtn)  { rejectBtn.disabled  = false; rejectBtn.innerText  = "Reject";  }
+      }
     }
 
     function closeInternModal() {
