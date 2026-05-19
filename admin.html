@@ -673,6 +673,255 @@
       font-size: 28px;
       margin-bottom: 10px;
     }
+
+    /* ── Notification Bell ── */
+    .notifWrap {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .notifBell {
+      position: relative;
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.10);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 18px;
+      transition: 0.2s;
+      flex-shrink: 0;
+    }
+
+    .notifBell:hover {
+      background: rgba(177,0,255,0.12);
+      border-color: rgba(177,0,255,0.35);
+      box-shadow: 0 0 18px rgba(177,0,255,0.15);
+    }
+
+    .notifBadge {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      background: linear-gradient(135deg, #ff4444, #B100FF);
+      color: #fff;
+      font-size: 9px;
+      font-weight: 900;
+      border-radius: 20px;
+      min-width: 16px;
+      height: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 4px;
+      letter-spacing: 0.3px;
+      border: 1.5px solid #0a0812;
+      animation: badgePulse 2s infinite;
+    }
+
+    @keyframes badgePulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(177,0,255,0.4); }
+      50%       { box-shadow: 0 0 0 5px rgba(177,0,255,0); }
+    }
+
+    .notifBadge.hidden { display: none; }
+
+    .notifDropdown {
+      display: none;
+      position: fixed;
+      right: 20px;
+      top: 80px;
+      width: 340px;
+      background: #12101c;
+      border: 1px solid rgba(177,0,255,0.25);
+      border-radius: 18px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.03);
+      z-index: 99999;
+      overflow: hidden;
+      animation: menuPop 0.18s ease;
+    }
+
+    .notifDropdown.open { display: block; }
+    
+    @media (max-width: 500px) {
+      .notifDropdown { right: 10px; width: calc(100vw - 20px); }
+    }
+
+    .notifHeader {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 16px 10px;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+    }
+
+    .notifTitle {
+      font-size: 13px;
+      font-weight: 900;
+      letter-spacing: 0.4px;
+    }
+
+    .notifRefreshBtn {
+      background: none;
+      border: 1px solid rgba(177,0,255,0.3);
+      color: #B100FF;
+      border-radius: 8px;
+      padding: 4px 10px;
+      font-size: 11px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .notifRefreshBtn:hover {
+      background: rgba(177,0,255,0.12);
+    }
+
+    .notifRefreshBtn.spinning svg {
+      animation: spinIcon 0.7s linear infinite;
+    }
+
+    @keyframes spinIcon {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
+    }
+
+    .notifBody {
+      max-height: 380px;
+      overflow-y: auto;
+      padding: 8px 0;
+    }
+
+    .notifBody::-webkit-scrollbar { width: 3px; }
+    .notifBody::-webkit-scrollbar-thumb { background: rgba(177,0,255,0.3); border-radius: 10px; }
+
+    .notifGroup {
+      padding: 6px 0;
+    }
+
+    .notifGroupLabel {
+      font-size: 10px;
+      font-weight: 900;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.35);
+      padding: 4px 16px 6px;
+    }
+
+    .notifItem {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 10px 16px;
+      cursor: pointer;
+      transition: background 0.15s;
+      border-radius: 0;
+    }
+
+    .notifItem:hover {
+      background: rgba(177,0,255,0.07);
+    }
+
+    .notifIcon {
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .notifIcon.sub  { background: rgba(0,200,100,0.12); border: 1px solid rgba(0,200,100,0.2); }
+    .notifIcon.join { background: rgba(177,0,255,0.12); border: 1px solid rgba(177,0,255,0.2); }
+    .notifIcon.edit { background: rgba(255,165,0,0.12); border: 1px solid rgba(255,165,0,0.2); }
+
+    .notifText {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .notifItemTitle {
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .notifItemSub {
+      font-size: 11px;
+      color: rgba(255,255,255,0.45);
+      line-height: 1.4;
+    }
+
+    .notifArrow {
+      font-size: 11px;
+      color: rgba(255,255,255,0.25);
+      flex-shrink: 0;
+      margin-top: 8px;
+    }
+
+    .notifEmpty {
+      text-align: center;
+      padding: 30px 20px;
+      color: rgba(255,255,255,0.3);
+      font-size: 12px;
+    }
+
+    .notifEmpty span { display: block; font-size: 26px; margin-bottom: 8px; }
+
+    .notifFooter {
+      border-top: 1px solid rgba(255,255,255,0.07);
+      padding: 10px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .notifCountChip {
+      font-size: 11px;
+      font-weight: 800;
+      padding: 3px 10px;
+      border-radius: 20px;
+      background: rgba(177,0,255,0.12);
+      border: 1px solid rgba(177,0,255,0.25);
+      color: #B100FF;
+    }
+
+    .notifSkeleton {
+      padding: 10px 16px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .skeletonCircle {
+      width: 32px; height: 32px; border-radius: 10px;
+      background: linear-gradient(90deg, rgba(255,255,255,0.05) 25%, rgba(255,255,255,0.09) 50%, rgba(255,255,255,0.05) 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+      flex-shrink: 0;
+    }
+
+    .skeletonLine {
+      height: 10px; border-radius: 6px;
+      background: linear-gradient(90deg, rgba(255,255,255,0.05) 25%, rgba(255,255,255,0.09) 50%, rgba(255,255,255,0.05) 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+      margin-bottom: 6px;
+    }
   </style>
 </head>
 
@@ -730,7 +979,38 @@
             <p>Software training institute in Maharashtra</p>
           </div>
 
-          <div class="actions">
+          <div class="actions" style="align-items:center;">
+
+            <!-- 🔔 Notification Bell -->
+            <div class="notifWrap" id="notifWrap">
+              <div class="notifBell" onclick="toggleNotifDropdown(event)" title="Notifications">
+                🔔
+                <span class="notifBadge hidden" id="notifBadge">0</span>
+              </div>
+
+              <div class="notifDropdown" id="notifDropdown">
+                <div class="notifHeader">
+                  <div class="notifTitle">🔔 Notifications</div>
+                  <button class="notifRefreshBtn" id="notifRefreshBtn" onclick="refreshNotifications(event)">
+                    <svg id="notifRefreshIcon" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="23 4 23 10 17 10"></polyline>
+                      <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+                    </svg>
+                    Refresh
+                  </button>
+                </div>
+
+                <div class="notifBody" id="notifBody">
+                  <div class="notifEmpty"><span>🔔</span>Click to load notifications</div>
+                </div>
+
+                <div class="notifFooter">
+                  <span class="notifCountChip" id="notifTotalChip">Loading...</span>
+                  <span style="font-size:11px;color:rgba(255,255,255,0.25);" id="notifLastUpdated">—</span>
+                </div>
+              </div>
+            </div>
+
             <button class="btn ghost" onclick="init()">🔄 Refresh</button>
             <button class="btn danger" onclick="logout()">Logout</button>
           </div>
@@ -3181,8 +3461,193 @@
       }
     }
 
+
+    // ===============================
+    // NOTIFICATION SYSTEM
+    // ===============================
+
+    let _notifData = { submissions: [], joiningInterns: [], editRequests: [] };
+    let _notifOpen = false;
+    let _notifLoaded = false;
+
+    function toggleNotifDropdown(e) {
+      e.stopPropagation();
+      const dd = document.getElementById("notifDropdown");
+      const bell = document.getElementById("notifWrap");
+      _notifOpen = !_notifOpen;
+      if (_notifOpen) {
+        // Position dropdown relative to bell icon
+        const rect = bell.getBoundingClientRect();
+        dd.style.top = (rect.bottom + 10) + "px";
+        dd.style.right = (window.innerWidth - rect.right) + "px";
+        dd.classList.add("open");
+        if (!_notifLoaded) fetchNotifications();
+      } else {
+        dd.classList.remove("open");
+      }
+    }
+
+    document.addEventListener("click", function(e) {
+      const wrap = document.getElementById("notifWrap");
+      if (wrap && !wrap.contains(e.target)) {
+        const dd = document.getElementById("notifDropdown");
+        if (dd) dd.classList.remove("open");
+        _notifOpen = false;
+      }
+    });
+
+    async function refreshNotifications(e) {
+      if (e) e.stopPropagation();
+      const btn = document.getElementById("notifRefreshBtn");
+      if (btn) btn.classList.add("spinning");
+      await fetchNotifications();
+      if (btn) btn.classList.remove("spinning");
+    }
+
+    async function fetchNotifications() {
+      _notifLoaded = true;
+      // Show skeleton while loading
+      const body = document.getElementById("notifBody");
+      if (body) body.innerHTML = '<div id="notifSkeleton">'
+        + '<div class="notifSkeleton"><div class="skeletonCircle"></div><div style="flex:1"><div class="skeletonLine" style="width:70%"></div><div class="skeletonLine" style="width:45%"></div></div></div>'
+        + '<div class="notifSkeleton"><div class="skeletonCircle"></div><div style="flex:1"><div class="skeletonLine" style="width:80%"></div><div class="skeletonLine" style="width:50%"></div></div></div>'
+        + '<div class="notifSkeleton"><div class="skeletonCircle"></div><div style="flex:1"><div class="skeletonLine" style="width:60%"></div><div class="skeletonLine" style="width:40%"></div></div></div>'
+        + '</div>';
+      try {
+        const [subsData, joiningData, editData] = await Promise.all([
+          apiGET({ action: "getPendingSubmissions", adminId: admin.adminId, adminPass: admin.adminPass }, true),
+          apiGET({ action: "getJoiningInterns",    adminId: admin.adminId, adminPass: admin.adminPass, status: "Pending" }, true),
+          apiGET({ action: "getEditRequests",       adminId: admin.adminId, adminPass: admin.adminPass }, true)
+        ]);
+        _notifData = {
+          submissions:    (subsData.success    ? subsData.submissions       : []),
+          joiningInterns: (joiningData.success  ? joiningData.joiningInterns : []),
+          editRequests:   (editData.success     ? editData.requests          : [])
+        };
+      } catch(err) {
+        console.error("Notification fetch error:", err);
+      }
+      renderNotifications();
+    }
+
+    function renderNotifications() {
+      const { submissions, joiningInterns, editRequests } = _notifData;
+      const total = submissions.length + joiningInterns.length + editRequests.length;
+
+      const badge = document.getElementById("notifBadge");
+      if (badge) {
+        if (total > 0) {
+          badge.classList.remove("hidden");
+          badge.textContent = total > 99 ? "99+" : String(total);
+        } else {
+          badge.classList.add("hidden");
+        }
+      }
+
+      const chip = document.getElementById("notifTotalChip");
+      if (chip) chip.textContent = total === 0 ? "All clear ✅" : total + " pending";
+
+      const ts = document.getElementById("notifLastUpdated");
+      if (ts) {
+        const now = new Date();
+        ts.textContent = "Updated " + now.getHours().toString().padStart(2,"0") + ":" + now.getMinutes().toString().padStart(2,"0");
+      }
+
+      const body = document.getElementById("notifBody");
+      if (!body) return;
+
+      // Clear skeleton + old content
+      body.innerHTML = "";
+
+      if (total === 0) {
+        body.innerHTML = '<div class="notifEmpty"><span>✅</span>Sab theek hai! Koi pending action nahi.</div>';
+        return;
+      }
+
+      let html = "";
+
+      if (submissions.length > 0) {
+        html += '<div class="notifGroup"><div class="notifGroupLabel">\uD83D\uDCE5 New Submissions (' + submissions.length + ')</div>';
+        submissions.slice(0, 5).forEach(function(s) {
+          html += '<div class="notifItem" onclick="goToSubmissions()">'
+            + '<div class="notifIcon sub">\uD83D\uDCE5</div>'
+            + '<div class="notifText">'
+            + '<div class="notifItemTitle">' + escapeHTML(s.Name || s.InternID) + '</div>'
+            + '<div class="notifItemSub">' + escapeHTML(s.Title || s.AssignedTaskID || "") + ' \u00B7 ' + formatDate(s.SubmittedAt) + '</div>'
+            + '</div><div class="notifArrow">\u203A</div></div>';
+        });
+        if (submissions.length > 5) html += '<div style="padding:6px 16px 8px;font-size:11px;color:rgba(255,255,255,0.35);">+' + (submissions.length - 5) + ' more submissions...</div>';
+        html += '</div>';
+      }
+
+      if (joiningInterns.length > 0) {
+        html += '<div class="notifGroup" style="border-top:1px solid rgba(255,255,255,0.05);"><div class="notifGroupLabel">\uD83C\uDF93 Joining Applications (' + joiningInterns.length + ')</div>';
+        joiningInterns.slice(0, 5).forEach(function(j) {
+          var fn = j["First Name"] || "";
+          var ln = j["Last Name"] || "";
+          var name = j.FullName || (fn + " " + ln).trim();
+          var date = formatDate(j["Joining Date"] || j.JoiningDate || "");
+          html += '<div class="notifItem" onclick="goToJoining()">'
+            + '<div class="notifIcon join">\uD83C\uDF93</div>'
+            + '<div class="notifText">'
+            + '<div class="notifItemTitle">' + escapeHTML(name) + '</div>'
+            + '<div class="notifItemSub">' + escapeHTML(j.Email || "") + ' \u00B7 Applied ' + date + '</div>'
+            + '</div><div class="notifArrow">\u203A</div></div>';
+        });
+        if (joiningInterns.length > 5) html += '<div style="padding:6px 16px 8px;font-size:11px;color:rgba(255,255,255,0.35);">+' + (joiningInterns.length - 5) + ' more applications...</div>';
+        html += '</div>';
+      }
+
+      if (editRequests.length > 0) {
+        html += '<div class="notifGroup" style="border-top:1px solid rgba(255,255,255,0.05);"><div class="notifGroupLabel">\uD83D\uDD10 Edit Requests (' + editRequests.length + ')</div>';
+        editRequests.slice(0, 5).forEach(function(r) {
+          html += '<div class="notifItem" onclick="goToEditRequests()">'
+            + '<div class="notifIcon edit">\u270F\uFE0F</div>'
+            + '<div class="notifText">'
+            + '<div class="notifItemTitle">' + escapeHTML(r.InternID) + '</div>'
+            + '<div class="notifItemSub">' + escapeHTML(r.SubmissionID || "") + ' \u00B7 ' + formatDate(r.RequestedAt) + '</div>'
+            + '</div><div class="notifArrow">\u203A</div></div>';
+        });
+        if (editRequests.length > 5) html += '<div style="padding:6px 16px 8px;font-size:11px;color:rgba(255,255,255,0.35);">+' + (editRequests.length - 5) + ' more requests...</div>';
+        html += '</div>';
+      }
+
+      body.innerHTML = html;
+    }
+
+    function goToSubmissions() {
+      document.getElementById("notifDropdown").classList.remove("open");
+      _notifOpen = false;
+      var link = document.querySelector("#adminNav a[onclick*='subsPage']");
+      if (link) link.click();
+    }
+
+    function goToJoining() {
+      document.getElementById("notifDropdown").classList.remove("open");
+      _notifOpen = false;
+      var link = document.querySelector("#adminNav a[onclick*='batchPage']");
+      if (link) link.click();
+      setTimeout(function() {
+        var enrolledTabBtn = document.querySelector(".batchTab[onclick*='enrolledTab']");
+        if (enrolledTabBtn) enrolledTabBtn.click();
+      }, 250);
+    }
+
+    function goToEditRequests() {
+      document.getElementById("notifDropdown").classList.remove("open");
+      _notifOpen = false;
+      var link = document.querySelector("#adminNav a[onclick*='editRequestsPage']");
+      if (link) link.click();
+    }
+
+    function startNotifAutoRefresh() {
+      setInterval(function() { fetchNotifications(); }, 60000);
+    }
+
     init();
     startAutoRefreshAdmin();
+    fetchNotifications();
+    startNotifAutoRefresh();
 
   </script>
 </body>
