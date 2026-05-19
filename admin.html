@@ -43,20 +43,84 @@
     }
 
     .dotBtn {
-      padding: 8px 12px;
-      border-radius: 14px;
+      padding: 7px 11px;
+      border-radius: 10px;
       font-weight: 900;
+      font-size: 16px;
       border: 1px solid rgba(255, 255, 255, 0.10);
       background: rgba(255, 255, 255, 0.03);
       color: var(--text);
       cursor: pointer;
+      transition: 0.2s;
+      line-height: 1;
     }
 
     .dotBtn:hover {
-      background: rgba(255, 255, 255, 0.06);
-      box-shadow: 0 0 25px rgba(124, 0, 255, 0.12);
+      background: rgba(124, 0, 255, 0.12);
+      border-color: rgba(124, 0, 255, 0.35);
+      box-shadow: 0 0 18px rgba(124, 0, 255, 0.15);
       transform: translateY(-1px);
-      transition: 0.2s;
+    }
+
+    /* ── Action Dropdown ── */
+    .actionWrap {
+      position: relative;
+      display: inline-block;
+    }
+
+    .actionMenu {
+      display: none;
+      position: absolute;
+      right: 0;
+      top: calc(100% + 6px);
+      min-width: 160px;
+      background: #16141f;
+      border: 1px solid rgba(124, 0, 255, 0.25);
+      border-radius: 14px;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,255,255,0.04);
+      z-index: 9000;
+      overflow: hidden;
+      animation: menuPop 0.15s ease;
+    }
+
+    @keyframes menuPop {
+      from { opacity: 0; transform: translateY(-6px) scale(0.97); }
+      to   { opacity: 1; transform: translateY(0)   scale(1);    }
+    }
+
+    .actionMenu.open { display: block; }
+
+    .actionMenuItem {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 11px 16px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      color: var(--text);
+      transition: background 0.15s;
+      border: none;
+      background: transparent;
+      width: 100%;
+      text-align: left;
+    }
+
+    .actionMenuItem:hover { background: rgba(255,255,255,0.05); }
+
+    .actionMenuItem.view  { color: #a78bfa; }
+    .actionMenuItem.warn  { color: #f59e0b; }
+    .actionMenuItem.remove { color: #f87171; }
+
+    .actionMenuItem + .actionMenuItem {
+      border-top: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .actionMenuIcon {
+      font-size: 15px;
+      width: 20px;
+      text-align: center;
+      flex-shrink: 0;
     }
 
     .modalOverlay {
@@ -259,6 +323,12 @@
         font-size: 12px;
         padding: 10px !important;
       }
+    }
+
+
+    @keyframes shimmer {
+      0%   { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
     }
 
     .taskDesc {
@@ -1484,6 +1554,74 @@
     </div>
   </div>
 
+  <!-- ===== WARN INTERN MODAL ===== -->
+  <div id="warnModal" class="modalOverlay">
+    <div class="modalCard" style="max-width:520px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:16px;">
+        <div>
+          <div style="font-size:16px;font-weight:900;">⚠️ Send Warning to Intern</div>
+          <div style="color:var(--muted);font-size:12px;margin-top:4px;" id="warnInternMeta">—</div>
+        </div>
+        <button class="btn danger" onclick="closeWarnModal()">Close</button>
+      </div>
+      <label style="font-size:12px;color:var(--muted);">Warning Reason</label>
+      <select id="warnReason" style="margin-bottom:12px;" onchange="updateWarnPreview()">
+        <option value="absent">🚫 Not Coming (Absent / No Show)</option>
+        <option value="late_submit">⏰ Late Task Submission</option>
+        <option value="incomplete">📋 Project / Task Not Completed</option>
+      </select>
+      <label style="font-size:12px;color:var(--muted);">Warning Level</label>
+      <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;">
+        <button id="warnLvl1Btn" class="btn" style="flex:1;font-size:12px;background:rgba(255,165,0,0.20);border-color:rgba(255,165,0,0.5);color:#ffaa33;font-weight:800;"
+          onclick="setWarnLevel(1)">⚠️ Warning 1<br/><span style="font-size:10px;font-weight:500;opacity:0.8;">First Notice</span></button>
+        <button id="warnLvl2Btn" class="btn" style="flex:1;font-size:12px;background:rgba(255,100,0,0.08);border-color:rgba(255,100,0,0.2);color:#ff8844;font-weight:800;"
+          onclick="setWarnLevel(2)">⚠️⚠️ Warning 2<br/><span style="font-size:10px;font-weight:500;opacity:0.8;">Second Notice</span></button>
+        <button id="warnLvl3Btn" class="btn" style="flex:1;font-size:12px;background:rgba(255,40,40,0.08);border-color:rgba(255,40,40,0.2);color:#ff4444;font-weight:800;"
+          onclick="setWarnLevel(3)">🔴 Final Notice<br/><span style="font-size:10px;font-weight:500;opacity:0.8;">Last Warning</span></button>
+      </div>
+      <div id="warnPreviewBox" style="background:rgba(255,165,0,0.04);border:1px solid rgba(255,165,0,0.15);border-radius:12px;padding:14px;margin-bottom:14px;font-size:12px;color:var(--muted);line-height:1.7;">
+        Select warning level to preview email tone...
+      </div>
+      <button class="btn primary" style="width:100%;padding:12px;font-weight:800;background:rgba(255,165,0,0.15);border-color:rgba(255,165,0,0.4);color:#ffaa33;"
+        onclick="sendWarnEmail()">📧 Send Warning Email</button>
+      <div class="small" id="warnMsg" style="margin-top:8px;text-align:center;"></div>
+    </div>
+  </div>
+
+  <!-- ===== REMOVE INTERN MODAL ===== -->
+  <div id="removeModal" class="modalOverlay">
+    <div class="modalCard" style="max-width:480px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:16px;">
+        <div>
+          <div style="font-size:16px;font-weight:900;color:#ff4444;">🗑️ Remove Intern</div>
+          <div style="color:var(--muted);font-size:12px;margin-top:4px;" id="removeInternMeta">—</div>
+        </div>
+        <button class="btn" onclick="closeRemoveModal()">Close</button>
+      </div>
+      <div style="background:rgba(255,40,40,0.08);border:1px solid rgba(255,40,40,0.3);border-radius:12px;padding:14px;margin-bottom:14px;">
+        <div style="font-size:13px;font-weight:800;color:#ff4444;margin-bottom:6px;">⛔ Permanent Action</div>
+        <div style="font-size:12px;color:var(--muted);line-height:1.6;">
+          Yeh intern ka data sheet se <b style="color:#ff4444;">permanently delete</b> ho jayega.<br/>
+          Saare submissions, tasks, messages bhi remove ho jayenge.<br/>
+          Intern ko <b>termination email</b> bhi bheja jayega.
+        </div>
+      </div>
+      <label style="font-size:12px;color:var(--muted);">Removal Reason</label>
+      <select id="removeReason" style="margin-bottom:14px;">
+        <option value="absent">🚫 Consistent Absence / No Show</option>
+        <option value="incomplete">📋 Failed to Complete Projects</option>
+        <option value="late">⏰ Repeated Late Submissions</option>
+        <option value="conduct">⚠️ Code of Conduct Violation</option>
+        <option value="voluntary">✋ Voluntary Exit / Resigned</option>
+      </select>
+      <label style="font-size:12px;color:var(--muted);">Confirm karne ke liye Intern ID type karein</label>
+      <input id="removeConfirmId" placeholder="e.g. COD0001" style="margin-bottom:14px;" />
+      <button class="btn danger" style="width:100%;padding:13px;font-weight:900;font-size:14px;"
+        onclick="confirmRemoveIntern()">🗑️ Confirm Remove & Delete Data</button>
+      <div class="small" id="removeMsg" style="margin-top:8px;text-align:center;"></div>
+    </div>
+  </div>
+
   <!-- Loader + Toast -->
   <div id="loaderOverlay" class="loaderOverlay">
     <div class="loaderCard">
@@ -1505,6 +1643,24 @@
         .replace(/"/g, "&quot;")
         .replace(/'/g, "&#039;");
     }
+
+    // ── Action Dropdown Menu ──
+    function toggleActionMenu(internId, e) {
+      e.stopPropagation();
+      const menu = document.getElementById("am_" + internId);
+      if (!menu) return;
+      const isOpen = menu.classList.contains("open");
+      closeAllMenus();
+      if (!isOpen) menu.classList.add("open");
+    }
+
+    function closeAllMenus() {
+      document.querySelectorAll(".actionMenu.open").forEach(m => m.classList.remove("open"));
+    }
+
+    document.addEventListener("click", function(e) {
+      if (!e.target.closest(".actionWrap")) closeAllMenus();
+    });
 
     let currentInternRequestId = 0;
     let batchChart;
@@ -1578,33 +1734,27 @@
       }
 
       try {
-        await loadBatches();
-        await loadInterns(true);
+        // ⚡ Parallel load — dono ek saath, sequential nahi
+        await Promise.all([loadBatches(true), loadInterns(true)]);
       } catch (e) {
         console.log("Init load failed");
       }
     }
 
     async function loadBatches(silent = false) {
-      const data = await apiGET({
-        action: "getBatches",
-        adminId: admin.adminId,
-        adminPass: admin.adminPass
-      });
-
-      if (!data.success) { toast(data.message, "error"); return; }
-
-      const list = data.batches || [];
-
-      document.getElementById("filterBatch").innerHTML =
-        `<option value="">All</option>` +
-        list.map(b => `<option value="${b.BatchID}">${b.BatchName} (${b.BatchID})</option>`).join("");
-
-      document.getElementById("inBatch").innerHTML =
-        list.map(b => `<option value="${b.BatchID}">${b.BatchName} (${b.BatchID})</option>`).join("");
-
-      document.getElementById("assignBatch").innerHTML =
-        list.map(b => `<option value="${b.BatchID}">${b.BatchName} (${b.BatchID})</option>`).join("");
+      function renderBatches(data) {
+        if (!data.success) { if (!silent) toast(data.message, "error"); return; }
+        const list = data.batches || [];
+        const opts = list.map(b => `<option value="${b.BatchID}">${b.BatchName} (${b.BatchID})</option>`).join("");
+        document.getElementById("filterBatch").innerHTML = `<option value="">All</option>` + opts;
+        document.getElementById("inBatch").innerHTML = opts;
+        document.getElementById("assignBatch").innerHTML = opts;
+      }
+      await cachedGET(
+        { action: "getBatches", adminId: admin.adminId, adminPass: admin.adminPass },
+        "batches",
+        renderBatches
+      );
     }
 
     async function createBatch() {
@@ -1955,53 +2105,73 @@
     }
 
     async function loadInterns(silent = false) {
-
       const requestId = ++currentInternRequestId;
-
       const filterEl = document.getElementById("filterBatch");
       const batchId = filterEl ? filterEl.value : "";
+      const cacheKey = "interns_" + (batchId || "all");
 
-      const data = await apiGET({
-        action: "getInternsList",
-        adminId: admin.adminId,
-        adminPass: admin.adminPass,
-        batchId
-      });
-
-      if (requestId !== currentInternRequestId) return;
-
-      if (!data.success) {
-        if (!silent) toast(data.message, "error");
-        return;
-      }
-
+      // Skeleton dikhao — pehli load pe, cache nahi hai tab
       const tb = document.getElementById("internTable");
-      tb.innerHTML = "";
-
-      const list = data.interns || [];
-
-      document.getElementById("batchCount").innerText = list.length;
-
-      if (list.length === 0) {
-        tb.innerHTML = `<tr><td colspan="7">No interns found ✅</td></tr>`;
-        return;
+      if (!cacheGet(cacheKey)) {
+        tb.innerHTML = `
+          <tr><td colspan="7" style="padding:0;">
+            <div style="display:flex;flex-direction:column;gap:8px;padding:10px 0;">
+              ${[1,2,3,4,5].map(() => `
+                <div style="height:38px;border-radius:10px;
+                  background:linear-gradient(90deg,rgba(255,255,255,0.04) 25%,rgba(255,255,255,0.08) 50%,rgba(255,255,255,0.04) 75%);
+                  background-size:200% 100%;
+                  animation:shimmer 1.2s infinite;">
+                </div>`).join("")}
+            </div>
+          </td></tr>`;
       }
 
-      list.forEach(i => {
-        tb.innerHTML += `
+      function renderInterns(data, fromCache) {
+        if (requestId !== currentInternRequestId) return;
+        if (!data.success) { if (!silent) toast(data.message, "error"); return; }
+
+        const list = data.interns || [];
+        document.getElementById("batchCount").innerText = list.length;
+
+        if (list.length === 0) {
+          tb.innerHTML = `<tr><td colspan="7">No interns found ✅</td></tr>`;
+          return;
+        }
+
+        // innerHTML build once — DOM ko baar baar touch nahi karo
+        const rows = list.map(i => `
           <tr>
             <td><b>${i.InternID}</b></td>
-            <td>${i.Name}</td>
-            <td>${i.Email}</td>
-            <td>${i.BatchName}</td>
-            <td>${i.Duration}</td>
+            <td>${escapeHTML(i.Name)}</td>
+            <td>${escapeHTML(i.Email)}</td>
+            <td>${escapeHTML(i.BatchName)}</td>
+            <td>${escapeHTML(i.Duration)}</td>
             <td>${i.CreatedAt ? formatDate(i.CreatedAt) : "-"}</td>
             <td>
-              <button class="dotBtn" onclick="openInternOverview('${i.InternID}')">⋮</button>
+              <div class="actionWrap" id="aw_${i.InternID}">
+                <button class="dotBtn" onclick="toggleActionMenu('${i.InternID}', event)">⋮</button>
+                <div class="actionMenu" id="am_${i.InternID}">
+                  <button class="actionMenuItem view" onclick="closeAllMenus();openInternOverview('${i.InternID}')">
+                    <span class="actionMenuIcon">👁️</span> View Overview
+                  </button>
+                  <button class="actionMenuItem warn" onclick='closeAllMenus();openWarnModal(${JSON.stringify(JSON.stringify({ InternID: i.InternID, Name: i.Name, Email: i.Email }))})'>
+                    <span class="actionMenuIcon">⚠️</span> Send Warning
+                  </button>
+                  <button class="actionMenuItem remove" onclick='closeAllMenus();openRemoveModal(${JSON.stringify(JSON.stringify({ InternID: i.InternID, Name: i.Name, Email: i.Email, BatchName: i.BatchName }))})'>
+                    <span class="actionMenuIcon">🗑️</span> Remove Intern
+                  </button>
+                </div>
+              </div>
             </td>
-          </tr>
-        `;
-      });
+          </tr>`).join("");
+        tb.innerHTML = rows;
+      }
+
+      await cachedGET(
+        { action: "getInternsList", adminId: admin.adminId, adminPass: admin.adminPass, batchId },
+        cacheKey,
+        renderInterns
+      );
     }
 
     async function loadAnalytics() {
@@ -2822,11 +2992,165 @@
       btn.innerText = desc.classList.contains("show") ? "View Less" : "View More";
     }
 
-    init();
+    // ===============================
+    // WARN INTERN FUNCTIONS
+    // ===============================
 
-    window.addEventListener("beforeunload", function () {
-      if (AUTO_REFRESH_TIMER) clearInterval(AUTO_REFRESH_TIMER);
-    });
+    let CURRENT_WARN_INTERN = null;
+    let CURRENT_WARN_LEVEL = 1;
+    let CURRENT_REMOVE_INTERN = null;
+
+    const WARN_PREVIEWS = {
+      1: {
+        absent:      "⚠️ First Notice: Aapki attendance mein kami dekhi gayi hai. Please regular aayein — yeh aapke internship record ko affect kar sakta hai.",
+        late_submit: "⚠️ First Notice: Aapki task submissions late ho rahi hain. Deadlines follow karna zaroori hai. Please samay pe submit karein.",
+        incomplete:  "⚠️ First Notice: Aapka assigned project/task incomplete pada hai. Isse timely complete karna aapki responsibility hai."
+      },
+      2: {
+        absent:      "⚠️⚠️ Second Warning: Humne pehle bhi notice diya tha, phir bhi attendance improve nahi hui. Yeh serious concern hai. Agar sudhaar nahi hua toh aage ki action li jayegi.",
+        late_submit: "⚠️⚠️ Second Warning: Task submissions repeatedly late ho rahi hain. Yeh doosri warning hai. Agle baar se strict action liya jayega.",
+        incomplete:  "⚠️⚠️ Second Warning: Projects incomplete hain — yeh doosri formal warning hai. Hum expect karte hain ki aap apna kaam complete karein."
+      },
+      3: {
+        absent:      "🔴 FINAL NOTICE: Yeh aapki last warning hai. Agar attendance mein sudhar nahi aaya toh aapko internship program se remove kiya jayega. Yeh ek official notice hai.",
+        late_submit: "🔴 FINAL NOTICE: Yeh last warning hai regarding late submissions. Agle late submission par aapka internship terminate kiya ja sakta hai.",
+        incomplete:  "🔴 FINAL NOTICE: Aapke projects/tasks consistently incomplete hain. Yeh final notice hai — immediate action required hai warna internship terminate hogi."
+      }
+    };
+
+    function openWarnModal(internJson) {
+      const i = typeof internJson === "string" ? JSON.parse(internJson) : internJson;
+      CURRENT_WARN_INTERN = i;
+      CURRENT_WARN_LEVEL = 1;
+      document.getElementById("warnInternMeta").innerText = `${i.Name} (${i.InternID}) · ${i.Email}`;
+      document.getElementById("warnMsg").innerText = "";
+      document.getElementById("warnReason").value = "absent";
+      setWarnLevel(1);
+      document.getElementById("warnModal").classList.add("show");
+    }
+
+    function closeWarnModal() {
+      document.getElementById("warnModal").classList.remove("show");
+      CURRENT_WARN_INTERN = null;
+    }
+
+    function setWarnLevel(level) {
+      CURRENT_WARN_LEVEL = level;
+      [1, 2, 3].forEach(l => {
+        const btn = document.getElementById("warnLvl" + l + "Btn");
+        const baseColors = {
+          1: { bg: "rgba(255,165,0,0.08)", border: "rgba(255,165,0,0.2)", color: "#ffaa33" },
+          2: { bg: "rgba(255,100,0,0.08)", border: "rgba(255,100,0,0.2)", color: "#ff8844" },
+          3: { bg: "rgba(255,40,40,0.08)",  border: "rgba(255,40,40,0.2)",  color: "#ff4444" }
+        };
+        const activeColors = {
+          1: { bg: "rgba(255,165,0,0.22)", border: "rgba(255,165,0,0.6)", color: "#ffcc44" },
+          2: { bg: "rgba(255,100,0,0.22)", border: "rgba(255,100,0,0.6)", color: "#ff9944" },
+          3: { bg: "rgba(255,40,40,0.22)",  border: "rgba(255,40,40,0.6)",  color: "#ff5555" }
+        };
+        const c = l === level ? activeColors[l] : baseColors[l];
+        btn.style.background = c.bg;
+        btn.style.borderColor = c.border;
+        btn.style.color = c.color;
+      });
+      updateWarnPreview();
+    }
+
+    function updateWarnPreview() {
+      const reason = document.getElementById("warnReason").value;
+      const preview = WARN_PREVIEWS[CURRENT_WARN_LEVEL]?.[reason] || "";
+      const levelLabels = { 1: "⚠️ First Notice", 2: "⚠️⚠️ Second Warning", 3: "🔴 Final Notice" };
+      document.getElementById("warnPreviewBox").innerHTML = `
+        <div style="font-size:11px;font-weight:800;opacity:0.6;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.5px;">
+          Email Preview — ${levelLabels[CURRENT_WARN_LEVEL]}
+        </div>
+        <div style="color:var(--text);font-size:12px;">${preview}</div>
+      `;
+    }
+
+    async function sendWarnEmail() {
+      if (!CURRENT_WARN_INTERN) { toast("No intern selected ❌", "error"); return; }
+      const reason = document.getElementById("warnReason").value;
+      const msgEl = document.getElementById("warnMsg");
+      msgEl.innerText = "📨 Sending warning email...";
+
+      const data = await apiPOST({
+        action: "warnIntern",
+        adminId: admin.adminId,
+        adminPass: admin.adminPass,
+        internId: CURRENT_WARN_INTERN.InternID,
+        internName: CURRENT_WARN_INTERN.Name,
+        internEmail: CURRENT_WARN_INTERN.Email,
+        warnLevel: CURRENT_WARN_LEVEL,
+        reason
+      });
+
+      if (data.success) {
+        toast(`Warning ${CURRENT_WARN_LEVEL} sent ✅`, "success");
+        msgEl.innerText = `✅ Warning email sent to ${CURRENT_WARN_INTERN.Email}`;
+        setTimeout(() => closeWarnModal(), 1800);
+      } else {
+        msgEl.innerText = "❌ " + (data.message || "Failed");
+        toast(data.message || "Failed ❌", "error");
+      }
+    }
+
+    // ===============================
+    // REMOVE INTERN FUNCTIONS
+    // ===============================
+
+    function openRemoveModal(internJson) {
+      const i = typeof internJson === "string" ? JSON.parse(internJson) : internJson;
+      CURRENT_REMOVE_INTERN = i;
+      document.getElementById("removeInternMeta").innerText = `${i.Name} (${i.InternID}) · ${i.BatchName}`;
+      document.getElementById("removeConfirmId").value = "";
+      document.getElementById("removeMsg").innerText = "";
+      document.getElementById("removeReason").value = "absent";
+      document.getElementById("removeModal").classList.add("show");
+    }
+
+    function closeRemoveModal() {
+      document.getElementById("removeModal").classList.remove("show");
+      CURRENT_REMOVE_INTERN = null;
+    }
+
+    async function confirmRemoveIntern() {
+      if (!CURRENT_REMOVE_INTERN) { toast("No intern selected ❌", "error"); return; }
+      const typed = document.getElementById("removeConfirmId").value.trim();
+      const msgEl = document.getElementById("removeMsg");
+
+      if (typed !== CURRENT_REMOVE_INTERN.InternID) {
+        msgEl.innerText = `❌ ID match nahi hua. Type: "${CURRENT_REMOVE_INTERN.InternID}"`;
+        toast("InternID mismatch ❌", "error");
+        return;
+      }
+
+      const reason = document.getElementById("removeReason").value;
+      msgEl.innerText = "🗑️ Removing intern data...";
+
+      const data = await apiPOST({
+        action: "removeIntern",
+        adminId: admin.adminId,
+        adminPass: admin.adminPass,
+        internId: CURRENT_REMOVE_INTERN.InternID,
+        reason
+      });
+
+      if (data.success) {
+        toast(`${CURRENT_REMOVE_INTERN.Name} removed ✅`, "success");
+        msgEl.innerText = "✅ Intern removed successfully.";
+        setTimeout(() => {
+          closeRemoveModal();
+          loadInterns();
+        }, 1500);
+      } else {
+        msgEl.innerText = "❌ " + (data.message || "Failed");
+        toast(data.message || "Failed ❌", "error");
+      }
+    }
+
+    init();
+    startAutoRefreshAdmin();
 
   </script>
 </body>
