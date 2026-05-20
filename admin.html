@@ -77,18 +77,27 @@
       background: #16141f;
       border: 1px solid rgba(124, 0, 255, 0.25);
       border-radius: 14px;
-      box-shadow: 0 12px 40px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,255,255,0.04);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.04);
       z-index: 9000;
       overflow: hidden;
       animation: menuPop 0.15s ease;
     }
 
     @keyframes menuPop {
-      from { opacity: 0; transform: translateY(-6px) scale(0.97); }
-      to   { opacity: 1; transform: translateY(0)   scale(1);    }
+      from {
+        opacity: 0;
+        transform: translateY(-6px) scale(0.97);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
     }
 
-    .actionMenu.open { display: block; }
+    .actionMenu.open {
+      display: block;
+    }
 
     .actionMenuItem {
       display: flex;
@@ -106,14 +115,24 @@
       text-align: left;
     }
 
-    .actionMenuItem:hover { background: rgba(255,255,255,0.05); }
+    .actionMenuItem:hover {
+      background: rgba(255, 255, 255, 0.05);
+    }
 
-    .actionMenuItem.view  { color: #a78bfa; }
-    .actionMenuItem.warn  { color: #f59e0b; }
-    .actionMenuItem.remove { color: #f87171; }
+    .actionMenuItem.view {
+      color: #a78bfa;
+    }
 
-    .actionMenuItem + .actionMenuItem {
-      border-top: 1px solid rgba(255,255,255,0.05);
+    .actionMenuItem.warn {
+      color: #f59e0b;
+    }
+
+    .actionMenuItem.remove {
+      color: #f87171;
+    }
+
+    .actionMenuItem+.actionMenuItem {
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
     }
 
     .actionMenuIcon {
@@ -327,8 +346,13 @@
 
 
     @keyframes shimmer {
-      0%   { background-position: 200% 0; }
-      100% { background-position: -200% 0; }
+      0% {
+        background-position: 200% 0;
+      }
+
+      100% {
+        background-position: -200% 0;
+      }
     }
 
     .taskDesc {
@@ -686,8 +710,8 @@
       width: 40px;
       height: 40px;
       border-radius: 12px;
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.10);
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.10);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -698,9 +722,9 @@
     }
 
     .notifBell:hover {
-      background: rgba(177,0,255,0.12);
-      border-color: rgba(177,0,255,0.35);
-      box-shadow: 0 0 18px rgba(177,0,255,0.15);
+      background: rgba(177, 0, 255, 0.12);
+      border-color: rgba(177, 0, 255, 0.35);
+      box-shadow: 0 0 18px rgba(177, 0, 255, 0.15);
     }
 
     .notifBadge {
@@ -724,11 +748,20 @@
     }
 
     @keyframes badgePulse {
-      0%, 100% { box-shadow: 0 0 0 0 rgba(177,0,255,0.4); }
-      50%       { box-shadow: 0 0 0 5px rgba(177,0,255,0); }
+
+      0%,
+      100% {
+        box-shadow: 0 0 0 0 rgba(177, 0, 255, 0.4);
+      }
+
+      50% {
+        box-shadow: 0 0 0 5px rgba(177, 0, 255, 0);
+      }
     }
 
-    .notifBadge.hidden { display: none; }
+    .notifBadge.hidden {
+      display: none;
+    }
 
     .notifDropdown {
       display: none;
@@ -737,18 +770,23 @@
       top: 80px;
       width: 340px;
       background: #12101c;
-      border: 1px solid rgba(177,0,255,0.25);
+      border: 1px solid rgba(177, 0, 255, 0.25);
       border-radius: 18px;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.03);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.03);
       z-index: 99999;
       overflow: hidden;
       animation: menuPop 0.18s ease;
     }
 
-    .notifDropdown.open { display: block; }
-    
+    .notifDropdown.open {
+      display: block;
+    }
+
     @media (max-width: 500px) {
-      .notifDropdown { right: 10px; width: calc(100vw - 20px); }
+      .notifDropdown {
+        right: 10px;
+        width: calc(100vw - 20px);
+      }
     }
 
     .notifHeader {
@@ -756,7 +794,7 @@
       align-items: center;
       justify-content: space-between;
       padding: 14px 16px 10px;
-      border-bottom: 1px solid rgba(255,255,255,0.07);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.07);
     }
 
     .notifTitle {
@@ -767,7 +805,7 @@
 
     .notifRefreshBtn {
       background: none;
-      border: 1px solid rgba(177,0,255,0.3);
+      border: 1px solid rgba(177, 0, 255, 0.3);
       color: #B100FF;
       border-radius: 8px;
       padding: 4px 10px;
@@ -781,7 +819,7 @@
     }
 
     .notifRefreshBtn:hover {
-      background: rgba(177,0,255,0.12);
+      background: rgba(177, 0, 255, 0.12);
     }
 
     .notifRefreshBtn.spinning svg {
@@ -789,8 +827,13 @@
     }
 
     @keyframes spinIcon {
-      from { transform: rotate(0deg); }
-      to   { transform: rotate(360deg); }
+      from {
+        transform: rotate(0deg);
+      }
+
+      to {
+        transform: rotate(360deg);
+      }
     }
 
     .notifBody {
@@ -799,8 +842,14 @@
       padding: 8px 0;
     }
 
-    .notifBody::-webkit-scrollbar { width: 3px; }
-    .notifBody::-webkit-scrollbar-thumb { background: rgba(177,0,255,0.3); border-radius: 10px; }
+    .notifBody::-webkit-scrollbar {
+      width: 3px;
+    }
+
+    .notifBody::-webkit-scrollbar-thumb {
+      background: rgba(177, 0, 255, 0.3);
+      border-radius: 10px;
+    }
 
     .notifGroup {
       padding: 6px 0;
@@ -811,7 +860,7 @@
       font-weight: 900;
       letter-spacing: 0.8px;
       text-transform: uppercase;
-      color: rgba(255,255,255,0.35);
+      color: rgba(255, 255, 255, 0.35);
       padding: 4px 16px 6px;
     }
 
@@ -826,7 +875,7 @@
     }
 
     .notifItem:hover {
-      background: rgba(177,0,255,0.07);
+      background: rgba(177, 0, 255, 0.07);
     }
 
     .notifIcon {
@@ -841,9 +890,20 @@
       margin-top: 1px;
     }
 
-    .notifIcon.sub  { background: rgba(0,200,100,0.12); border: 1px solid rgba(0,200,100,0.2); }
-    .notifIcon.join { background: rgba(177,0,255,0.12); border: 1px solid rgba(177,0,255,0.2); }
-    .notifIcon.edit { background: rgba(255,165,0,0.12); border: 1px solid rgba(255,165,0,0.2); }
+    .notifIcon.sub {
+      background: rgba(0, 200, 100, 0.12);
+      border: 1px solid rgba(0, 200, 100, 0.2);
+    }
+
+    .notifIcon.join {
+      background: rgba(177, 0, 255, 0.12);
+      border: 1px solid rgba(177, 0, 255, 0.2);
+    }
+
+    .notifIcon.edit {
+      background: rgba(255, 165, 0, 0.12);
+      border: 1px solid rgba(255, 165, 0, 0.2);
+    }
 
     .notifText {
       flex: 1;
@@ -862,13 +922,13 @@
 
     .notifItemSub {
       font-size: 11px;
-      color: rgba(255,255,255,0.45);
+      color: rgba(255, 255, 255, 0.45);
       line-height: 1.4;
     }
 
     .notifArrow {
       font-size: 11px;
-      color: rgba(255,255,255,0.25);
+      color: rgba(255, 255, 255, 0.25);
       flex-shrink: 0;
       margin-top: 8px;
     }
@@ -876,14 +936,18 @@
     .notifEmpty {
       text-align: center;
       padding: 30px 20px;
-      color: rgba(255,255,255,0.3);
+      color: rgba(255, 255, 255, 0.3);
       font-size: 12px;
     }
 
-    .notifEmpty span { display: block; font-size: 26px; margin-bottom: 8px; }
+    .notifEmpty span {
+      display: block;
+      font-size: 26px;
+      margin-bottom: 8px;
+    }
 
     .notifFooter {
-      border-top: 1px solid rgba(255,255,255,0.07);
+      border-top: 1px solid rgba(255, 255, 255, 0.07);
       padding: 10px 16px;
       display: flex;
       justify-content: space-between;
@@ -895,8 +959,8 @@
       font-weight: 800;
       padding: 3px 10px;
       border-radius: 20px;
-      background: rgba(177,0,255,0.12);
-      border: 1px solid rgba(177,0,255,0.25);
+      background: rgba(177, 0, 255, 0.12);
+      border: 1px solid rgba(177, 0, 255, 0.25);
       color: #B100FF;
     }
 
@@ -908,16 +972,19 @@
     }
 
     .skeletonCircle {
-      width: 32px; height: 32px; border-radius: 10px;
-      background: linear-gradient(90deg, rgba(255,255,255,0.05) 25%, rgba(255,255,255,0.09) 50%, rgba(255,255,255,0.05) 75%);
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
+      background: linear-gradient(90deg, rgba(255, 255, 255, 0.05) 25%, rgba(255, 255, 255, 0.09) 50%, rgba(255, 255, 255, 0.05) 75%);
       background-size: 200% 100%;
       animation: shimmer 1.5s infinite;
       flex-shrink: 0;
     }
 
     .skeletonLine {
-      height: 10px; border-radius: 6px;
-      background: linear-gradient(90deg, rgba(255,255,255,0.05) 25%, rgba(255,255,255,0.09) 50%, rgba(255,255,255,0.05) 75%);
+      height: 10px;
+      border-radius: 6px;
+      background: linear-gradient(90deg, rgba(255, 255, 255, 0.05) 25%, rgba(255, 255, 255, 0.09) 50%, rgba(255, 255, 255, 0.05) 75%);
       background-size: 200% 100%;
       animation: shimmer 1.5s infinite;
       margin-bottom: 6px;
@@ -992,7 +1059,8 @@
                 <div class="notifHeader">
                   <div class="notifTitle">🔔 Notifications</div>
                   <button class="notifRefreshBtn" id="notifRefreshBtn" onclick="refreshNotifications(event)">
-                    <svg id="notifRefreshIcon" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                    <svg id="notifRefreshIcon" width="11" height="11" viewBox="0 0 24 24" fill="none"
+                      stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
                       <polyline points="23 4 23 10 17 10"></polyline>
                       <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
                     </svg>
@@ -1720,7 +1788,27 @@
                 </div>
                 <div>
                   <label>Joining Date</label>
-                  <div class="reviewMeta" id="reviewDate">-</div>
+                  <div style="display:flex;align-items:center;gap:8px;">
+                    <div class="reviewMeta" id="reviewDate">-</div>
+                    <button id="editDateBtn" onclick="toggleInlineDateEdit()" title="Edit joining date" style="background:rgba(124,0,255,0.10);border:1px solid rgba(124,0,255,0.25);
+      border-radius:8px;padding:4px 8px;cursor:pointer;font-size:13px;color:#B100FF;
+      line-height:1;transition:0.2s;" onmouseover="this.style.background='rgba(124,0,255,0.20)'"
+                      onmouseout="this.style.background='rgba(124,0,255,0.10)'">✏️</button>
+                  </div>
+                  <!-- Inline date editor (hidden by default) -->
+                  <div id="inlineDateEditor" style="display:none;margin-top:8px;">
+                    <div style="display:flex;align-items:center;gap:8px;">
+                      <input type="date" id="inlineDateInput" style="font-size:12px;padding:6px 10px;border-radius:10px;flex:1;
+        background:rgba(255,255,255,0.04);border:1px solid rgba(124,0,255,0.3);
+        color:var(--text);" />
+                      <button onclick="saveInlineDate()" style="background:rgba(0,200,100,0.15);border:1px solid rgba(0,200,100,0.4);
+        color:#00c864;border-radius:8px;padding:6px 12px;cursor:pointer;
+        font-size:12px;font-weight:800;">Save</button>
+                      <button onclick="toggleInlineDateEdit()" style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);
+        color:var(--muted);border-radius:8px;padding:6px 10px;cursor:pointer;font-size:12px;">✕</button>
+                    </div>
+                    <div id="inlineDateMsg" style="font-size:11px;margin-top:5px;color:var(--muted);"></div>
+                  </div>
                 </div>
                 <div>
                   <label>Duration</label>
@@ -1792,6 +1880,30 @@
     </div>
   </div>
 
+  <!-- ===== CHANGE JOINING DATE MODAL ===== -->
+  <div id="changeDateModal" class="modalOverlay">
+    <div class="modalCard" style="max-width:440px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:16px;">
+        <div>
+          <div style="font-size:16px;font-weight:900;">📅 Change Joining Date</div>
+          <div style="color:var(--muted);font-size:12px;margin-top:4px;" id="changeDateMeta">—</div>
+        </div>
+        <button class="btn danger" onclick="closeChangeDateModal()">Close</button>
+      </div>
+      <div
+        style="background:rgba(100,160,255,0.06);border:1px solid rgba(100,160,255,0.22);border-radius:14px;padding:16px;margin-bottom:14px;">
+        <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:6px;">Current Joining Date</label>
+        <div style="font-size:14px;font-weight:800;color:#7ab4ff;margin-bottom:14px;" id="changeDateCurrent">—</div>
+        <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:6px;">New Joining Date</label>
+        <input type="date" id="changeDateInput" style="width:100%;box-sizing:border-box;" />
+      </div>
+      <button class="btn primary"
+        style="width:100%;padding:13px;font-weight:900;font-size:14px;background:rgba(100,160,255,0.18);border-color:rgba(100,160,255,0.45);color:#7ab4ff;"
+        onclick="confirmChangeDate()">📅 Update Joining Date</button>
+      <div class="small" id="changeDateMsg" style="margin-top:8px;text-align:center;"></div>
+    </div>
+  </div>
+
   <!-- INTERN OVERVIEW MODAL -->
   <div id="internModal" class="modalOverlay">
     <div class="modalCard">
@@ -1852,17 +1964,25 @@
       </select>
       <label style="font-size:12px;color:var(--muted);">Warning Level</label>
       <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;">
-        <button id="warnLvl1Btn" class="btn" style="flex:1;font-size:12px;background:rgba(255,165,0,0.20);border-color:rgba(255,165,0,0.5);color:#ffaa33;font-weight:800;"
-          onclick="setWarnLevel(1)">⚠️ Warning 1<br/><span style="font-size:10px;font-weight:500;opacity:0.8;">First Notice</span></button>
-        <button id="warnLvl2Btn" class="btn" style="flex:1;font-size:12px;background:rgba(255,100,0,0.08);border-color:rgba(255,100,0,0.2);color:#ff8844;font-weight:800;"
-          onclick="setWarnLevel(2)">⚠️⚠️ Warning 2<br/><span style="font-size:10px;font-weight:500;opacity:0.8;">Second Notice</span></button>
-        <button id="warnLvl3Btn" class="btn" style="flex:1;font-size:12px;background:rgba(255,40,40,0.08);border-color:rgba(255,40,40,0.2);color:#ff4444;font-weight:800;"
-          onclick="setWarnLevel(3)">🔴 Final Notice<br/><span style="font-size:10px;font-weight:500;opacity:0.8;">Last Warning</span></button>
+        <button id="warnLvl1Btn" class="btn"
+          style="flex:1;font-size:12px;background:rgba(255,165,0,0.20);border-color:rgba(255,165,0,0.5);color:#ffaa33;font-weight:800;"
+          onclick="setWarnLevel(1)">⚠️ Warning 1<br /><span style="font-size:10px;font-weight:500;opacity:0.8;">First
+            Notice</span></button>
+        <button id="warnLvl2Btn" class="btn"
+          style="flex:1;font-size:12px;background:rgba(255,100,0,0.08);border-color:rgba(255,100,0,0.2);color:#ff8844;font-weight:800;"
+          onclick="setWarnLevel(2)">⚠️⚠️ Warning 2<br /><span style="font-size:10px;font-weight:500;opacity:0.8;">Second
+            Notice</span></button>
+        <button id="warnLvl3Btn" class="btn"
+          style="flex:1;font-size:12px;background:rgba(255,40,40,0.08);border-color:rgba(255,40,40,0.2);color:#ff4444;font-weight:800;"
+          onclick="setWarnLevel(3)">🔴 Final Notice<br /><span style="font-size:10px;font-weight:500;opacity:0.8;">Last
+            Warning</span></button>
       </div>
-      <div id="warnPreviewBox" style="background:rgba(255,165,0,0.04);border:1px solid rgba(255,165,0,0.15);border-radius:12px;padding:14px;margin-bottom:14px;font-size:12px;color:var(--muted);line-height:1.7;">
+      <div id="warnPreviewBox"
+        style="background:rgba(255,165,0,0.04);border:1px solid rgba(255,165,0,0.15);border-radius:12px;padding:14px;margin-bottom:14px;font-size:12px;color:var(--muted);line-height:1.7;">
         Select warning level to preview email tone...
       </div>
-      <button class="btn primary" style="width:100%;padding:12px;font-weight:800;background:rgba(255,165,0,0.15);border-color:rgba(255,165,0,0.4);color:#ffaa33;"
+      <button class="btn primary"
+        style="width:100%;padding:12px;font-weight:800;background:rgba(255,165,0,0.15);border-color:rgba(255,165,0,0.4);color:#ffaa33;"
         onclick="sendWarnEmail()">📧 Send Warning Email</button>
       <div class="small" id="warnMsg" style="margin-top:8px;text-align:center;"></div>
     </div>
@@ -1878,11 +1998,12 @@
         </div>
         <button class="btn" onclick="closeRemoveModal()">Close</button>
       </div>
-      <div style="background:rgba(255,40,40,0.08);border:1px solid rgba(255,40,40,0.3);border-radius:12px;padding:14px;margin-bottom:14px;">
+      <div
+        style="background:rgba(255,40,40,0.08);border:1px solid rgba(255,40,40,0.3);border-radius:12px;padding:14px;margin-bottom:14px;">
         <div style="font-size:13px;font-weight:800;color:#ff4444;margin-bottom:6px;">⛔ Permanent Action</div>
         <div style="font-size:12px;color:var(--muted);line-height:1.6;">
-          Yeh intern ka data sheet se <b style="color:#ff4444;">permanently delete</b> ho jayega.<br/>
-          Saare submissions, tasks, messages bhi remove ho jayenge.<br/>
+          Yeh intern ka data sheet se <b style="color:#ff4444;">permanently delete</b> ho jayega.<br />
+          Saare submissions, tasks, messages bhi remove ho jayenge.<br />
           Intern ko <b>termination email</b> bhi bheja jayega.
         </div>
       </div>
@@ -1938,7 +2059,7 @@
       document.querySelectorAll(".actionMenu.open").forEach(m => m.classList.remove("open"));
     }
 
-    document.addEventListener("click", function(e) {
+    document.addEventListener("click", function (e) {
       if (!e.target.closest(".actionWrap")) closeAllMenus();
     });
 
@@ -2159,13 +2280,13 @@
 
     async function grade(submissionId, finalStatus) {
       const gradeVal = document.getElementById("g_" + submissionId).value.trim();
-      const remarks  = document.getElementById("r_" + submissionId).value.trim();
+      const remarks = document.getElementById("r_" + submissionId).value.trim();
 
       // Visually mark the row as processing
       const approveBtn = document.querySelector(`button[onclick="grade('${submissionId}','Approved')"]`);
-      const rejectBtn  = document.querySelector(`button[onclick="grade('${submissionId}','Rejected')"]`);
+      const rejectBtn = document.querySelector(`button[onclick="grade('${submissionId}','Rejected')"]`);
       if (approveBtn) { approveBtn.disabled = true; approveBtn.innerText = "..."; }
-      if (rejectBtn)  { rejectBtn.disabled  = true; rejectBtn.innerText  = "..."; }
+      if (rejectBtn) { rejectBtn.disabled = true; rejectBtn.innerText = "..."; }
 
       const data = await apiPOST({
         action: "adminGradeSubmission",
@@ -2199,7 +2320,7 @@
       } else {
         toast(data.message || "Failed ❌", "error");
         if (approveBtn) { approveBtn.disabled = false; approveBtn.innerText = "Approve"; }
-        if (rejectBtn)  { rejectBtn.disabled  = false; rejectBtn.innerText  = "Reject";  }
+        if (rejectBtn) { rejectBtn.disabled = false; rejectBtn.innerText = "Reject"; }
       }
     }
 
@@ -2421,7 +2542,7 @@
         tb.innerHTML = `
           <tr><td colspan="7" style="padding:0;">
             <div style="display:flex;flex-direction:column;gap:8px;padding:10px 0;">
-              ${[1,2,3,4,5].map(() => `
+              ${[1, 2, 3, 4, 5].map(() => `
                 <div style="height:38px;border-radius:10px;
                   background:linear-gradient(90deg,rgba(255,255,255,0.04) 25%,rgba(255,255,255,0.08) 50%,rgba(255,255,255,0.04) 75%);
                   background-size:200% 100%;
@@ -2430,6 +2551,24 @@
             </div>
           </td></tr>`;
       }
+
+      // Joining Intern sheet se date map banao (email → joiningDate)
+      let joiningDateMap = {};
+      try {
+        const jData = await apiGET({
+          action: "getJoiningInterns",
+          adminId: admin.adminId,
+          adminPass: admin.adminPass,
+          status: ""
+        }, true); // silent
+        if (jData.success && jData.joiningInterns) {
+          jData.joiningInterns.forEach(j => {
+            const em = (j["Email"] || j.Email || "").trim().toLowerCase();
+            const dt = toDateInputValue(j["Joining Date"] || j.JoiningDate || "");
+            if (em && dt) joiningDateMap[em] = dt;
+          });
+        }
+      } catch(e) {}
 
       function renderInterns(data, fromCache) {
         if (requestId !== currentInternRequestId) return;
@@ -2444,14 +2583,17 @@
         }
 
         // innerHTML build once — DOM ko baar baar touch nahi karo
-        const rows = list.map(i => `
+        const rows = list.map(i => {
+          const emailKey = (i.Email || "").trim().toLowerCase();
+          const joinDate = joiningDateMap[emailKey] || "";
+          return `
           <tr>
             <td><b>${i.InternID}</b></td>
             <td>${escapeHTML(i.Name)}</td>
             <td>${escapeHTML(i.Email)}</td>
             <td>${escapeHTML(i.BatchName)}</td>
             <td>${escapeHTML(i.Duration)}</td>
-            <td>${i.CreatedAt ? formatDate(i.CreatedAt) : "-"}</td>
+            <td>${joinDate ? formatDate(joinDate) : (i.CreatedAt ? formatDate(i.CreatedAt) : "-")}</td>
             <td>
               <div class="actionWrap" id="aw_${i.InternID}">
                 <button class="dotBtn" onclick="toggleActionMenu('${i.InternID}', event)">⋮</button>
@@ -2468,7 +2610,8 @@
                 </div>
               </div>
             </td>
-          </tr>`).join("");
+          </tr>`;
+        }).join("");
         tb.innerHTML = rows;
       }
 
@@ -2711,12 +2854,12 @@
         Email: s["Email"] || s.Email || "-",
         Phone: s["Phone"] || s.Phone || "-",
         Duration: s["Duration"] || s.Duration || "-",
-        JoiningDate: s["Joining Date"] || s.JoiningDate || "",
+        JoiningDate: toDateInputValue(s["Joining Date"] || s.JoiningDate || ""),
         CVLink: s["CV Link"] || s.CVLink || "",
         LetterLink: s["Letter Link"] || s.LetterLink || "",
-        Status:        s["Status"]         || s.Status        || "Pending",
+        Status: s["Status"] || s.Status || "Pending",
         RemovalReason: s["Removal Reason"] || s.RemovalReason || "",
-        RemovedAt:     s["Removed At"]     || s.RemovedAt     || "",
+        RemovedAt: s["Removed At"] || s.RemovedAt || "",
         _raw: s   // keep original for review modal
       }));
 
@@ -2788,6 +2931,7 @@
   onclick='openEnrolledReview(${JSON.stringify(JSON.stringify(s._raw))}, "reject")'>
   ❌ Reject
 </button>` : `<span style="font-size:11px;color:var(--muted);font-style:italic;">—</span>`}
+        
               </div>
             </td>
           </tr>
@@ -2803,7 +2947,7 @@
       const email = s["Email"] || s.Email || "-";
       const phone = s["Phone"] || s.Phone || "-";
       const duration = s["Duration"] || s.Duration || "-";
-      const joiningDate = s["Joining Date"] || s.JoiningDate || "";
+      const joiningDate = toDateInputValue(s["Joining Date"] || s.JoiningDate || "");
       const status = s["Status"] || s.Status || "Pending";
       const cvLink = s["CV Link"] || s.CVLink || "";
       const letterLink = s["Letter Link"] || s.LetterLink || "";
@@ -2952,6 +3096,59 @@
     function closeEnrolledReview() {
       document.getElementById("enrolledReviewModal").classList.remove("show");
       CURRENT_ENROLLED_ID = null;
+    }
+
+    // ===============================
+    // CHANGE JOINING DATE
+    // ===============================
+    let CURRENT_CHANGE_DATE_DATA = null;
+
+    function openChangeDateModal(dataJson) {
+      const d = typeof dataJson === "string" ? JSON.parse(dataJson) : dataJson;
+      CURRENT_CHANGE_DATE_DATA = d;
+
+      document.getElementById("changeDateMeta").innerText = escapeHTML(d.name || d.email || "—");
+      document.getElementById("changeDateCurrent").innerText = d.joiningDate ? formatDate(d.joiningDate) : "—";
+      document.getElementById("changeDateInput").value = toDateInputValue(d.joiningDate || "");
+      document.getElementById("changeDateMsg").innerText = "";
+
+      document.getElementById("changeDateModal").classList.add("show");
+    }
+
+    function closeChangeDateModal() {
+      document.getElementById("changeDateModal").classList.remove("show");
+      CURRENT_CHANGE_DATE_DATA = null;
+    }
+
+    async function confirmChangeDate() {
+      if (!CURRENT_CHANGE_DATE_DATA) { toast("Koi record select nahi hai ❌", "error"); return; }
+
+      const newDate = document.getElementById("changeDateInput").value.trim();
+      if (!newDate) { toast("Nai date select karo ❌", "error"); return; }
+
+      const msgEl = document.getElementById("changeDateMsg");
+      msgEl.innerText = "Updating...";
+
+      const data = await apiPOST({
+        action: "updateJoiningDate",
+        adminId: admin.adminId,
+        adminPass: admin.adminPass,
+        email: CURRENT_CHANGE_DATE_DATA.email,
+        oldJoiningDate: CURRENT_CHANGE_DATE_DATA.joiningDate,
+        newJoiningDate: newDate
+      });
+
+      if (data.success) {
+        toast("Joining Date update ho gayi ✅", "success");
+        msgEl.innerText = "✅ Date updated successfully!";
+        setTimeout(() => {
+          closeChangeDateModal();
+          loadEnrolledStudents(false);
+        }, 1200);
+      } else {
+        msgEl.innerText = "❌ " + (data.message || "Failed");
+        toast(data.message || "Update failed ❌", "error");
+      }
     }
 
     async function submitEnrolledDecision(decision) {
@@ -3308,11 +3505,29 @@
 
     function formatDate(dateString) {
       if (!dateString) return "-";
+      const s = String(dateString);
+      // yyyy-MM-dd format — parse manually to avoid UTC timezone shift
+      const iso = s.match(/^(\d{4})-(\d{2})-(\d{2})/);
+      if (iso) return `${iso[3]}/${iso[2]}/${iso[1]}`;
+      // Fallback for other formats (ISO with time, etc.)
       const d = new Date(dateString);
+      if (isNaN(d)) return s.slice(0, 10);
       const day = String(d.getDate()).padStart(2, "0");
       const month = String(d.getMonth() + 1).padStart(2, "0");
       const year = d.getFullYear();
       return `${day}/${month}/${year}`;
+    }
+
+    // Converts any date string/ISO to yyyy-MM-dd for <input type="date">
+    function toDateInputValue(dateString) {
+      if (!dateString) return "";
+      if (/^\d{4}-\d{2}-\d{2}$/.test(String(dateString))) return dateString;
+      const d = new Date(dateString);
+      if (isNaN(d)) return "";
+      const yyyy = d.getFullYear();
+      const mm   = String(d.getMonth() + 1).padStart(2, "0");
+      const dd   = String(d.getDate()).padStart(2, "0");
+      return `${yyyy}-${mm}-${dd}`;
     }
 
     function toggleDesc(btn) {
@@ -3331,19 +3546,19 @@
 
     const WARN_PREVIEWS = {
       1: {
-        absent:      "⚠️ First Notice: Aapki attendance mein kami dekhi gayi hai. Please regular aayein — yeh aapke internship record ko affect kar sakta hai.",
+        absent: "⚠️ First Notice: Aapki attendance mein kami dekhi gayi hai. Please regular aayein — yeh aapke internship record ko affect kar sakta hai.",
         late_submit: "⚠️ First Notice: Aapki task submissions late ho rahi hain. Deadlines follow karna zaroori hai. Please samay pe submit karein.",
-        incomplete:  "⚠️ First Notice: Aapka assigned project/task incomplete pada hai. Isse timely complete karna aapki responsibility hai."
+        incomplete: "⚠️ First Notice: Aapka assigned project/task incomplete pada hai. Isse timely complete karna aapki responsibility hai."
       },
       2: {
-        absent:      "⚠️⚠️ Second Warning: Humne pehle bhi notice diya tha, phir bhi attendance improve nahi hui. Yeh serious concern hai. Agar sudhaar nahi hua toh aage ki action li jayegi.",
+        absent: "⚠️⚠️ Second Warning: Humne pehle bhi notice diya tha, phir bhi attendance improve nahi hui. Yeh serious concern hai. Agar sudhaar nahi hua toh aage ki action li jayegi.",
         late_submit: "⚠️⚠️ Second Warning: Task submissions repeatedly late ho rahi hain. Yeh doosri warning hai. Agle baar se strict action liya jayega.",
-        incomplete:  "⚠️⚠️ Second Warning: Projects incomplete hain — yeh doosri formal warning hai. Hum expect karte hain ki aap apna kaam complete karein."
+        incomplete: "⚠️⚠️ Second Warning: Projects incomplete hain — yeh doosri formal warning hai. Hum expect karte hain ki aap apna kaam complete karein."
       },
       3: {
-        absent:      "🔴 FINAL NOTICE: Yeh aapki last warning hai. Agar attendance mein sudhar nahi aaya toh aapko internship program se remove kiya jayega. Yeh ek official notice hai.",
+        absent: "🔴 FINAL NOTICE: Yeh aapki last warning hai. Agar attendance mein sudhar nahi aaya toh aapko internship program se remove kiya jayega. Yeh ek official notice hai.",
         late_submit: "🔴 FINAL NOTICE: Yeh last warning hai regarding late submissions. Agle late submission par aapka internship terminate kiya ja sakta hai.",
-        incomplete:  "🔴 FINAL NOTICE: Aapke projects/tasks consistently incomplete hain. Yeh final notice hai — immediate action required hai warna internship terminate hogi."
+        incomplete: "🔴 FINAL NOTICE: Aapke projects/tasks consistently incomplete hain. Yeh final notice hai — immediate action required hai warna internship terminate hogi."
       }
     };
 
@@ -3370,12 +3585,12 @@
         const baseColors = {
           1: { bg: "rgba(255,165,0,0.08)", border: "rgba(255,165,0,0.2)", color: "#ffaa33" },
           2: { bg: "rgba(255,100,0,0.08)", border: "rgba(255,100,0,0.2)", color: "#ff8844" },
-          3: { bg: "rgba(255,40,40,0.08)",  border: "rgba(255,40,40,0.2)",  color: "#ff4444" }
+          3: { bg: "rgba(255,40,40,0.08)", border: "rgba(255,40,40,0.2)", color: "#ff4444" }
         };
         const activeColors = {
           1: { bg: "rgba(255,165,0,0.22)", border: "rgba(255,165,0,0.6)", color: "#ffcc44" },
           2: { bg: "rgba(255,100,0,0.22)", border: "rgba(255,100,0,0.6)", color: "#ff9944" },
-          3: { bg: "rgba(255,40,40,0.22)",  border: "rgba(255,40,40,0.6)",  color: "#ff5555" }
+          3: { bg: "rgba(255,40,40,0.22)", border: "rgba(255,40,40,0.6)", color: "#ff5555" }
         };
         const c = l === level ? activeColors[l] : baseColors[l];
         btn.style.background = c.bg;
@@ -3456,11 +3671,11 @@
 
       const reasonVal = document.getElementById("removeReason").value;
       const reasonLabels = {
-        absent:     "🚫 Consistent Absence / No Show",
+        absent: "🚫 Consistent Absence / No Show",
         incomplete: "📋 Failed to Complete Projects",
-        late:       "⏰ Repeated Late Submissions",
-        conduct:    "⚠️ Code of Conduct Violation",
-        voluntary:  "✋ Voluntary Exit / Resigned"
+        late: "⏰ Repeated Late Submissions",
+        conduct: "⚠️ Code of Conduct Violation",
+        voluntary: "✋ Voluntary Exit / Resigned"
       };
       const reasonText = reasonLabels[reasonVal] || reasonVal;
       msgEl.innerText = "🗑️ Removing intern data...";
@@ -3512,7 +3727,7 @@
       }
     }
 
-    document.addEventListener("click", function(e) {
+    document.addEventListener("click", function (e) {
       const wrap = document.getElementById("notifWrap");
       if (wrap && !wrap.contains(e.target)) {
         const dd = document.getElementById("notifDropdown");
@@ -3541,15 +3756,15 @@
       try {
         const [subsData, joiningData, editData] = await Promise.all([
           apiGET({ action: "getPendingSubmissions", adminId: admin.adminId, adminPass: admin.adminPass }, true),
-          apiGET({ action: "getJoiningInterns",    adminId: admin.adminId, adminPass: admin.adminPass, status: "Pending" }, true),
-          apiGET({ action: "getEditRequests",       adminId: admin.adminId, adminPass: admin.adminPass }, true)
+          apiGET({ action: "getJoiningInterns", adminId: admin.adminId, adminPass: admin.adminPass, status: "Pending" }, true),
+          apiGET({ action: "getEditRequests", adminId: admin.adminId, adminPass: admin.adminPass }, true)
         ]);
         _notifData = {
-          submissions:    (subsData.success    ? subsData.submissions       : []),
-          joiningInterns: (joiningData.success  ? joiningData.joiningInterns : []),
-          editRequests:   (editData.success     ? editData.requests          : [])
+          submissions: (subsData.success ? subsData.submissions : []),
+          joiningInterns: (joiningData.success ? joiningData.joiningInterns : []),
+          editRequests: (editData.success ? editData.requests : [])
         };
-      } catch(err) {
+      } catch (err) {
         console.error("Notification fetch error:", err);
       }
       renderNotifications();
@@ -3575,7 +3790,7 @@
       const ts = document.getElementById("notifLastUpdated");
       if (ts) {
         const now = new Date();
-        ts.textContent = "Updated " + now.getHours().toString().padStart(2,"0") + ":" + now.getMinutes().toString().padStart(2,"0");
+        ts.textContent = "Updated " + now.getHours().toString().padStart(2, "0") + ":" + now.getMinutes().toString().padStart(2, "0");
       }
 
       const body = document.getElementById("notifBody");
@@ -3593,7 +3808,7 @@
 
       if (submissions.length > 0) {
         html += '<div class="notifGroup"><div class="notifGroupLabel">\uD83D\uDCE5 New Submissions (' + submissions.length + ')</div>';
-        submissions.slice(0, 5).forEach(function(s) {
+        submissions.slice(0, 5).forEach(function (s) {
           html += '<div class="notifItem" onclick="goToSubmissions()">'
             + '<div class="notifIcon sub">\uD83D\uDCE5</div>'
             + '<div class="notifText">'
@@ -3607,7 +3822,7 @@
 
       if (joiningInterns.length > 0) {
         html += '<div class="notifGroup" style="border-top:1px solid rgba(255,255,255,0.05);"><div class="notifGroupLabel">\uD83C\uDF93 Joining Applications (' + joiningInterns.length + ')</div>';
-        joiningInterns.slice(0, 5).forEach(function(j) {
+        joiningInterns.slice(0, 5).forEach(function (j) {
           var fn = j["First Name"] || "";
           var ln = j["Last Name"] || "";
           var name = j.FullName || (fn + " " + ln).trim();
@@ -3625,7 +3840,7 @@
 
       if (editRequests.length > 0) {
         html += '<div class="notifGroup" style="border-top:1px solid rgba(255,255,255,0.05);"><div class="notifGroupLabel">\uD83D\uDD10 Edit Requests (' + editRequests.length + ')</div>';
-        editRequests.slice(0, 5).forEach(function(r) {
+        editRequests.slice(0, 5).forEach(function (r) {
           html += '<div class="notifItem" onclick="goToEditRequests()">'
             + '<div class="notifIcon edit">\u270F\uFE0F</div>'
             + '<div class="notifText">'
@@ -3652,7 +3867,7 @@
       _notifOpen = false;
       var link = document.querySelector("#adminNav a[onclick*='batchPage']");
       if (link) link.click();
-      setTimeout(function() {
+      setTimeout(function () {
         var enrolledTabBtn = document.querySelector(".batchTab[onclick*='enrolledTab']");
         if (enrolledTabBtn) enrolledTabBtn.click();
       }, 250);
@@ -3666,7 +3881,54 @@
     }
 
     function startNotifAutoRefresh() {
-      setInterval(function() { fetchNotifications(); }, 60000);
+      setInterval(function () { fetchNotifications(); }, 60000);
+    }
+
+    function toggleInlineDateEdit() {
+      const editor = document.getElementById("inlineDateEditor");
+      const isVisible = editor.style.display !== "none";
+      editor.style.display = isVisible ? "none" : "block";
+      if (!isVisible) {
+        // Pre-fill with current joining date from CURRENT_ENROLLED_ID
+        const cur = CURRENT_ENROLLED_ID?.joiningDate || "";
+        document.getElementById("inlineDateInput").value = toDateInputValue(cur);
+        document.getElementById("inlineDateMsg").innerText = "";
+      }
+    }
+
+    async function saveInlineDate() {
+      if (!CURRENT_ENROLLED_ID) { toast("No enrollment selected ❌", "error"); return; }
+
+      const newDate = document.getElementById("inlineDateInput").value.trim();
+      if (!newDate) { toast("Please select a date ❌", "error"); return; }
+
+      const msgEl = document.getElementById("inlineDateMsg");
+      msgEl.innerText = "Saving...";
+
+      const data = await apiPOST({
+        action: "updateJoiningDate",
+        adminId: admin.adminId,
+        adminPass: admin.adminPass,
+        email: CURRENT_ENROLLED_ID.email,
+        oldJoiningDate: CURRENT_ENROLLED_ID.joiningDate,
+        newJoiningDate: newDate
+      });
+
+      if (data.success) {
+        // Update local state + displayed date
+        CURRENT_ENROLLED_ID.joiningDate = newDate;
+        document.getElementById("reviewDate").innerText = formatDate(newDate);
+        msgEl.innerText = "✅ Saved!";
+        toast("Joining date updated ✅", "success");
+        // Collapse editor after short delay
+        setTimeout(() => {
+          document.getElementById("inlineDateEditor").style.display = "none";
+          loadEnrolledStudents(false);
+        }, 1000);
+      } else {
+        msgEl.innerText = "❌ " + (data.message || "Failed");
+        toast(data.message || "Update failed ❌", "error");
+      }
     }
 
     init();
