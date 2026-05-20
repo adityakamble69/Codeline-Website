@@ -1025,6 +1025,7 @@
           <a href="javascript:void(0)" onclick="switchPage('analyticsPage', this)">📊 Analytics</a>
           <a href="javascript:void(0)" onclick="switchPage('editRequestsPage', this)">🔐 Edit Requests</a>
           <a href="javascript:void(0)" onclick="switchPage('sendDocsPage', this)">📄 Send Documents</a>
+          <a href="javascript:void(0)" onclick="switchPage('removedPage', this)">🗑️ Removed Interns</a>
         </div>
 
         <div class="sideFooter">
@@ -1444,6 +1445,67 @@
             </table>
           </div>
         </section>
+        <!-- PAGE: REMOVED INTERNS -->
+        <section class="card pageSection" id="removedPage">
+          <div class="pageTop">
+            <div>
+              <h2>🗑️ Removed Interns</h2>
+              <p>All removed/terminated interns ka permanent record. InternID retire ho jaata hai — reuse nahi hoga.</p>
+            </div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+              <select id="removedBatchFilter" onchange="loadRemovedInterns()"
+                style="background:#1a1a24;border:1px solid rgba(255,255,255,0.1);color:var(--text);
+                       padding:8px 12px;border-radius:10px;font-size:13px;cursor:pointer;">
+                <option value="">All Batches</option>
+              </select>
+              <input id="removedSearch" type="text" placeholder="🔍 Search name / ID / email..."
+                oninput="filterRemovedInterns()"
+                style="background:#1a1a24;border:1px solid rgba(255,255,255,0.1);color:var(--text);
+                       padding:8px 14px;border-radius:10px;font-size:13px;width:220px;outline:none;" />
+              <button onclick="loadRemovedInterns()" class="dotBtn" title="Refresh">↻</button>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px;">
+            <div class="card" style="flex:1;min-width:130px;padding:14px 18px;">
+              <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:4px;">Total Removed</div>
+              <div id="removedStatTotal" style="font-size:26px;font-weight:900;color:#f87171;">—</div>
+            </div>
+            <div class="card" style="flex:1;min-width:130px;padding:14px 18px;">
+              <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:4px;">This Month</div>
+              <div id="removedStatMonth" style="font-size:26px;font-weight:900;color:#fb923c;">—</div>
+            </div>
+            <div class="card" style="flex:1;min-width:130px;padding:14px 18px;">
+              <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:4px;">Voluntary</div>
+              <div id="removedStatVoluntary" style="font-size:26px;font-weight:900;color:#a78bfa;">—</div>
+            </div>
+            <div class="card" style="flex:1;min-width:130px;padding:14px 18px;">
+              <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:4px;">Terminated</div>
+              <div id="removedStatTerminated" style="font-size:26px;font-weight:900;color:#ef4444;">—</div>
+            </div>
+          </div>
+
+          <div class="tableWrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Intern ID</th>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Phone</th>
+                  <th>Batch</th>
+                  <th>Duration</th>
+                  <th>Reason</th>
+                  <th>Joined</th>
+                  <th>Removed</th>
+                </tr>
+              </thead>
+              <tbody id="removedTableBody">
+                <tr><td colspan="9" style="padding:40px;text-align:center;color:var(--muted);">Click page to load...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
 
         <!-- SEND DOCUMENT MODAL — 3-Step Wizard -->
         <div id="sendDocModal" class="modalOverlay">
@@ -1855,8 +1917,10 @@
               <div
                 style="background:rgba(255,60,60,0.06);border:1px solid rgba(255,60,60,0.25);border-radius:14px;padding:14px;">
                 <div style="font-size:13px;font-weight:800;color:#ff4444;margin-bottom:10px;">❌ Reject Application</div>
-                <div style="font-size:12px;color:var(--muted);margin-bottom:12px;">A rejection email will be sent to the
-                  applicant automatically.</div>
+                <div style="font-size:12px;color:var(--muted);margin-bottom:10px;">Applicant ko rejection email mein reason bhi milega.</div>
+                <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:6px;">Rejection Reason <span style="color:#ff4444;">*</span></label>
+                <textarea id="rejectReasonInput" rows="3" placeholder="e.g. Currently we do not have openings in your preferred domain. We encourage you to apply again in the next intake..."
+                  style="width:100%;box-sizing:border-box;background:rgba(255,255,255,0.04);border:1px solid rgba(255,60,60,0.30);border-radius:10px;color:var(--text);font-size:13px;padding:10px 12px;resize:vertical;font-family:inherit;margin-bottom:12px;outline:none;"></textarea>
                 <button class="btn danger" style="width:100%;padding:12px;font-weight:800;" onclick="confirmReject()">
                   ❌ Confirm Reject & Send Email
                 </button>
@@ -2034,6 +2098,8 @@
 
   <script src="app.js"></script>
 
+  
+
   <script>
 
     function escapeHTML(str) {
@@ -2073,6 +2139,7 @@
       assignPage: false,
       subsPage: false,
       incompletePage: false,
+      removedPage: false,
       sendDocsPage: false
     };
 
@@ -2103,6 +2170,7 @@
       if (pageId === "analyticsPage") await loadAnalytics(!firstTime);
       if (pageId === "editRequestsPage") await loadEditRequests(!firstTime);
       if (pageId === "sendDocsPage") await loadActiveInterns(!firstTime);
+      if (pageId === "removedPage") await loadRemovedInterns(!firstTime);
     }
 
     function switchBatchTab(tabId, el) {
@@ -3069,6 +3137,9 @@
     async function confirmReject() {
       if (!CURRENT_ENROLLED_ID) { toast("No enrollment selected ❌", "error"); return; }
 
+      const reason = (document.getElementById("rejectReasonInput")?.value || "").trim();
+      if (!reason) { toast("Please enter a rejection reason ❌", "error"); return; }
+
       document.getElementById("reviewMsg").innerText = "Processing...";
 
       const data = await apiPOST({
@@ -3077,7 +3148,8 @@
         adminPass: admin.adminPass,
         email: CURRENT_ENROLLED_ID.email,
         joiningDate: CURRENT_ENROLLED_ID.joiningDate,
-        status: "Declined"
+        status: "Declined",
+        reason
       });
 
       if (data.success) {
@@ -3096,6 +3168,9 @@
     function closeEnrolledReview() {
       document.getElementById("enrolledReviewModal").classList.remove("show");
       CURRENT_ENROLLED_ID = null;
+      // Reset reject reason
+      const ri = document.getElementById("rejectReasonInput");
+      if (ri) ri.value = "";
     }
 
     // ===============================
@@ -3930,6 +4005,160 @@
         toast(data.message || "Update failed ❌", "error");
       }
     }
+
+    // ══════════════════════════════════════════════════════════
+    //  REMOVED INTERNS — JavaScript
+    // ══════════════════════════════════════════════════════════
+
+    // ── State ──
+    let _removedAll = [];
+
+    // Reason badge config
+    const REASON_CONFIG = {
+      absent:      { label: "Absent",       color: "#f59e0b", bg: "rgba(245,158,11,0.12)" },
+      late_submit: { label: "Late Submit",  color: "#fb923c", bg: "rgba(251,146,60,0.12)" },
+      incomplete:  { label: "Incomplete",   color: "#f87171", bg: "rgba(248,113,113,0.12)" },
+      conduct:     { label: "Conduct",      color: "#ef4444", bg: "rgba(239,68,68,0.12)" },
+      voluntary:   { label: "Voluntary",    color: "#a78bfa", bg: "rgba(167,139,250,0.12)" },
+      other:       { label: "Other",        color: "#94a3b8", bg: "rgba(148,163,184,0.12)" },
+    };
+
+    function reasonBadge(reason) {
+      const r = String(reason || "other").toLowerCase().trim();
+      const cfg = REASON_CONFIG[r] || REASON_CONFIG["other"];
+      return `<span style="display:inline-block;padding:3px 10px;border-radius:20px;
+                font-size:11px;font-weight:700;letter-spacing:0.4px;
+                color:${cfg.color};background:${cfg.bg};border:1px solid ${cfg.color}40;">
+                ${cfg.label}
+              </span>`;
+    }
+
+    // ── Load removed interns from API ──
+    async function loadRemovedInterns(silent) {
+      const batchFilter = (document.getElementById("removedBatchFilter")?.value || "").trim();
+      const cacheKey = "removed_" + (batchFilter || "all");
+      await cachedGET(
+        { action: "getRemovedInterns", adminId: admin.adminId, adminPass: admin.adminPass, batchId: batchFilter },
+        cacheKey,
+        function(data, fromCache) {
+          if (!data || !data.success) {
+            document.getElementById("removedTableBody").innerHTML =
+              '<tr><td colspan="9" style="padding:30px;text-align:center;color:#f87171;">' +
+              (data?.message || "Failed to load ❌") + '</td></tr>';
+            return;
+          }
+          _removedAll = data.removed || [];
+          populateRemovedBatchFilter(_removedAll);
+          renderRemovedStats(_removedAll);
+          renderRemovedTable(_removedAll);
+        }
+      );
+    }
+
+    // ── Populate batch filter dropdown ──
+    function populateRemovedBatchFilter(list) {
+      const sel = document.getElementById("removedBatchFilter");
+      if (!sel) return;
+      const batches = [...new Set(list.map(x => (x.BatchName || "").trim()).filter(Boolean))].sort();
+      const current = sel.value;
+      sel.innerHTML = '<option value="">All Batches</option>';
+      batches.forEach(b => {
+        const opt = document.createElement("option");
+        opt.value = b; opt.textContent = b;
+        if (b === current) opt.selected = true;
+        sel.appendChild(opt);
+      });
+    }
+
+    // ── Stats ──
+    function renderRemovedStats(list) {
+      const thisMonth = new Date().toISOString().slice(0, 7);
+      const monthCount  = list.filter(x => String(x["Removed At"] || "").startsWith(thisMonth)).length;
+      const voluntary   = list.filter(x => String(x["Reason"] || "").toLowerCase() === "voluntary").length;
+      const terminated  = list.filter(x => String(x["Reason"] || "").toLowerCase() !== "voluntary").length;
+
+      const s = id => document.getElementById(id);
+      if (s("removedStatTotal"))      s("removedStatTotal").textContent      = list.length;
+      if (s("removedStatMonth"))      s("removedStatMonth").textContent      = monthCount;
+      if (s("removedStatVoluntary"))  s("removedStatVoluntary").textContent  = voluntary;
+      if (s("removedStatTerminated")) s("removedStatTerminated").textContent = terminated;
+    }
+
+    // ── Render table ──
+    function renderRemovedTable(list) {
+      const tbody = document.getElementById("removedTableBody");
+      if (!tbody) return;
+
+      if (!list || list.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="9" style="padding:48px;text-align:center;color:var(--muted);">' +
+          '<div style="font-size:32px;margin-bottom:10px;">🗑️</div>' +
+          '<div style="font-size:14px;">Koi removed intern nahi mila</div></td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = list.map((r, idx) => {
+        const evenRow   = idx % 2 === 0 ? "" : "background:rgba(255,255,255,0.02);";
+        const internId  = escapeHTML(r.InternID   || "—");
+        const name      = escapeHTML(r.Name       || "—");
+        const email     = escapeHTML(r.Email      || "—");
+        const phone     = escapeHTML(r.Phone      || "—");
+        const batchName = escapeHTML(r.BatchName  || r.BatchID || "—");
+        const batchId   = escapeHTML(r.BatchID    || "");
+        const duration  = escapeHTML(r.Duration   || "—");
+        const reason    = (r.Reason || "other").toLowerCase().trim();
+        const joinedAt  = formatDate(r["Joined At"]  || r.JoinedAt  || "");
+        const removedAt = formatDate(r["Removed At"] || r.RemovedAt || "");
+
+        return `<tr style="${evenRow}border-bottom:1px solid rgba(255,255,255,0.04);transition:background 0.15s;"
+                    onmouseover="this.style.background='rgba(177,0,255,0.06)'"
+                    onmouseout="this.style.background='${idx % 2 !== 0 ? 'rgba(255,255,255,0.02)' : 'transparent'}'">
+          <td style="padding:11px 14px;white-space:nowrap;">
+            <span style="font-family:monospace;font-size:12px;font-weight:700;
+                         color:#a78bfa;background:rgba(167,139,250,0.1);
+                         padding:3px 8px;border-radius:6px;">${internId}</span>
+          </td>
+          <td style="padding:11px 14px;font-weight:600;color:var(--text);">${name}</td>
+          <td style="padding:11px 14px;color:var(--muted);font-size:12px;">
+            <a href="mailto:${email}" style="color:var(--muted);text-decoration:none;"
+               onmouseover="this.style.color='#B100FF'" onmouseout="this.style.color='var(--muted)'">${email}</a>
+          </td>
+          <td style="padding:11px 14px;color:var(--muted);font-size:12px;white-space:nowrap;">
+            ${phone !== "—" ? `<a href="tel:${phone}" style="color:var(--muted);text-decoration:none;">${phone}</a>` : "—"}
+          </td>
+          <td style="padding:11px 14px;">
+            <div style="font-size:13px;font-weight:600;color:var(--text);">${batchName}</div>
+            ${batchId ? `<div style="font-size:11px;color:var(--muted);margin-top:2px;">${batchId}</div>` : ""}
+          </td>
+          <td style="padding:11px 14px;color:var(--muted);font-size:12px;white-space:nowrap;">${duration}</td>
+          <td style="padding:11px 14px;">${reasonBadge(reason)}</td>
+          <td style="padding:11px 14px;color:var(--muted);font-size:12px;white-space:nowrap;">${joinedAt || "—"}</td>
+          <td style="padding:11px 14px;white-space:nowrap;">
+            <span style="color:#f87171;font-size:12px;font-weight:600;">${removedAt || "—"}</span>
+          </td>
+        </tr>`;
+      }).join("");
+    }
+
+    // ── Client-side search filter ──
+    function filterRemovedInterns() {
+      const q = (document.getElementById("removedSearch")?.value || "").toLowerCase().trim();
+      if (!q) {
+        renderRemovedTable(_removedAll);
+        renderRemovedStats(_removedAll);
+        return;
+      }
+      const filtered = _removedAll.filter(r =>
+        String(r.InternID  || "").toLowerCase().includes(q) ||
+        String(r.Name      || "").toLowerCase().includes(q) ||
+        String(r.Email     || "").toLowerCase().includes(q) ||
+        String(r.BatchName || "").toLowerCase().includes(q) ||
+        String(r.Reason    || "").toLowerCase().includes(q)
+      );
+      renderRemovedTable(filtered);
+      renderRemovedStats(filtered);
+    }
+
+    // ══════════════════════════════════════════════════════════
 
     init();
     startAutoRefreshAdmin();
