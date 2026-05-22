@@ -989,6 +989,54 @@
       animation: shimmer 1.5s infinite;
       margin-bottom: 6px;
     }
+
+    /* ── Verify Step Field Styles ── */
+    .vfFieldGroup {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .vfFieldGroup label {
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .vfFieldGroup input,
+    .vfFieldGroup select {
+      font-size: 13px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .vfEndDateBox {
+      background: rgba(124, 0, 255, 0.07);
+      border: 1px solid rgba(124, 0, 255, 0.20);
+      border-radius: 14px;
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+      grid-column: 1 / -1;
+    }
+
+    .vfEndDateLabel {
+      font-size: 11px;
+      color: var(--muted);
+      margin-bottom: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-weight: 700;
+    }
+
+    .vfEndDateValue {
+      font-size: 16px;
+      font-weight: 900;
+      color: #B100FF;
+    }
   </style>
 </head>
 
@@ -1445,6 +1493,7 @@
             </table>
           </div>
         </section>
+
         <!-- PAGE: REMOVED INTERNS -->
         <section class="card pageSection" id="removedPage">
           <div class="pageTop">
@@ -1515,7 +1564,7 @@
           </div>
         </section>
 
-        <!-- SEND DOCUMENT MODAL — 3-Step Wizard -->
+        <!-- SEND DOCUMENT MODAL — 3-Step Wizard (with Verify Step for Offer Letter) -->
         <div id="sendDocModal" class="modalOverlay">
           <div class="modalCard" style="width:min(540px,95vw);">
 
@@ -1536,6 +1585,11 @@
                 background:linear-gradient(135deg,rgba(124,0,255,0.25),rgba(177,0,255,0.15));color:#fff;
                 letter-spacing:0.3px;transition:0.3s;">
                 1 · Create
+              </div>
+              <div id="stepPillVerify" style="flex:1;text-align:center;padding:7px 0;font-size:11px;font-weight:800;
+                border-top:1px solid rgba(255,255,255,0.10);border-bottom:1px solid rgba(255,255,255,0.10);
+                background:rgba(255,255,255,0.02);color:var(--muted);transition:0.3s;">
+                1.5 · Verify
               </div>
               <div id="stepPill2" style="flex:1;text-align:center;padding:7px 0;font-size:11px;font-weight:800;
                 border-top:1px solid rgba(255,255,255,0.10);border-bottom:1px solid rgba(255,255,255,0.10);
@@ -1659,6 +1713,257 @@
               <button class="btn primary" style="width:100%;padding:14px;font-size:14px;" onclick="docGoToStep2()">
                 ⚡ Create Documents → Get Link
               </button>
+            </div>
+
+            <!-- ═══════════════════════════════════════════════ -->
+            <!-- STEP 1.5: VERIFY DETAILS (Offer Letter ke liye) -->
+            <!-- ═══════════════════════════════════════════════ -->
+            <div id="docStepVerify" style="display:none;">
+              <div style="font-size:13px;font-weight:800;margin-bottom:6px;color:#B100FF;">✅ Verify Intern Details</div>
+              <p style="font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.6;">
+                Yeh details Offer Letter mein print hongi. Sab fields editable hain — check karke confirm karein.
+              </p>
+
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;">
+
+                <div class="vfFieldGroup">
+                  <label>📋 Reference No.</label>
+                  <input id="vfRefNo" type="text" placeholder="COD/OL/2026/0001" />
+                </div>
+
+                <div class="vfFieldGroup">
+                  <label>👤 Full Name</label>
+                  <input id="vfFullName" type="text" placeholder="Intern Full Name" />
+                </div>
+
+                <div class="vfFieldGroup">
+                  <label>📅 Current Date</label>
+                  <input id="vfCurrentDate" type="date" />
+                </div>
+
+                <div class="vfFieldGroup">
+                  <label>📞 Mobile No.</label>
+                  <input id="vfMobile" type="tel" placeholder="+91 XXXXX XXXXX" />
+                </div>
+
+                <div class="vfFieldGroup">
+                  <label>✉️ Email</label>
+                  <input id="vfEmail" type="email" placeholder="intern@gmail.com" />
+                </div>
+
+                <div class="vfFieldGroup">
+                  <label>💼 Internship Role</label>
+                  <input id="vfRole" type="text" placeholder="Software Development Intern" />
+                </div>
+
+                <div class="vfFieldGroup">
+                  <label>🗓️ Joining Date</label>
+                  <input id="vfJoiningDate" type="date" oninput="calcVerifyEndDate()" />
+                </div>
+
+                <div class="vfFieldGroup">
+                  <label>⏳ Duration</label>
+                  <select id="vfDuration" onchange="calcVerifyEndDate()" style="background:#1a1a24;border:1px solid rgba(255,255,255,0.1);
+                           color:var(--text);padding:8px 12px;border-radius:10px;">
+                    <option value="6">6 Months</option>
+                    <option value="9">9 Months</option>
+                  </select>
+                </div>
+
+                <!-- End Date — full width -->
+                <div class="vfEndDateBox">
+                  <div>
+                    <div class="vfEndDateLabel">Internship End Date (auto-calculated)</div>
+                    <div class="vfEndDateValue" id="vfEndDateDisplay">— Joining date select karein</div>
+                  </div>
+                  <div style="text-align:right;">
+                    <div class="vfEndDateLabel">Total Duration</div>
+                    <div style="font-size:14px;font-weight:800;color:var(--muted);" id="vfDurationDisplay">6 Months
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+
+              <div id="vfMsg"
+                style="font-size:12px;color:var(--danger);min-height:16px;margin-bottom:10px;text-align:center;"></div>
+
+              <div style="display:flex;gap:10px;">
+                <button class="btn ghost" style="flex:0 0 auto;padding:12px 16px;" onclick="docVerifyBack()">←
+                  Back</button>
+                <button class="btn primary" style="flex:1;padding:13px;font-size:14px;" onclick="docVerifyConfirm()">
+                  ✅ Confirm & Proceed →
+                </button>
+              </div>
+            </div>
+
+            <!-- ═══════════════════════════════════════════════ -->
+            <!-- STEP 1.5 LOI: VERIFY DETAILS (LOI ke liye)     -->
+            <!-- ═══════════════════════════════════════════════ -->
+            <div id="docStepVerifyLoi" style="display:none;">
+              <div style="font-size:13px;font-weight:800;margin-bottom:6px;color:#B100FF;">✅ Verify LOI Details</div>
+              <p style="font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.6;">
+                Yeh details Letter of Intent mein print hongi. Check karke confirm karein.
+              </p>
+
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;">
+
+                <div class="vfFieldGroup" style="grid-column:1/-1;">
+                  <label>👤 Full Name</label>
+                  <input id="loiFullName" type="text" placeholder="Intern Full Name" />
+                </div>
+
+                <div class="vfFieldGroup">
+                  <label>📅 Current Date</label>
+                  <input id="loiCurrentDate" type="date" />
+                </div>
+
+                <div class="vfFieldGroup">
+                  <label>💼 Role / Position</label>
+                  <input id="loiRole" type="text" placeholder="Software Development Intern" />
+                </div>
+
+                <div class="vfFieldGroup">
+                  <label>🗓️ Joining Date</label>
+                  <input id="loiJoiningDate" type="date" oninput="calcLoiEndDate()" />
+                </div>
+
+                <div class="vfFieldGroup">
+                  <label>⏳ Duration</label>
+                  <select id="loiDuration" onchange="calcLoiEndDate()" style="background:#1a1a24;border:1px solid rgba(255,255,255,0.1);
+               color:var(--text);padding:8px 12px;border-radius:10px;">
+                    <option value="6">6 Months</option>
+                    <option value="9">9 Months</option>
+                  </select>
+                </div>
+
+                <!-- End Date full width -->
+                <div class="vfEndDateBox">
+                  <div>
+                    <div class="vfEndDateLabel">Internship End Date (auto-calculated)</div>
+                    <div class="vfEndDateValue" id="loiEndDateDisplay">— Joining date select karein</div>
+                  </div>
+                  <div style="text-align:right;">
+                    <div class="vfEndDateLabel">Total Duration</div>
+                    <div style="font-size:14px;font-weight:800;color:var(--muted);" id="loiDurationDisplay">6 Months
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+
+              <div id="loiVfMsg"
+                style="font-size:12px;color:var(--danger);min-height:16px;margin-bottom:10px;text-align:center;"></div>
+
+              <div style="display:flex;gap:10px;">
+                <button class="btn ghost" style="flex:0 0 auto;padding:12px 16px;" onclick="docLoiVerifyBack()">←
+                  Back</button>
+                <button class="btn primary" style="flex:1;padding:13px;font-size:14px;" onclick="docLoiVerifyConfirm()">
+                  ✅ Confirm & Proceed →
+                </button>
+              </div>
+            </div>
+
+            <!-- ═══════════════════════════════════════════════ -->
+            <!-- STEP 1.5 JOINING: VERIFY DETAILS               -->
+            <!-- ═══════════════════════════════════════════════ -->
+            <div id="docStepVerifyJoining" style="display:none;">
+              <div style="font-size:13px;font-weight:800;margin-bottom:6px;color:#B100FF;">✅ Verify Joining Letter
+                Details</div>
+              <p style="font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.6;">
+                Yeh details Joining Letter mein print hongi. Check karke confirm karein.
+              </p>
+
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;">
+
+                <div class="vfFieldGroup">
+                  <label>📋 Reference No.</label>
+                  <input id="jlRefNo" type="text" placeholder="COD/JL/2026/0001" />
+                </div>
+
+                <div class="vfFieldGroup">
+                  <label>👤 Intern Name</label>
+                  <input id="jlFullName" type="text" placeholder="Intern Full Name" />
+                </div>
+
+                <div class="vfFieldGroup">
+                  <label>📅 Current Date</label>
+                  <input id="jlCurrentDate" type="date" />
+                </div>
+
+                <div class="vfFieldGroup">
+                  <label>🗓️ Joining / Start Date</label>
+                  <input id="jlJoiningDate" type="date" />
+                </div>
+
+              </div>
+
+              <div id="jlVfMsg"
+                style="font-size:12px;color:var(--danger);min-height:16px;margin-bottom:10px;text-align:center;"></div>
+
+              <div style="display:flex;gap:10px;">
+                <button class="btn ghost" style="flex:0 0 auto;padding:12px 16px;" onclick="docJlVerifyBack()">←
+                  Back</button>
+                <button class="btn primary" style="flex:1;padding:13px;font-size:14px;" onclick="docJlVerifyConfirm()">
+                  ✅ Confirm & Proceed →
+                </button>
+              </div>
+            </div>
+
+            <!-- ═══════════════════════════════════════════════ -->
+            <!-- STEP 1.5 CERTIFICATE: VERIFY DETAILS           -->
+            <!-- ═══════════════════════════════════════════════ -->
+            <div id="docStepVerifyCertificate" style="display:none;">
+              <div style="font-size:13px;font-weight:800;margin-bottom:6px;color:#B100FF;">✅ Verify Certificate Details</div>
+              <p style="font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.6;">
+                Yeh details Completion Certificate mein print hongi. Check karke confirm karein.
+              </p>
+
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;">
+                <div class="vfFieldGroup" style="grid-column:1/-1;">
+                  <label>👤 Intern Name</label>
+                  <input id="certFullName" type="text" placeholder="Intern Full Name" />
+                </div>
+              </div>
+
+              <div id="certVfMsg" style="font-size:12px;color:var(--danger);min-height:16px;margin-bottom:10px;text-align:center;"></div>
+
+              <div style="display:flex;gap:10px;">
+                <button class="btn ghost" style="flex:0 0 auto;padding:12px 16px;" onclick="docCertVerifyBack()">← Back</button>
+                <button class="btn primary" style="flex:1;padding:13px;font-size:14px;" onclick="docCertVerifyConfirm()">
+                  ✅ Confirm & Proceed →
+                </button>
+              </div>
+            </div>
+
+            <!-- ═══════════════════════════════════════════════ -->
+            <!-- STEP 1.5 BEST PERFORMER: VERIFY DETAILS        -->
+            <!-- ═══════════════════════════════════════════════ -->
+            <div id="docStepVerifyBestPerformer" style="display:none;">
+              <div style="font-size:13px;font-weight:800;margin-bottom:6px;color:#B100FF;">✅ Verify Best Performer Details</div>
+              <p style="font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.6;">
+                Yeh details Best Performer Certificate mein print hongi. Check karke confirm karein.
+              </p>
+
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;">
+                <div class="vfFieldGroup" style="grid-column:1/-1;">
+                  <label>👤 Intern Name</label>
+                  <input id="bpFullName" type="text" placeholder="Intern Full Name" />
+                </div>
+                <div class="vfFieldGroup" style="grid-column:1/-1;">
+                  <label>📅 Date</label>
+                  <input id="bpDate" type="date" />
+                </div>
+              </div>
+
+              <div id="bpVfMsg" style="font-size:12px;color:var(--danger);min-height:16px;margin-bottom:10px;text-align:center;"></div>
+
+              <div style="display:flex;gap:10px;">
+                <button class="btn ghost" style="flex:0 0 auto;padding:12px 16px;" onclick="docBpVerifyBack()">← Back</button>
+                <button class="btn primary" style="flex:1;padding:13px;font-size:14px;" onclick="docBpVerifyConfirm()">
+                  ✅ Confirm & Proceed →
+                </button>
+              </div>
             </div>
 
             <!-- ═══════════════════════════════════ -->
@@ -1865,7 +2170,6 @@
       line-height:1;transition:0.2s;" onmouseover="this.style.background='rgba(124,0,255,0.20)'"
                       onmouseout="this.style.background='rgba(124,0,255,0.10)'">✏️</button>
                   </div>
-                  <!-- Inline date editor (hidden by default) -->
                   <div id="inlineDateEditor" style="display:none;margin-top:8px;">
                     <div style="display:flex;align-items:center;gap:8px;">
                       <input type="date" id="inlineDateInput" style="font-size:12px;padding:6px 10px;border-radius:10px;flex:1;
@@ -1901,7 +2205,6 @@
               </div>
             </div>
 
-            <!-- ACCEPT PANEL: batch selector -->
             <div id="acceptPanel" style="display:none;margin-top:14px;">
               <div
                 style="background:rgba(0,200,100,0.06);border:1px solid rgba(0,200,100,0.25);border-radius:14px;padding:14px;">
@@ -1920,7 +2223,6 @@
               </div>
             </div>
 
-            <!-- REJECT PANEL -->
             <div id="rejectPanel" style="display:none;margin-top:14px;">
               <div
                 style="background:rgba(255,60,60,0.06);border:1px solid rgba(255,60,60,0.25);border-radius:14px;padding:14px;">
@@ -1930,7 +2232,7 @@
                 <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:6px;">Rejection Reason <span
                     style="color:#ff4444;">*</span></label>
                 <textarea id="rejectReasonInput" rows="3"
-                  placeholder="e.g. Currently we do not have openings in your preferred domain. We encourage you to apply again in the next intake..."
+                  placeholder="e.g. Currently we do not have openings in your preferred domain..."
                   style="width:100%;box-sizing:border-box;background:rgba(255,255,255,0.04);border:1px solid rgba(255,60,60,0.30);border-radius:10px;color:var(--text);font-size:13px;padding:10px 12px;resize:vertical;font-family:inherit;margin-bottom:12px;outline:none;"></textarea>
                 <button class="btn danger" style="width:100%;padding:12px;font-weight:800;" onclick="confirmReject()">
                   ❌ Confirm Reject & Send Email
@@ -1938,7 +2240,6 @@
               </div>
             </div>
 
-            <!-- Default action buttons (shown when opened without pre-set action) -->
             <div id="reviewDefaultActions" style="display:none;">
               <div class="reviewActions">
                 <button class="btn primary"
@@ -2109,8 +2410,6 @@
 
   <script src="app.js"></script>
 
-
-
   <script>
 
     function escapeHTML(str) {
@@ -2214,7 +2513,6 @@
       }
 
       try {
-        // ⚡ Parallel load — dono ek saath, sequential nahi
         await Promise.all([loadBatches(true), loadInterns(true)]);
       } catch (e) {
         console.log("Init load failed");
@@ -2324,7 +2622,7 @@
       tb.innerHTML = "";
 
       if ((data.submissions || []).length === 0) {
-        tb.innerHTML = `<tr><td colspan="9" style="text-align:center;padding:30px;color:var(--muted);">✅ No pending submissions — sab review ho gaye!</td></tr>`;
+        tb.innerHTML = `<tr><td colspan="9" style="text-align:center;padding:30px;color:var(--muted);">✅ No pending submissions</td></tr>`;
         return;
       }
 
@@ -2361,7 +2659,6 @@
       const gradeVal = document.getElementById("g_" + submissionId).value.trim();
       const remarks = document.getElementById("r_" + submissionId).value.trim();
 
-      // Visually mark the row as processing
       const approveBtn = document.querySelector(`button[onclick="grade('${submissionId}','Approved')"]`);
       const rejectBtn = document.querySelector(`button[onclick="grade('${submissionId}','Rejected')"]`);
       if (approveBtn) { approveBtn.disabled = true; approveBtn.innerText = "..."; }
@@ -2380,7 +2677,6 @@
       if (data.success) {
         toast(finalStatus === "Approved" ? "Approved ✅" : "Rejected ❌", "success");
 
-        // Animate row out, then reload
         const row = approveBtn ? approveBtn.closest("tr") : null;
         if (row) {
           row.style.transition = "opacity 0.4s, transform 0.4s";
@@ -2615,7 +2911,6 @@
       const batchId = filterEl ? filterEl.value : "";
       const cacheKey = "interns_" + (batchId || "all");
 
-      // Skeleton dikhao — pehli load pe, cache nahi hai tab
       const tb = document.getElementById("internTable");
       if (!cacheGet(cacheKey)) {
         tb.innerHTML = `
@@ -2631,7 +2926,6 @@
           </td></tr>`;
       }
 
-      // Joining Intern sheet se date map banao (email → joiningDate)
       let joiningDateMap = {};
       try {
         const jData = await apiGET({
@@ -2639,7 +2933,7 @@
           adminId: admin.adminId,
           adminPass: admin.adminPass,
           status: ""
-        }, true); // silent
+        }, true);
         if (jData.success && jData.joiningInterns) {
           jData.joiningInterns.forEach(j => {
             const em = (j["Email"] || j.Email || "").trim().toLowerCase();
@@ -2661,7 +2955,6 @@
           return;
         }
 
-        // innerHTML build once — DOM ko baar baar touch nahi karo
         const rows = list.map(i => {
           const emailKey = (i.Email || "").trim().toLowerCase();
           const joinDate = joiningDateMap[emailKey] || "";
@@ -2900,9 +3193,6 @@
       }
     }
 
-    // ════════════════════════════════════════════════════════════
-    //  LOAD ENROLLED STUDENTS
-    // ════════════════════════════════════════════════════════════
     async function loadEnrolledStudents(silent = false) {
       const data = await apiGET({
         action: "getJoiningInterns",
@@ -2938,7 +3228,6 @@
         _raw: s
       }));
 
-      // Summary tags
       const total = list.length;
       const pending = list.filter(s => s.Status === "Pending").length;
       const accepted = list.filter(s => s.Status === "Accepted").length;
@@ -2956,7 +3245,6 @@
       }
 
       list.forEach((s, idx) => {
-        // ── Status cell ──
         let statusCell = "";
         if (s.Status === "Removed") {
           statusCell = `
@@ -2981,10 +3269,9 @@
           statusCell = `<span class="statusPill pending">⏳ Pending</span>`;
         }
 
-        const cvBtn = s.CVLink ? `<a href="${escapeHTML(s.CVLink)}"     target="_blank" class="btn" style="font-size:11px;padding:5px 10px;">📄 CV</a>` : "";
+        const cvBtn = s.CVLink ? `<a href="${escapeHTML(s.CVLink)}" target="_blank" class="btn" style="font-size:11px;padding:5px 10px;">📄 CV</a>` : "";
         const letterBtn = s.LetterLink ? `<a href="${escapeHTML(s.LetterLink)}" target="_blank" class="btn" style="font-size:11px;padding:5px 10px;">📝 Letter</a>` : "";
 
-        // Show Accept/Reject only for Pending
         const actionBtns = s.Status === "Pending" ? `
       <button class="btn primary" style="font-size:11px;padding:5px 10px;background:rgba(0,200,100,0.15);
         border-color:rgba(0,200,100,0.4);color:#00c864;"
@@ -3016,9 +3303,6 @@
       });
     }
 
-    // ════════════════════════════════════════════════════════════
-    //  OPEN REVIEW MODAL
-    // ════════════════════════════════════════════════════════════
     function openEnrolledReview(studentJson, action) {
       const s = typeof studentJson === "string" ? JSON.parse(studentJson) : studentJson;
 
@@ -3031,7 +3315,6 @@
       const cvLink = s["CV Link"] || s.CVLink || "";
       const letterLink = s["Letter Link"] || s.LetterLink || "";
 
-      // Store both email + joiningDate for exact row match
       CURRENT_ENROLLED_ID = { email, joiningDate };
 
       document.getElementById("reviewAvatar").innerText = (fullName || "?")[0].toUpperCase();
@@ -3053,10 +3336,8 @@
       const statusClass = status === "Accepted" ? "approved" : status === "Declined" ? "rejected" : "pending";
       document.getElementById("reviewCurrentStatus").innerHTML = `<span class="statusPill ${statusClass}">${status}</span>`;
 
-      // Populate batch dropdown from existing
       document.getElementById("reviewBatchSelect").innerHTML = document.getElementById("inBatch").innerHTML;
 
-      // Match duration
       const durSelect = document.getElementById("reviewDurationSelect");
       for (let i = 0; i < durSelect.options.length; i++) {
         if (durSelect.options[i].value === duration || durSelect.options[i].text === duration) {
@@ -3064,7 +3345,6 @@
         }
       }
 
-      // Show panels
       document.getElementById("acceptPanel").style.display = "none";
       document.getElementById("rejectPanel").style.display = "none";
       document.getElementById("reviewDefaultActions").style.display = "none";
@@ -3094,9 +3374,6 @@
       }
     }
 
-    // ════════════════════════════════════════════════════════════
-    //  CONFIRM ACCEPT  ← KEY FIX: cache cleared + fresh reload
-    // ════════════════════════════════════════════════════════════
     async function confirmAccept() {
       if (!CURRENT_ENROLLED_ID) { toast("No enrollment selected ❌", "error"); return; }
 
@@ -3104,20 +3381,19 @@
       const duration = document.getElementById("reviewDurationSelect").value;
       const name = document.getElementById("reviewName").innerText;
       const email = CURRENT_ENROLLED_ID.email;
-      const joinDate = CURRENT_ENROLLED_ID.joiningDate;   // ← passed for exact row match
+      const joinDate = CURRENT_ENROLLED_ID.joiningDate;
 
       if (!batchId) { toast("Please select a batch ❌", "error"); return; }
 
       const msgEl = document.getElementById("reviewMsg");
       msgEl.innerText = "Processing...";
 
-      // Step 1: Update joining status → "Accepted" (matched by email + joiningDate)
       const statusData = await apiPOST({
         action: "updateJoiningStatus",
         adminId: admin.adminId,
         adminPass: admin.adminPass,
         email,
-        joiningDate: joinDate,   // ← FIX: exact row match
+        joiningDate: joinDate,
         status: "Accepted"
       });
 
@@ -3127,7 +3403,6 @@
         return;
       }
 
-      // Step 2: Create intern account
       const internData = await apiGET({
         action: "adminCreateInternGET",
         adminId: admin.adminId,
@@ -3141,11 +3416,10 @@
 
         setTimeout(() => {
           closeEnrolledReview();
-          // Clear ALL caches so fresh data is fetched
           cacheInvalidate("interns_all");
           cacheInvalidate("interns_");
           Object.keys(_cache).forEach(k => cacheInvalidate(k));
-          loadEnrolledStudents(false);   // false = show loader, force fresh fetch
+          loadEnrolledStudents(false);
         }, 1500);
       } else {
         msgEl.innerText = "Status updated but intern creation failed: " + internData.message;
@@ -3153,9 +3427,6 @@
       }
     }
 
-    // ════════════════════════════════════════════════════════════
-    //  CONFIRM REJECT  ← KEY FIX: cache cleared + fresh reload
-    // ════════════════════════════════════════════════════════════
     async function confirmReject() {
       if (!CURRENT_ENROLLED_ID) { toast("No enrollment selected ❌", "error"); return; }
 
@@ -3170,7 +3441,7 @@
         adminId: admin.adminId,
         adminPass: admin.adminPass,
         email: CURRENT_ENROLLED_ID.email,
-        joiningDate: CURRENT_ENROLLED_ID.joiningDate,   // ← FIX: exact row match
+        joiningDate: CURRENT_ENROLLED_ID.joiningDate,
         status: "Declined",
         reason
       });
@@ -3181,9 +3452,8 @@
 
         setTimeout(() => {
           closeEnrolledReview();
-          // Clear ALL caches
           Object.keys(_cache).forEach(k => cacheInvalidate(k));
-          loadEnrolledStudents(false);   // force fresh fetch
+          loadEnrolledStudents(false);
         }, 1400);
       } else {
         msgEl.innerText = "❌ " + data.message;
@@ -3196,14 +3466,10 @@
       CURRENT_ENROLLED_ID = null;
       const ri = document.getElementById("rejectReasonInput");
       if (ri) ri.value = "";
-      // Reset inline date editor
       const editor = document.getElementById("inlineDateEditor");
       if (editor) editor.style.display = "none";
     }
 
-    // ===============================
-    // CHANGE JOINING DATE
-    // ===============================
     let CURRENT_CHANGE_DATE_DATA = null;
 
     function openChangeDateModal(dataJson) {
@@ -3257,7 +3523,6 @@
     async function submitEnrolledDecision(decision) {
       if (!CURRENT_ENROLLED_ID) { toast("No enrollment selected ❌", "error"); return; }
 
-      // Map Approved → Accepted, Rejected → Declined to match backend allowed values
       const statusMap = { "Approved": "Accepted", "Rejected": "Declined" };
       const newStatus = statusMap[decision] || decision;
 
@@ -3273,10 +3538,7 @@
       });
 
       if (data.success) {
-        const msg = newStatus === "Accepted"
-          ? "✅ Application Accepted!"
-          : "✅ Application Declined.";
-
+        const msg = newStatus === "Accepted" ? "✅ Application Accepted!" : "✅ Application Declined.";
         toast(msg, "success");
         document.getElementById("reviewMsg").innerText = msg;
 
@@ -3299,6 +3561,8 @@
     let ALL_ACTIVE_INTERNS = [];
     let GENERATED_DOC_LINK = "";
     let SELECTED_DOCS = [];
+    // Verified data from Step 1.5 — passed to backend on send
+    let VERIFIED_DOC_DATA = {};
 
     async function loadActiveInterns(silent = false) {
       const data = await apiGET({
@@ -3364,27 +3628,55 @@
       renderDocInternTable(filtered);
     }
 
-    // ── Wizard step navigation helpers ──
+    // ── Step pill updater ──
     function _showDocStep(n) {
-      [1, 2, 3].forEach(s => {
-        document.getElementById("docStep" + s).style.display = s === n ? "block" : "none";
+      ["docStep1", "docStepVerify", "docStepVerifyLoi", "docStepVerifyJoining", "docStepVerifyCertificate", "docStepVerifyBestPerformer", "docStep2", "docStep3"].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.style.display = "none";
       });
-      // Update progress pills
-      const pillStyles = {
-        active: "background:linear-gradient(135deg,rgba(124,0,255,0.28),rgba(177,0,255,0.18));border:1px solid rgba(124,0,255,0.45);color:#fff;",
-        done: "background:rgba(0,255,168,0.08);border:1px solid rgba(0,255,168,0.22);color:#caffdf;",
-        idle: "background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.10);color:var(--muted);"
+
+      const targets = {
+        1: "docStep1",
+        "verify": "docStepVerify",
+        "verifyLoi": "docStepVerifyLoi",
+        "verifyJoining": "docStepVerifyJoining",
+        "verifyCertificate": "docStepVerifyCertificate",
+        "verifyBestPerformer": "docStepVerifyBestPerformer",
+        2: "docStep2",
+        3: "docStep3"
       };
-      const states = n === 1 ? ["active", "idle", "idle"]
-        : n === 2 ? ["done", "active", "idle"]
-          : ["done", "done", "active"];
-      ["stepPill1", "stepPill2", "stepPill3"].forEach((id, i) => {
-        document.getElementById(id).style.cssText +=
-          ";flex:1;text-align:center;padding:7px 0;font-size:11px;font-weight:800;letter-spacing:0.3px;transition:0.3s;" +
-          pillStyles[states[i]];
-        if (states[i] === "done") document.getElementById(id).innerHTML = ["✅ Create", "✅ Link", "✅ Share"][i];
-        else document.getElementById(id).innerHTML = ["1 · Create", "2 · Link", "3 · Share"][i];
+
+      const targetEl = document.getElementById(targets[n]);
+      if (targetEl) targetEl.style.display = "block";
+
+      const active = "background:rgba(124,0,255,0.25);border:1px solid rgba(124,0,255,0.45);color:#fff;";
+      const done = "background:rgba(0,255,168,0.08);border:1px solid rgba(0,255,168,0.22);color:#caffdf;";
+      const idle = "background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.10);color:var(--muted);";
+
+      const stateMap = {
+        1:                      [active, idle,   idle,   idle],
+        "verify":               [done,   active, idle,   idle],
+        "verifyLoi":            [done,   active, idle,   idle],
+        "verifyJoining":        [done,   active, idle,   idle],
+        "verifyCertificate":    [done,   active, idle,   idle],
+        "verifyBestPerformer":  [done,   active, idle,   idle],
+        2:                      [done,   done,   active, idle],
+        3:                      [done,   done,   done,   active]
+      };
+      const labels = ["1 · Create", "1.5 · Verify", "2 · Link", "3 · Share"];
+      const doneLabels = ["✅ Create", "✅ Verify", "✅ Link", "✅ Share"];
+      const states = stateMap[n] || [idle, idle, idle, idle];
+      const pillIds = ["stepPill1", "stepPillVerify", "stepPill2", "stepPill3"];
+
+      pillIds.forEach((id, i) => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.style.cssText += ";" + states[i] + ";flex:1;text-align:center;padding:7px 0;font-size:11px;font-weight:800;letter-spacing:0.3px;transition:0.3s;";
+        el.innerHTML = states[i] === done ? doneLabels[i] : labels[i];
       });
+
+      document.getElementById("stepPill1").style.borderRadius = "12px 0 0 12px";
+      document.getElementById("stepPill3").style.borderRadius = "0 12px 12px 0";
     }
 
     function openSendDocModal(internJson) {
@@ -3392,6 +3684,7 @@
       CURRENT_DOC_INTERN = i;
       GENERATED_DOC_LINK = "";
       SELECTED_DOCS = [];
+      VERIFIED_DOC_DATA = {};
 
       // Reset checkboxes
       ["chkLoi", "chkOfferLetter", "chkJoiningLetter", "chkCompletion", "chkCertificate", "chkBestPerformer"].forEach(id => {
@@ -3454,7 +3747,114 @@
       }
     }
 
-    // ── STEP 1 → STEP 2: Preview selected docs ──
+    // ── Joining Letter Verify Step open ──
+    function openJlVerifyStep() {
+      const i = CURRENT_DOC_INTERN;
+      if (!i) return;
+
+      const today = new Date();
+      const todayStr = today.toISOString().slice(0, 10);
+
+      const idNum = (i.InternID || "").replace(/\D/g, "");
+      const refNo = `COD/JL/${today.getFullYear()}/${idNum || "0001"}`;
+
+      document.getElementById("jlRefNo").value = refNo;
+      document.getElementById("jlFullName").value = i.Name || "";
+      document.getElementById("jlCurrentDate").value = todayStr;
+      document.getElementById("jlVfMsg").innerText = "";
+
+      let joiningDate = toDateInputValue(i.CreatedAt || "");
+      if (!joiningDate) joiningDate = todayStr;
+      document.getElementById("jlJoiningDate").value = joiningDate;
+
+      _showDocStep("verifyJoining");
+    }
+
+    // ── Joining Letter Verify Back ──
+    function docJlVerifyBack() {
+      _showDocStep(1);
+    }
+
+    // ── Joining Letter Verify Confirm ──
+    function docJlVerifyConfirm() {
+      const refNo = document.getElementById("jlRefNo").value.trim();
+      const fullName = document.getElementById("jlFullName").value.trim();
+      const currentDate = document.getElementById("jlCurrentDate").value;
+      const joiningDate = document.getElementById("jlJoiningDate").value;
+      const msgEl = document.getElementById("jlVfMsg");
+
+      if (!refNo) { msgEl.innerText = "⚠️ Reference No. required"; return; }
+      if (!fullName) { msgEl.innerText = "⚠️ Intern Name required"; return; }
+      if (!currentDate) { msgEl.innerText = "⚠️ Current Date required"; return; }
+      if (!joiningDate) { msgEl.innerText = "⚠️ Joining Date required"; return; }
+
+      msgEl.innerText = "";
+
+      VERIFIED_DOC_DATA = {
+        docType: "joiningLetter",
+        refNo, fullName, currentDate, joiningDate
+      };
+
+      proceedToDocStep2();
+    }
+
+    // ── Certificate Verify Step ──
+    function openCertVerifyStep() {
+      const i = CURRENT_DOC_INTERN;
+      if (!i) return;
+      document.getElementById("certFullName").value = i.Name || "";
+      document.getElementById("certVfMsg").innerText = "";
+      _showDocStep("verifyCertificate");
+    }
+
+    function docCertVerifyBack() { _showDocStep(1); }
+
+    function docCertVerifyConfirm() {
+      const fullName = document.getElementById("certFullName").value.trim();
+      const msgEl = document.getElementById("certVfMsg");
+
+      if (!fullName) { msgEl.innerText = "⚠️ Intern Name required"; return; }
+      msgEl.innerText = "";
+
+      VERIFIED_DOC_DATA = {
+        docType: "certificate",
+        fullName
+      };
+
+      proceedToDocStep2();
+    }
+
+    // ── Best Performer Verify Step ──
+    function openBpVerifyStep() {
+      const i = CURRENT_DOC_INTERN;
+      if (!i) return;
+      const today = new Date().toISOString().slice(0, 10);
+      document.getElementById("bpFullName").value = i.Name || "";
+      document.getElementById("bpDate").value = today;
+      document.getElementById("bpVfMsg").innerText = "";
+      _showDocStep("verifyBestPerformer");
+    }
+
+    function docBpVerifyBack() { _showDocStep(1); }
+
+    function docBpVerifyConfirm() {
+      const fullName = document.getElementById("bpFullName").value.trim();
+      const date = document.getElementById("bpDate").value;
+      const msgEl = document.getElementById("bpVfMsg");
+
+      if (!fullName) { msgEl.innerText = "⚠️ Intern Name required"; return; }
+      if (!date) { msgEl.innerText = "⚠️ Date required"; return; }
+      msgEl.innerText = "";
+
+      VERIFIED_DOC_DATA = {
+        docType: "bestPerformer",
+        fullName, date
+      };
+
+      proceedToDocStep2();
+    }
+
+    // ── STEP 1 → next ──
     function docGoToStep2() {
       const map = [
         { id: "chkLoi", key: "loi", label: "📝 Letter of Intent (LOI)" },
@@ -3472,13 +3872,225 @@
       }
       document.getElementById("docStep1Msg").innerText = "";
 
-      // No backend call needed here — documents are generated at send time
-      // Set a placeholder link (will be populated after actual send)
-      GENERATED_DOC_LINK = "";
+      const hasOfferLetter    = SELECTED_DOCS.some(d => d.key === "offerLetter");
+      const hasLoi            = SELECTED_DOCS.some(d => d.key === "loi");
+      const hasJoiningLetter  = SELECTED_DOCS.some(d => d.key === "joiningLetter");
+      const hasCertificate    = SELECTED_DOCS.some(d => d.key === "certificate");
+      const hasBestPerformer  = SELECTED_DOCS.some(d => d.key === "bestPerformer");
+
+      if (hasOfferLetter)   { openVerifyStep(); return; }
+      if (hasLoi)           { openLoiVerifyStep(); return; }
+      if (hasJoiningLetter) { openJlVerifyStep(); return; }
+      if (hasCertificate)   { openCertVerifyStep(); return; }
+      if (hasBestPerformer) { openBpVerifyStep(); return; }
+
+      proceedToDocStep2();
+    }
+    
+
+    // ── LOI Verify Step open ──
+    async function openLoiVerifyStep() {
+      const i = CURRENT_DOC_INTERN;
+      if (!i) return;
+
+      const today = new Date();
+      const todayStr = today.toISOString().slice(0, 10);
+
+      document.getElementById("loiFullName").value = i.Name || "";
+      document.getElementById("loiCurrentDate").value = todayStr;
+      document.getElementById("loiRole").value = "Software Development Intern";
+      document.getElementById("loiVfMsg").innerText = "";
+
+      const durMonths = String(i.Duration || "6").includes("9") ? "9" : "6";
+      document.getElementById("loiDuration").value = durMonths;
+
+      let joiningDate = toDateInputValue(i.CreatedAt || "");
+      if (!joiningDate) joiningDate = todayStr;
+      document.getElementById("loiJoiningDate").value = joiningDate;
+
+      calcLoiEndDate();
+      _showDocStep("verifyLoi");
+    }
+
+    // ── LOI End Date auto-calculate ──
+    function calcLoiEndDate() {
+      const jDateStr = document.getElementById("loiJoiningDate").value;
+      const dur = parseInt(document.getElementById("loiDuration").value) || 6;
+
+      if (!jDateStr) {
+        document.getElementById("loiEndDateDisplay").innerText = "— Joining date select karein";
+        document.getElementById("loiDurationDisplay").innerText = dur + " Months";
+        return;
+      }
+
+      const d = new Date(jDateStr);
+      d.setMonth(d.getMonth() + dur);
+      d.setDate(d.getDate() - 1);
+
+      document.getElementById("loiEndDateDisplay").innerText =
+        d.toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" });
+      document.getElementById("loiDurationDisplay").innerText = dur + " Months";
+    }
+
+    // ── LOI Verify Back ──
+    function docLoiVerifyBack() {
+      _showDocStep(1);
+    }
+
+    // ── LOI Verify Confirm ──
+    function docLoiVerifyConfirm() {
+      const fullName = document.getElementById("loiFullName").value.trim();
+      const currentDate = document.getElementById("loiCurrentDate").value;
+      const role = document.getElementById("loiRole").value.trim();
+      const joiningDate = document.getElementById("loiJoiningDate").value;
+      const duration = document.getElementById("loiDuration").value;
+      const msgEl = document.getElementById("loiVfMsg");
+
+      if (!fullName) { msgEl.innerText = "⚠️ Full Name required"; return; }
+      if (!currentDate) { msgEl.innerText = "⚠️ Current Date required"; return; }
+      if (!role) { msgEl.innerText = "⚠️ Role required"; return; }
+      if (!joiningDate) { msgEl.innerText = "⚠️ Joining Date required"; return; }
+
+      msgEl.innerText = "";
+
+      const d = new Date(joiningDate);
+      d.setMonth(d.getMonth() + parseInt(duration));
+      d.setDate(d.getDate() - 1);
+      const endDateStr = d.toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" });
+
+      VERIFIED_DOC_DATA = {
+        docType: "loi",
+        fullName, currentDate, role,
+        joiningDate, duration, endDate: endDateStr
+      };
+
+      proceedToDocStep2();
+    }
+
+    // ── Open Verify Step and pre-fill fields ──
+    async function openVerifyStep() {
+      const i = CURRENT_DOC_INTERN;
+      if (!i) return;
+
+      // Today's date
+      const today = new Date();
+      const todayStr = today.toISOString().slice(0, 10);
+
+      // Generate reference number: COD/OL/YEAR/InternID-number
+      const idNum = (i.InternID || "").replace(/\D/g, "");
+      const refNo = `COD/OL/${today.getFullYear()}/${idNum || "0001"}`;
+
+      // Pre-fill fields
+      document.getElementById("vfRefNo").value = refNo;
+      document.getElementById("vfFullName").value = i.Name || "";
+      document.getElementById("vfCurrentDate").value = todayStr;
+      document.getElementById("vfEmail").value = i.Email || "";
+      document.getElementById("vfRole").value = "Software Development Intern";
+      document.getElementById("vfMsg").innerText = "";
+
+      // Duration — match intern's duration string
+      const durSel = document.getElementById("vfDuration");
+      const durMonths = String(i.Duration || "6").includes("9") ? "9" : "6";
+      durSel.value = durMonths;
+
+      // Mobile — try to fetch from joining interns sheet
+      let mobile = i.Phone || i.Mobile || "";
+      if (!mobile) {
+        try {
+          const jData = await apiGET({
+            action: "getJoiningInterns",
+            adminId: admin.adminId,
+            adminPass: admin.adminPass,
+            status: ""
+          }, true);
+          if (jData.success && jData.joiningInterns) {
+            const match = jData.joiningInterns.find(j =>
+              (j["Email"] || j.Email || "").trim().toLowerCase() === (i.Email || "").trim().toLowerCase()
+            );
+            if (match) mobile = match["Phone"] || match.Phone || "";
+          }
+        } catch (e) { }
+      }
+      document.getElementById("vfMobile").value = mobile || "";
+
+      // Joining Date — from intern's CreatedAt / joining sheet
+      let joiningDate = toDateInputValue(i.CreatedAt || "");
+      if (!joiningDate) joiningDate = todayStr;
+      document.getElementById("vfJoiningDate").value = joiningDate;
+
+      // Calculate end date
+      calcVerifyEndDate();
+
+      _showDocStep("verify");
+    }
+
+    // ── Calculate end date from joining date + duration ──
+    function calcVerifyEndDate() {
+      const jDateStr = document.getElementById("vfJoiningDate").value;
+      const dur = parseInt(document.getElementById("vfDuration").value) || 6;
+
+      if (!jDateStr) {
+        document.getElementById("vfEndDateDisplay").innerText = "— Joining date select karein";
+        document.getElementById("vfDurationDisplay").innerText = dur + " Months";
+        return;
+      }
+
+      // Add months to joining date, subtract 1 day for last day of internship
+      const d = new Date(jDateStr);
+      d.setMonth(d.getMonth() + dur);
+      d.setDate(d.getDate() - 1);
+
+      const options = { day: "numeric", month: "long", year: "numeric" };
+      document.getElementById("vfEndDateDisplay").innerText = d.toLocaleDateString("en-IN", options);
+      document.getElementById("vfDurationDisplay").innerText = dur + " Months";
+    }
+
+    // ── Verify step Back ──
+    function docVerifyBack() {
+      _showDocStep(1);
+    }
+
+    // ── Verify step Confirm — collect data and go to Step 2 ──
+    function docVerifyConfirm() {
+      const refNo = document.getElementById("vfRefNo").value.trim();
+      const fullName = document.getElementById("vfFullName").value.trim();
+      const currentDate = document.getElementById("vfCurrentDate").value;
+      const mobile = document.getElementById("vfMobile").value.trim();
+      const email = document.getElementById("vfEmail").value.trim();
+      const role = document.getElementById("vfRole").value.trim();
+      const joiningDate = document.getElementById("vfJoiningDate").value;
+      const duration = document.getElementById("vfDuration").value;
+
+      const msgEl = document.getElementById("vfMsg");
+
+      if (!refNo) { msgEl.innerText = "⚠️ Reference No. required"; return; }
+      if (!fullName) { msgEl.innerText = "⚠️ Full Name required"; return; }
+      if (!currentDate) { msgEl.innerText = "⚠️ Current Date required"; return; }
+      if (!email) { msgEl.innerText = "⚠️ Email required"; return; }
+      if (!joiningDate) { msgEl.innerText = "⚠️ Joining Date required"; return; }
+
+      msgEl.innerText = "";
+
+      // Calculate end date string
+      const d = new Date(joiningDate);
+      d.setMonth(d.getMonth() + parseInt(duration));
+      d.setDate(d.getDate() - 1);
+      const endDateStr = d.toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" });
+
+      // Store verified data globally — used when sending docs
+      VERIFIED_DOC_DATA = {
+        refNo, fullName, currentDate, mobile, email, role,
+        joiningDate, duration, endDate: endDateStr
+      };
+
+      proceedToDocStep2();
+    }
+
+    // ── Proceed to Step 2 (link step) after verify (or directly) ──
+    function proceedToDocStep2() {
       const linkEl = document.getElementById("docGeneratedLink");
       if (linkEl) linkEl.value = "Document link will be available after sending via email.";
 
-      // Populate step 2 doc list UI
       const listEl = document.getElementById("docLinkDocList");
       if (listEl) {
         listEl.innerHTML = SELECTED_DOCS.map(m => `
@@ -3494,7 +4106,9 @@
       _showDocStep(2);
     }
 
-    function docGoToStep1() { _showDocStep(1); }
+    function docGoToStep1() {
+      _showDocStep(1);
+    }
 
     function updateShareOpt() {
       const val = document.querySelector("input[name='shareOpt']:checked")?.value || "public";
@@ -3514,15 +4128,12 @@
       });
     }
 
-    // ── STEP 2 → STEP 3 ──
     function docGoToStep3() {
       const docNames = SELECTED_DOCS.map(m => m.label).join(", ");
       document.getElementById("docStep3Summary").innerText =
         `📋 ${SELECTED_DOCS.length} document(s) ready: ${docNames}`;
       _showDocStep(3);
     }
-
-    function docGoToStep2FromStep3() { _showDocStep(2); }
 
     // ── STEP 3: Send via Email ──
     async function submitSendDocs() {
@@ -3543,7 +4154,9 @@
         internId: CURRENT_DOC_INTERN.InternID,
         documents: docs,
         emailTo,
-        docLink: GENERATED_DOC_LINK
+        docLink: GENERATED_DOC_LINK,
+        // Pass verified data if available (for Offer Letter placeholders)
+        verifiedData: Object.keys(VERIFIED_DOC_DATA).length > 0 ? VERIFIED_DOC_DATA : null
       });
 
       if (data.success) {
@@ -3563,7 +4176,6 @@
 
       let phone = document.getElementById("docWhatsappNum").value.trim().replace(/\s+/g, "");
       if (!phone) { toast("Enter phone number ❌", "error"); return; }
-      // Strip leading + for wa.me URL
       phone = phone.replace(/^\+/, "");
 
       const docNames = SELECTED_DOCS.map(m => m.label).join(", ");
@@ -3609,10 +4221,8 @@
     function formatDate(dateString) {
       if (!dateString) return "-";
       const s = String(dateString);
-      // yyyy-MM-dd format — parse manually to avoid UTC timezone shift
       const iso = s.match(/^(\d{4})-(\d{2})-(\d{2})/);
       if (iso) return `${iso[3]}/${iso[2]}/${iso[1]}`;
-      // Fallback for other formats (ISO with time, etc.)
       const d = new Date(dateString);
       if (isNaN(d)) return s.slice(0, 10);
       const day = String(d.getDate()).padStart(2, "0");
@@ -3621,7 +4231,6 @@
       return `${day}/${month}/${year}`;
     }
 
-    // Converts any date string/ISO to yyyy-MM-dd for <input type="date">
     function toDateInputValue(dateString) {
       if (!dateString) return "";
       if (/^\d{4}-\d{2}-\d{2}$/.test(String(dateString))) return dateString;
@@ -3649,19 +4258,19 @@
 
     const WARN_PREVIEWS = {
       1: {
-        absent: "⚠️ First Notice: Aapki attendance mein kami dekhi gayi hai. Please regular aayein — yeh aapke internship record ko affect kar sakta hai.",
-        late_submit: "⚠️ First Notice: Aapki task submissions late ho rahi hain. Deadlines follow karna zaroori hai. Please samay pe submit karein.",
-        incomplete: "⚠️ First Notice: Aapka assigned project/task incomplete pada hai. Isse timely complete karna aapki responsibility hai."
+        absent: "⚠️ First Notice: Aapki attendance mein kami dekhi gayi hai. Please regular aayein.",
+        late_submit: "⚠️ First Notice: Aapki task submissions late ho rahi hain. Deadlines follow karna zaroori hai.",
+        incomplete: "⚠️ First Notice: Aapka assigned project/task incomplete pada hai."
       },
       2: {
-        absent: "⚠️⚠️ Second Warning: Humne pehle bhi notice diya tha, phir bhi attendance improve nahi hui. Yeh serious concern hai. Agar sudhaar nahi hua toh aage ki action li jayegi.",
-        late_submit: "⚠️⚠️ Second Warning: Task submissions repeatedly late ho rahi hain. Yeh doosri warning hai. Agle baar se strict action liya jayega.",
-        incomplete: "⚠️⚠️ Second Warning: Projects incomplete hain — yeh doosri formal warning hai. Hum expect karte hain ki aap apna kaam complete karein."
+        absent: "⚠️⚠️ Second Warning: Humne pehle bhi notice diya tha, phir bhi attendance improve nahi hui.",
+        late_submit: "⚠️⚠️ Second Warning: Task submissions repeatedly late ho rahi hain.",
+        incomplete: "⚠️⚠️ Second Warning: Projects incomplete hain — yeh doosri formal warning hai."
       },
       3: {
-        absent: "🔴 FINAL NOTICE: Yeh aapki last warning hai. Agar attendance mein sudhar nahi aaya toh aapko internship program se remove kiya jayega. Yeh ek official notice hai.",
-        late_submit: "🔴 FINAL NOTICE: Yeh last warning hai regarding late submissions. Agle late submission par aapka internship terminate kiya ja sakta hai.",
-        incomplete: "🔴 FINAL NOTICE: Aapke projects/tasks consistently incomplete hain. Yeh final notice hai — immediate action required hai warna internship terminate hogi."
+        absent: "🔴 FINAL NOTICE: Yeh aapki last warning hai. Agar attendance mein sudhar nahi aaya toh remove kiya jayega.",
+        late_submit: "🔴 FINAL NOTICE: Yeh last warning hai regarding late submissions.",
+        incomplete: "🔴 FINAL NOTICE: Aapke projects/tasks consistently incomplete hain. Final notice."
       }
     };
 
@@ -3773,14 +4382,6 @@
       }
 
       const reasonVal = document.getElementById("removeReason").value;
-      const reasonLabels = {
-        absent: "🚫 Consistent Absence / No Show",
-        incomplete: "📋 Failed to Complete Projects",
-        late: "⏰ Repeated Late Submissions",
-        conduct: "⚠️ Code of Conduct Violation",
-        voluntary: "✋ Voluntary Exit / Resigned"
-      };
-      const reasonText = reasonLabels[reasonVal] || reasonVal;
       msgEl.innerText = "🗑️ Removing intern data...";
 
       const data = await apiPOST({
@@ -3804,7 +4405,6 @@
       }
     }
 
-
     // ===============================
     // NOTIFICATION SYSTEM
     // ===============================
@@ -3819,7 +4419,6 @@
       const bell = document.getElementById("notifWrap");
       _notifOpen = !_notifOpen;
       if (_notifOpen) {
-        // Position dropdown relative to bell icon
         const rect = bell.getBoundingClientRect();
         dd.style.top = (rect.bottom + 10) + "px";
         dd.style.right = (window.innerWidth - rect.right) + "px";
@@ -3849,7 +4448,6 @@
 
     async function fetchNotifications() {
       _notifLoaded = true;
-      // Show skeleton while loading
       const body = document.getElementById("notifBody");
       if (body) body.innerHTML = '<div id="notifSkeleton">'
         + '<div class="notifSkeleton"><div class="skeletonCircle"></div><div style="flex:1"><div class="skeletonLine" style="width:70%"></div><div class="skeletonLine" style="width:45%"></div></div></div>'
@@ -3899,7 +4497,6 @@
       const body = document.getElementById("notifBody");
       if (!body) return;
 
-      // Clear skeleton + old content
       body.innerHTML = "";
 
       if (total === 0) {
@@ -3997,7 +4594,6 @@
       }
     }
 
-
     async function saveInlineDate() {
       if (!CURRENT_ENROLLED_ID) { toast("No enrollment selected ❌", "error"); return; }
 
@@ -4033,13 +4629,11 @@
     }
 
     // ══════════════════════════════════════════════════════════
-    //  REMOVED INTERNS — JavaScript
+    //  REMOVED INTERNS
     // ══════════════════════════════════════════════════════════
 
-    // ── State ──
     let _removedAll = [];
 
-    // Reason badge config
     const REASON_CONFIG = {
       absent: { label: "Absent", color: "#f59e0b", bg: "rgba(245,158,11,0.12)" },
       late_submit: { label: "Late Submit", color: "#fb923c", bg: "rgba(251,146,60,0.12)" },
@@ -4059,7 +4653,6 @@
               </span>`;
     }
 
-    // ── Load removed interns from API ──
     async function loadRemovedInterns(silent) {
       const batchFilter = (document.getElementById("removedBatchFilter")?.value || "").trim();
       const cacheKey = "removed_" + (batchFilter || "all");
@@ -4081,7 +4674,6 @@
       );
     }
 
-    // ── Populate batch filter dropdown ──
     function populateRemovedBatchFilter(list) {
       const sel = document.getElementById("removedBatchFilter");
       if (!sel) return;
@@ -4096,7 +4688,6 @@
       });
     }
 
-    // ── Stats ──
     function renderRemovedStats(list) {
       const thisMonth = new Date().toISOString().slice(0, 7);
       const monthCount = list.filter(x => String(x["Removed At"] || "").startsWith(thisMonth)).length;
@@ -4110,7 +4701,6 @@
       if (s("removedStatTerminated")) s("removedStatTerminated").textContent = terminated;
     }
 
-    // ── Render table ──
     function renderRemovedTable(list) {
       const tbody = document.getElementById("removedTableBody");
       if (!tbody) return;
@@ -4145,8 +4735,7 @@
           </td>
           <td style="padding:11px 14px;font-weight:600;color:var(--text);">${name}</td>
           <td style="padding:11px 14px;color:var(--muted);font-size:12px;">
-            <a href="mailto:${email}" style="color:var(--muted);text-decoration:none;"
-               onmouseover="this.style.color='#B100FF'" onmouseout="this.style.color='var(--muted)'">${email}</a>
+            <a href="mailto:${email}" style="color:var(--muted);text-decoration:none;">${email}</a>
           </td>
           <td style="padding:11px 14px;color:var(--muted);font-size:12px;white-space:nowrap;">
             ${phone !== "—" ? `<a href="tel:${phone}" style="color:var(--muted);text-decoration:none;">${phone}</a>` : "—"}
@@ -4165,7 +4754,6 @@
       }).join("");
     }
 
-    // ── Client-side search filter ──
     function filterRemovedInterns() {
       const q = (document.getElementById("removedSearch")?.value || "").toLowerCase().trim();
       if (!q) {
@@ -4183,8 +4771,6 @@
       renderRemovedTable(filtered);
       renderRemovedStats(filtered);
     }
-
-    // ══════════════════════════════════════════════════════════
 
     init();
     startAutoRefreshAdmin();
