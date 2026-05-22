@@ -1969,6 +1969,61 @@
             <!-- ═══════════════════════════════════ -->
             <!-- STEP 2: Generated Link              -->
             <!-- ═══════════════════════════════════ -->
+            <!-- ═══════════════════════════════════════════════════════ -->
+            <!-- STEP 1.5: VERIFY DETAILS — Completion Letter           -->
+            <!-- ═══════════════════════════════════════════════════════ -->
+            <div id="docStepVerifyCompletion" style="display:none;">
+              <div style="font-size:13px;font-weight:800;margin-bottom:6px;color:#B100FF;">✅ Verify Completion Letter Details</div>
+              <p style="font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.6;">
+                Completion Letter mein print hone wali details verify karein.
+              </p>
+
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;">
+                <div class="vfFieldGroup">
+                  <label>👤 Intern Full Name</label>
+                  <input id="compFullName" type="text" placeholder="Full Name" />
+                </div>
+                <div class="vfFieldGroup">
+                  <label>📋 Reference No.</label>
+                  <input id="compRefNo" type="text" placeholder="COD/CL/2026/..." />
+                </div>
+                <div class="vfFieldGroup">
+                  <label>📅 Current Date</label>
+                  <input id="compCurrentDate" type="date" />
+                </div>
+                <div class="vfFieldGroup">
+                  <label>💼 Role / Position</label>
+                  <input id="compRole" type="text" placeholder="Software Development Intern" />
+                </div>
+                <div class="vfFieldGroup">
+                  <label>📅 Joining Date</label>
+                  <input id="compJoiningDate" type="date" />
+                </div>
+                <div class="vfFieldGroup">
+                  <label>⏳ Duration (Months)</label>
+                  <select id="compDuration"
+                    style="background:#1a1a24;border:1px solid rgba(255,255,255,0.1);color:var(--text);
+                           border-radius:10px;padding:9px 12px;font-size:13px;width:100%;">
+                    <option value="1">1 Month</option>
+                    <option value="2">2 Months</option>
+                    <option value="3">3 Months</option>
+                    <option value="6" selected>6 Months</option>
+                    <option value="9">9 Months</option>
+                    <option value="12">12 Months</option>
+                  </select>
+                </div>
+              </div>
+
+              <div id="compVfMsg" style="font-size:12px;color:var(--danger);min-height:16px;margin-bottom:10px;"></div>
+
+              <div style="display:flex;gap:10px;">
+                <button class="btn ghost" style="flex:0 0 auto;padding:12px 16px;" onclick="docCompVerifyBack()">← Back</button>
+                <button class="btn primary" style="flex:1;padding:13px;font-size:14px;" onclick="docCompVerifyConfirm()">
+                  ✅ Confirm & Continue →
+                </button>
+              </div>
+            </div>
+
             <div id="docStep2" style="display:none;">
               <div style="font-size:13px;font-weight:800;margin-bottom:14px;color:#B100FF;">🔗 Document Link Generated
               </div>
@@ -3630,7 +3685,7 @@
 
     // ── Step pill updater ──
     function _showDocStep(n) {
-      ["docStep1", "docStepVerify", "docStepVerifyLoi", "docStepVerifyJoining", "docStepVerifyCertificate", "docStepVerifyBestPerformer", "docStep2", "docStep3"].forEach(id => {
+      ["docStep1", "docStepVerify", "docStepVerifyLoi", "docStepVerifyJoining", "docStepVerifyCertificate", "docStepVerifyBestPerformer", "docStepVerifyCompletion", "docStep2", "docStep3"].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.style.display = "none";
       });
@@ -3640,6 +3695,7 @@
         "verify": "docStepVerify",
         "verifyLoi": "docStepVerifyLoi",
         "verifyJoining": "docStepVerifyJoining",
+        "verifyCompletion": "docStepVerifyCompletion",
         "verifyCertificate": "docStepVerifyCertificate",
         "verifyBestPerformer": "docStepVerifyBestPerformer",
         2: "docStep2",
@@ -3658,6 +3714,7 @@
         "verify":               [done,   active, idle,   idle],
         "verifyLoi":            [done,   active, idle,   idle],
         "verifyJoining":        [done,   active, idle,   idle],
+        "verifyCompletion":     [done,   active, idle,   idle],
         "verifyCertificate":    [done,   active, idle,   idle],
         "verifyBestPerformer":  [done,   active, idle,   idle],
         2:                      [done,   done,   active, idle],
@@ -3854,6 +3911,62 @@
       proceedToDocStep2();
     }
 
+    // ── Completion Letter Verify Step ──
+    function openCompVerifyStep() {
+      const i = CURRENT_DOC_INTERN;
+      if (!i) return;
+
+      const today    = new Date();
+      const todayStr = today.toISOString().slice(0, 10);
+      const idNum    = (i.InternID || "").replace(/\D/g, "");
+      const refNo    = `COD/CL/${today.getFullYear()}/${idNum || "0001"}`;
+
+      document.getElementById("compFullName").value    = i.Name  || "";
+      document.getElementById("compRefNo").value       = refNo;
+      document.getElementById("compCurrentDate").value = todayStr;
+      document.getElementById("compRole").value        = "Software Development Intern";
+      document.getElementById("compVfMsg").innerText   = "";
+
+      const durMonths = String(i.Duration || "6").includes("9") ? "9" : "6";
+      document.getElementById("compDuration").value = durMonths;
+
+      let joiningDate = toDateInputValue(i.CreatedAt || "");
+      if (!joiningDate) joiningDate = todayStr;
+      document.getElementById("compJoiningDate").value = joiningDate;
+
+      _showDocStep("verifyCompletion");
+    }
+
+    function docCompVerifyBack() { _showDocStep(1); }
+
+    function docCompVerifyConfirm() {
+      const fullName    = document.getElementById("compFullName").value.trim();
+      const refNo       = document.getElementById("compRefNo").value.trim();
+      const currentDate = document.getElementById("compCurrentDate").value;
+      const role        = document.getElementById("compRole").value.trim();
+      const joiningDate = document.getElementById("compJoiningDate").value;
+      const duration    = document.getElementById("compDuration").value;
+      const msgEl       = document.getElementById("compVfMsg");
+
+      if (!fullName)    { msgEl.innerText = "⚠️ Full Name required"; return; }
+      if (!currentDate) { msgEl.innerText = "⚠️ Current Date required"; return; }
+      if (!joiningDate) { msgEl.innerText = "⚠️ Joining Date required"; return; }
+      msgEl.innerText = "";
+
+      const d = new Date(joiningDate);
+      d.setMonth(d.getMonth() + parseInt(duration));
+      d.setDate(d.getDate() - 1);
+      const endDateStr = d.toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" });
+
+      VERIFIED_DOC_DATA = {
+        docType: "completion",
+        fullName, refNo, currentDate, role,
+        joiningDate, duration, endDate: endDateStr
+      };
+
+      proceedToDocStep2();
+    }
+
     // ── STEP 1 → next ──
     function docGoToStep2() {
       const map = [
@@ -3875,12 +3988,14 @@
       const hasOfferLetter    = SELECTED_DOCS.some(d => d.key === "offerLetter");
       const hasLoi            = SELECTED_DOCS.some(d => d.key === "loi");
       const hasJoiningLetter  = SELECTED_DOCS.some(d => d.key === "joiningLetter");
+      const hasCompletion     = SELECTED_DOCS.some(d => d.key === "completion");
       const hasCertificate    = SELECTED_DOCS.some(d => d.key === "certificate");
       const hasBestPerformer  = SELECTED_DOCS.some(d => d.key === "bestPerformer");
 
       if (hasOfferLetter)   { openVerifyStep(); return; }
       if (hasLoi)           { openLoiVerifyStep(); return; }
       if (hasJoiningLetter) { openJlVerifyStep(); return; }
+      if (hasCompletion)    { openCompVerifyStep(); return; }
       if (hasCertificate)   { openCertVerifyStep(); return; }
       if (hasBestPerformer) { openBpVerifyStep(); return; }
 
@@ -4145,25 +4260,42 @@
       const docs = SELECTED_DOCS.map(m => m.key);
       if (docs.length === 0) { toast("No documents selected ❌", "error"); return; }
 
-      document.getElementById("docSendMsg").innerText = "📨 Sending documents...";
+      const sendBtn = document.querySelector("#docStep3 .btn.primary");
+      if (sendBtn) { sendBtn.disabled = true; sendBtn.innerText = "📨 Sending..."; }
+      document.getElementById("docSendMsg").innerText = "📨 Generating & sending documents via email...";
 
       const data = await apiPOST({
-        action: "adminSendDocuments",
-        adminId: admin.adminId,
-        adminPass: admin.adminPass,
-        internId: CURRENT_DOC_INTERN.InternID,
-        documents: docs,
+        action:       "adminSendDocuments",
+        adminId:      admin.adminId,
+        adminPass:    admin.adminPass,
+        internId:     CURRENT_DOC_INTERN.InternID,
+        documents:    docs,
         emailTo,
-        docLink: GENERATED_DOC_LINK,
-        // Pass verified data if available (for Offer Letter placeholders)
         verifiedData: Object.keys(VERIFIED_DOC_DATA).length > 0 ? VERIFIED_DOC_DATA : null
       });
 
+      if (sendBtn) { sendBtn.disabled = false; sendBtn.innerText = "Send"; }
+
       if (data.success) {
-        const msg = `✅ ${docs.length} document(s) sent to ${emailTo}`;
+        // Store Drive link for WhatsApp sharing
+        if (data.driveLink) {
+          GENERATED_DOC_LINK = data.driveLink;
+          const linkEl = document.getElementById("docGeneratedLink");
+          if (linkEl) linkEl.value = data.driveLink;
+        }
+
+        const msg = `✅ ${docs.length} document(s) emailed to ${emailTo}`;
         toast(msg, "success");
         document.getElementById("docSendMsg").innerText = msg;
-        setTimeout(() => closeSendDocModal(), 1800);
+
+        // Pre-fill WhatsApp number if available
+        const waInput = document.getElementById("docWhatsappNum");
+        if (waInput && !waInput.value) {
+          waInput.value = CURRENT_DOC_INTERN?.Phone || "";
+        }
+
+        // Reload intern list in background to update doc status columns
+        setTimeout(() => loadActiveInterns(true), 1200);
       } else {
         document.getElementById("docSendMsg").innerText = "❌ " + data.message;
         toast(data.message, "error");
@@ -4172,18 +4304,31 @@
 
     // ── STEP 3: Send via WhatsApp ──
     function sendViaWhatsApp() {
-      if (!GENERATED_DOC_LINK) { toast("No document link available ❌", "error"); return; }
-
       let phone = document.getElementById("docWhatsappNum").value.trim().replace(/\s+/g, "");
       if (!phone) { toast("Enter phone number ❌", "error"); return; }
       phone = phone.replace(/^\+/, "");
 
       const docNames = SELECTED_DOCS.map(m => m.label).join(", ");
-      const msg = encodeURIComponent(
-        `Hello ${CURRENT_DOC_INTERN?.Name || ""},\n\nYour internship document(s) are ready:\n${docNames}\n\n🔗 Download Link:\n${GENERATED_DOC_LINK}\n\n— CODELINE.AI Team`
-      );
+      const intern   = CURRENT_DOC_INTERN;
 
-      const waUrl = `https://wa.me/${phone}?text=${msg}`;
+      let msgText;
+      if (GENERATED_DOC_LINK) {
+        msgText =
+          `Hello ${intern?.Name || ""},\n\n` +
+          `Your internship document(s) have been sent to your email *${intern?.Email || ""}*.\n\n` +
+          `📄 *Documents:*\n${docNames}\n\n` +
+          `📁 *Drive Link:*\n${GENERATED_DOC_LINK}\n\n` +
+          `— CODELINE.AI Team`;
+      } else {
+        msgText =
+          `Hello ${intern?.Name || ""},\n\n` +
+          `Your internship document(s) have been sent to your email *${intern?.Email || ""}*.\n\n` +
+          `📄 *Documents:* ${docNames}\n\n` +
+          `Please check your inbox. 📧\n\n` +
+          `— CODELINE.AI Team`;
+      }
+
+      const waUrl = `https://wa.me/${phone}?text=${encodeURIComponent(msgText)}`;
       window.open(waUrl, "_blank");
       toast("WhatsApp opened ✅", "success");
     }
