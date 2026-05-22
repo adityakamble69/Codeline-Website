@@ -1914,7 +1914,8 @@
             <!-- STEP 1.5 CERTIFICATE: VERIFY DETAILS           -->
             <!-- ═══════════════════════════════════════════════ -->
             <div id="docStepVerifyCertificate" style="display:none;">
-              <div style="font-size:13px;font-weight:800;margin-bottom:6px;color:#B100FF;">✅ Verify Certificate Details</div>
+              <div style="font-size:13px;font-weight:800;margin-bottom:6px;color:#B100FF;">✅ Verify Certificate Details
+              </div>
               <p style="font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.6;">
                 Yeh details Completion Certificate mein print hongi. Check karke confirm karein.
               </p>
@@ -1926,11 +1927,14 @@
                 </div>
               </div>
 
-              <div id="certVfMsg" style="font-size:12px;color:var(--danger);min-height:16px;margin-bottom:10px;text-align:center;"></div>
+              <div id="certVfMsg"
+                style="font-size:12px;color:var(--danger);min-height:16px;margin-bottom:10px;text-align:center;"></div>
 
               <div style="display:flex;gap:10px;">
-                <button class="btn ghost" style="flex:0 0 auto;padding:12px 16px;" onclick="docCertVerifyBack()">← Back</button>
-                <button class="btn primary" style="flex:1;padding:13px;font-size:14px;" onclick="docCertVerifyConfirm()">
+                <button class="btn ghost" style="flex:0 0 auto;padding:12px 16px;" onclick="docCertVerifyBack()">←
+                  Back</button>
+                <button class="btn primary" style="flex:1;padding:13px;font-size:14px;"
+                  onclick="docCertVerifyConfirm()">
                   ✅ Confirm & Proceed →
                 </button>
               </div>
@@ -1940,7 +1944,8 @@
             <!-- STEP 1.5 BEST PERFORMER: VERIFY DETAILS        -->
             <!-- ═══════════════════════════════════════════════ -->
             <div id="docStepVerifyBestPerformer" style="display:none;">
-              <div style="font-size:13px;font-weight:800;margin-bottom:6px;color:#B100FF;">✅ Verify Best Performer Details</div>
+              <div style="font-size:13px;font-weight:800;margin-bottom:6px;color:#B100FF;">✅ Verify Best Performer
+                Details</div>
               <p style="font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.6;">
                 Yeh details Best Performer Certificate mein print hongi. Check karke confirm karein.
               </p>
@@ -1956,10 +1961,12 @@
                 </div>
               </div>
 
-              <div id="bpVfMsg" style="font-size:12px;color:var(--danger);min-height:16px;margin-bottom:10px;text-align:center;"></div>
+              <div id="bpVfMsg"
+                style="font-size:12px;color:var(--danger);min-height:16px;margin-bottom:10px;text-align:center;"></div>
 
               <div style="display:flex;gap:10px;">
-                <button class="btn ghost" style="flex:0 0 auto;padding:12px 16px;" onclick="docBpVerifyBack()">← Back</button>
+                <button class="btn ghost" style="flex:0 0 auto;padding:12px 16px;" onclick="docBpVerifyBack()">←
+                  Back</button>
                 <button class="btn primary" style="flex:1;padding:13px;font-size:14px;" onclick="docBpVerifyConfirm()">
                   ✅ Confirm & Proceed →
                 </button>
@@ -1969,11 +1976,124 @@
             <!-- ═══════════════════════════════════ -->
             <!-- STEP 2: Generated Link              -->
             <!-- ═══════════════════════════════════ -->
+
+            <!-- ═══════════════════════════════════════════════ -->
+            <!-- STEP 1.5 COMPLETION: VERIFY DETAILS            -->
+            <!-- ═══════════════════════════════════════════════ -->
+            <div id="docStepVerifyCompletion" style="display:none;">
+              <div style="font-size:13px;font-weight:800;margin-bottom:6px;color:#B100FF;">✅ Verify Completion Letter
+                Details</div>
+              <p style="font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.6;">
+                Yeh details Completion Letter mein print hongi. Check karke confirm karein.
+              </p>
+
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;">
+
+                <div class="vfFieldGroup" style="grid-column:1/-1;">
+                  <label>👤 Intern Name</label>
+                  <input id="clFullName" type="text" placeholder="Intern Full Name" />
+                </div>
+
+                <div class="vfFieldGroup">
+                  <label>⚧ Gender</label>
+                  <select id="clGender" style="background:#1a1a24;border:1px solid rgba(255,255,255,0.1);
+                    color:var(--text);padding:8px 12px;border-radius:10px;">
+                    <option value="male">Male (he/him)</option>
+                    <option value="female">Female (she/her)</option>
+                  </select>
+                </div>
+
+                <div class="vfFieldGroup">
+                  <label>🏫 College Name</label>
+                  <input id="clCollege" type="text" placeholder="e.g. RTMNU, Nagpur" />
+                </div>
+
+                <div class="vfFieldGroup">
+                  <label>💼 Role / Position</label>
+                  <input id="clRole" type="text" placeholder="Software Development Intern" />
+                </div>
+
+                <div class="vfFieldGroup">
+                  <label>⏳ Duration</label>
+                  <select id="clDuration" onchange="calcClEndDate()" style="background:#1a1a24;border:1px solid rgba(255,255,255,0.1);
+                    color:var(--text);padding:8px 12px;border-radius:10px;">
+                    <option value="6">6 Months</option>
+                    <option value="9">9 Months</option>
+                  </select>
+                </div>
+
+                <div class="vfFieldGroup">
+                  <label>🗓️ Joining Date</label>
+                  <input id="clJoiningDate" type="date" oninput="calcClEndDate()" />
+                </div>
+
+                <!-- End Date full width -->
+                <div class="vfEndDateBox">
+                  <div>
+                    <div class="vfEndDateLabel">End Date (auto-calculated)</div>
+                    <div class="vfEndDateValue" id="clEndDateDisplay">— Joining date select karein</div>
+                  </div>
+                  <div style="text-align:right;">
+                    <div class="vfEndDateLabel">Total Duration</div>
+                    <div style="font-size:14px;font-weight:800;color:var(--muted);" id="clDurationDisplay">6 Months
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+
+              <!-- 4 Projects Section -->
+              <div style="font-size:13px;font-weight:800;margin-bottom:10px;color:#B100FF;">📁 Select 4 Projects</div>
+              <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px;" id="clProjectsWrap">
+
+                <div style="display:flex;align-items:center;gap:10px;">
+                  <div style="width:24px;height:24px;border-radius:50%;background:rgba(124,0,255,0.15);
+                    border:1px solid rgba(124,0,255,0.3);display:flex;align-items:center;justify-content:center;
+                    font-size:11px;font-weight:900;color:#B100FF;flex-shrink:0;">1</div>
+                  <input id="clProject1" type="text" placeholder="Project 1 name" style="flex:1;font-size:13px;" />
+                </div>
+
+                <div style="display:flex;align-items:center;gap:10px;">
+                  <div style="width:24px;height:24px;border-radius:50%;background:rgba(124,0,255,0.15);
+                    border:1px solid rgba(124,0,255,0.3);display:flex;align-items:center;justify-content:center;
+                    font-size:11px;font-weight:900;color:#B100FF;flex-shrink:0;">2</div>
+                  <input id="clProject2" type="text" placeholder="Project 2 name" style="flex:1;font-size:13px;" />
+                </div>
+
+                <div style="display:flex;align-items:center;gap:10px;">
+                  <div style="width:24px;height:24px;border-radius:50%;background:rgba(124,0,255,0.15);
+                    border:1px solid rgba(124,0,255,0.3);display:flex;align-items:center;justify-content:center;
+                    font-size:11px;font-weight:900;color:#B100FF;flex-shrink:0;">3</div>
+                  <input id="clProject3" type="text" placeholder="Project 3 name" style="flex:1;font-size:13px;" />
+                </div>
+
+                <div style="display:flex;align-items:center;gap:10px;">
+                  <div style="width:24px;height:24px;border-radius:50%;background:rgba(124,0,255,0.15);
+                    border:1px solid rgba(124,0,255,0.3);display:flex;align-items:center;justify-content:center;
+                    font-size:11px;font-weight:900;color:#B100FF;flex-shrink:0;">4</div>
+                  <input id="clProject4" type="text" placeholder="Project 4 name" style="flex:1;font-size:13px;" />
+                </div>
+
+              </div>
+
+              <div id="clVfMsg"
+                style="font-size:12px;color:var(--danger);min-height:16px;margin-bottom:10px;text-align:center;"></div>
+
+              <div style="display:flex;gap:10px;">
+                <button class="btn ghost" style="flex:0 0 auto;padding:12px 16px;" onclick="docClVerifyBack()">←
+                  Back</button>
+                <button class="btn primary" style="flex:1;padding:13px;font-size:14px;" onclick="docClVerifyConfirm()">
+                  ✅ Confirm & Proceed →
+                </button>
+              </div>
+            </div>
+
             <!-- ═══════════════════════════════════════════════════════ -->
             <!-- STEP 1.5: VERIFY DETAILS — Completion Letter           -->
             <!-- ═══════════════════════════════════════════════════════ -->
             <div id="docStepVerifyCompletion" style="display:none;">
-              <div style="font-size:13px;font-weight:800;margin-bottom:6px;color:#B100FF;">✅ Verify Completion Letter Details</div>
+              <div style="font-size:13px;font-weight:800;margin-bottom:6px;color:#B100FF;">✅ Verify Completion Letter
+                Details</div>
               <p style="font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.6;">
                 Completion Letter mein print hone wali details verify karein.
               </p>
@@ -2001,8 +2121,7 @@
                 </div>
                 <div class="vfFieldGroup">
                   <label>⏳ Duration (Months)</label>
-                  <select id="compDuration"
-                    style="background:#1a1a24;border:1px solid rgba(255,255,255,0.1);color:var(--text);
+                  <select id="compDuration" style="background:#1a1a24;border:1px solid rgba(255,255,255,0.1);color:var(--text);
                            border-radius:10px;padding:9px 12px;font-size:13px;width:100%;">
                     <option value="1">1 Month</option>
                     <option value="2">2 Months</option>
@@ -2017,8 +2136,10 @@
               <div id="compVfMsg" style="font-size:12px;color:var(--danger);min-height:16px;margin-bottom:10px;"></div>
 
               <div style="display:flex;gap:10px;">
-                <button class="btn ghost" style="flex:0 0 auto;padding:12px 16px;" onclick="docCompVerifyBack()">← Back</button>
-                <button class="btn primary" style="flex:1;padding:13px;font-size:14px;" onclick="docCompVerifyConfirm()">
+                <button class="btn ghost" style="flex:0 0 auto;padding:12px 16px;" onclick="docCompVerifyBack()">←
+                  Back</button>
+                <button class="btn primary" style="flex:1;padding:13px;font-size:14px;"
+                  onclick="docCompVerifyConfirm()">
                   ✅ Confirm & Continue →
                 </button>
               </div>
@@ -3698,6 +3819,7 @@
         "verifyCompletion": "docStepVerifyCompletion",
         "verifyCertificate": "docStepVerifyCertificate",
         "verifyBestPerformer": "docStepVerifyBestPerformer",
+        "verifyCompletion": "docStepVerifyCompletion",
         2: "docStep2",
         3: "docStep3"
       };
@@ -3710,15 +3832,16 @@
       const idle = "background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.10);color:var(--muted);";
 
       const stateMap = {
-        1:                      [active, idle,   idle,   idle],
-        "verify":               [done,   active, idle,   idle],
-        "verifyLoi":            [done,   active, idle,   idle],
-        "verifyJoining":        [done,   active, idle,   idle],
-        "verifyCompletion":     [done,   active, idle,   idle],
-        "verifyCertificate":    [done,   active, idle,   idle],
-        "verifyBestPerformer":  [done,   active, idle,   idle],
-        2:                      [done,   done,   active, idle],
-        3:                      [done,   done,   done,   active]
+        1: [active, idle, idle, idle],
+        "verify": [done, active, idle, idle],
+        "verifyLoi": [done, active, idle, idle],
+        "verifyJoining": [done, active, idle, idle],
+        "verifyCompletion": [done, active, idle, idle],
+        "verifyCertificate": [done, active, idle, idle],
+        "verifyBestPerformer": [done, active, idle, idle],
+        "verifyCompletion": [done, active, idle, idle],
+        2: [done, done, active, idle],
+        3: [done, done, done, active]
       };
       const labels = ["1 · Create", "1.5 · Verify", "2 · Link", "3 · Share"];
       const doneLabels = ["✅ Create", "✅ Verify", "✅ Link", "✅ Share"];
@@ -3912,20 +4035,157 @@
     }
 
     // ── Completion Letter Verify Step ──
+    async function openClVerifyStep() {
+      const i = CURRENT_DOC_INTERN;
+      if (!i) return;
+
+      const today = new Date();
+      const todayStr = today.toISOString().slice(0, 10);
+
+      document.getElementById("clFullName").value = i.Name || "";
+      document.getElementById("clRole").value = "Software Development Intern";
+      document.getElementById("clCollege").value = "";
+      document.getElementById("clVfMsg").innerText = "⏳ Intern ke projects load ho rahe hain...";
+
+      const durMonths = String(i.Duration || "6").includes("9") ? "9" : "6";
+      document.getElementById("clDuration").value = durMonths;
+
+      let joiningDate = toDateInputValue(i.CreatedAt || "");
+      if (!joiningDate) joiningDate = todayStr;
+      document.getElementById("clJoiningDate").value = joiningDate;
+      calcClEndDate();
+
+      // ── Fetch intern ke approved tasks ──
+      let projectOptions = ["<option value=''>— Select Project —</option>"];
+      try {
+        const data = await apiGET({
+          action: "adminInternOverview",
+          adminId: admin.adminId,
+          adminPass: admin.adminPass,
+          internId: i.InternID
+        }, true);
+
+        if (data.success && data.history) {
+          const approvedTasks = data.history.filter(h =>
+            String(h.Status).toLowerCase().includes("approved") && h.Title
+          );
+
+          if (approvedTasks.length > 0) {
+            approvedTasks.forEach(task => {
+              projectOptions.push(
+                `<option value="${escapeHTML(task.Title)}">${escapeHTML(task.Title)}</option>`
+              );
+            });
+            document.getElementById("clVfMsg").innerText = "";
+          } else {
+            document.getElementById("clVfMsg").innerText = "⚠️ Koi approved task nahi mila. Manually type karo.";
+          }
+        }
+      } catch (e) {
+        document.getElementById("clVfMsg").innerText = "⚠️ Projects load nahi hue. Manually type karo.";
+      }
+
+      const optHtml = projectOptions.join("");
+
+      // ── Replace 4 text inputs with dropdowns ──
+      const wrap = document.getElementById("clProjectsWrap");
+      wrap.innerHTML = [1, 2, 3, 4].map(n => `
+    <div style="display:flex;align-items:center;gap:10px;">
+      <div style="width:24px;height:24px;border-radius:50%;background:rgba(124,0,255,0.15);
+        border:1px solid rgba(124,0,255,0.3);display:flex;align-items:center;justify-content:center;
+        font-size:11px;font-weight:900;color:#B100FF;flex-shrink:0;">${n}</div>
+      <select id="clProject${n}" style="flex:1;font-size:13px;background:#1a1a24;
+        border:1px solid rgba(255,255,255,0.1);color:var(--text);
+        padding:8px 12px;border-radius:10px;">
+        ${optHtml}
+      </select>
+    </div>
+  `).join("");
+
+      _showDocStep("verifyCompletion");
+    }
+
+    // ── Completion End Date auto-calculate ──
+    function calcClEndDate() {
+      const jDateStr = document.getElementById("clJoiningDate").value;
+      const dur = parseInt(document.getElementById("clDuration").value) || 6;
+
+      if (!jDateStr) {
+        document.getElementById("clEndDateDisplay").innerText = "— Joining date select karein";
+        document.getElementById("clDurationDisplay").innerText = dur + " Months";
+        return;
+      }
+
+      const d = new Date(jDateStr);
+      d.setMonth(d.getMonth() + dur);
+      d.setDate(d.getDate() - 1);
+
+      document.getElementById("clEndDateDisplay").innerText =
+        d.toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" });
+      document.getElementById("clDurationDisplay").innerText = dur + " Months";
+    }
+
+    // ── Completion Letter Verify Back ──
+    function docClVerifyBack() { _showDocStep(1); }
+
+    // ── Completion Letter Verify Confirm ──
+    function docClVerifyConfirm() {
+      const fullName = document.getElementById("clFullName").value.trim();
+      const gender = document.getElementById("clGender").value;
+      const college = document.getElementById("clCollege").value.trim();
+      const role = document.getElementById("clRole").value.trim();
+      const duration = document.getElementById("clDuration").value;
+      const joiningDate = document.getElementById("clJoiningDate").value;
+      const p1 = document.getElementById("clProject1").value.trim();
+      const p2 = document.getElementById("clProject2").value.trim();
+      const p3 = document.getElementById("clProject3").value.trim();
+      const p4 = document.getElementById("clProject4").value.trim();
+      const msgEl = document.getElementById("clVfMsg");
+
+      if (!fullName) { msgEl.innerText = "⚠️ Intern Name required"; return; }
+      if (!college) { msgEl.innerText = "⚠️ College Name required"; return; }
+      if (!role) { msgEl.innerText = "⚠️ Role required"; return; }
+      if (!joiningDate) { msgEl.innerText = "⚠️ Joining Date required"; return; }
+      if (!p1 || !p2 || !p3 || !p4) { msgEl.innerText = "⚠️ Sabhi 4 projects fill karein"; return; }
+
+      msgEl.innerText = "";
+
+      // End date calculate
+      const d = new Date(joiningDate);
+      d.setMonth(d.getMonth() + parseInt(duration));
+      d.setDate(d.getDate() - 1);
+      const endDateStr = d.toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" });
+
+      // Gender pronouns
+      const pronoun = gender === "female" ? "she" : "he";
+      const pronounObj = gender === "female" ? "her" : "him";
+      const pronounPoss = gender === "female" ? "her" : "his";
+
+      VERIFIED_DOC_DATA = {
+        docType: "completion",
+        fullName, gender, pronoun, pronounObj, pronounPoss,
+        college, role, duration, joiningDate, endDate: endDateStr,
+        project1: p1, project2: p2, project3: p3, project4: p4
+      };
+
+      proceedToDocStep2();
+    }
+
+    // ── Completion Letter Verify Step ──
     function openCompVerifyStep() {
       const i = CURRENT_DOC_INTERN;
       if (!i) return;
 
-      const today    = new Date();
+      const today = new Date();
       const todayStr = today.toISOString().slice(0, 10);
-      const idNum    = (i.InternID || "").replace(/\D/g, "");
-      const refNo    = `COD/CL/${today.getFullYear()}/${idNum || "0001"}`;
+      const idNum = (i.InternID || "").replace(/\D/g, "");
+      const refNo = `COD/CL/${today.getFullYear()}/${idNum || "0001"}`;
 
-      document.getElementById("compFullName").value    = i.Name  || "";
-      document.getElementById("compRefNo").value       = refNo;
+      document.getElementById("compFullName").value = i.Name || "";
+      document.getElementById("compRefNo").value = refNo;
       document.getElementById("compCurrentDate").value = todayStr;
-      document.getElementById("compRole").value        = "Software Development Intern";
-      document.getElementById("compVfMsg").innerText   = "";
+      document.getElementById("compRole").value = "Software Development Intern";
+      document.getElementById("compVfMsg").innerText = "";
 
       const durMonths = String(i.Duration || "6").includes("9") ? "9" : "6";
       document.getElementById("compDuration").value = durMonths;
@@ -3940,15 +4200,15 @@
     function docCompVerifyBack() { _showDocStep(1); }
 
     function docCompVerifyConfirm() {
-      const fullName    = document.getElementById("compFullName").value.trim();
-      const refNo       = document.getElementById("compRefNo").value.trim();
+      const fullName = document.getElementById("compFullName").value.trim();
+      const refNo = document.getElementById("compRefNo").value.trim();
       const currentDate = document.getElementById("compCurrentDate").value;
-      const role        = document.getElementById("compRole").value.trim();
+      const role = document.getElementById("compRole").value.trim();
       const joiningDate = document.getElementById("compJoiningDate").value;
-      const duration    = document.getElementById("compDuration").value;
-      const msgEl       = document.getElementById("compVfMsg");
+      const duration = document.getElementById("compDuration").value;
+      const msgEl = document.getElementById("compVfMsg");
 
-      if (!fullName)    { msgEl.innerText = "⚠️ Full Name required"; return; }
+      if (!fullName) { msgEl.innerText = "⚠️ Full Name required"; return; }
       if (!currentDate) { msgEl.innerText = "⚠️ Current Date required"; return; }
       if (!joiningDate) { msgEl.innerText = "⚠️ Joining Date required"; return; }
       msgEl.innerText = "";
@@ -3985,23 +4245,23 @@
       }
       document.getElementById("docStep1Msg").innerText = "";
 
-      const hasOfferLetter    = SELECTED_DOCS.some(d => d.key === "offerLetter");
-      const hasLoi            = SELECTED_DOCS.some(d => d.key === "loi");
-      const hasJoiningLetter  = SELECTED_DOCS.some(d => d.key === "joiningLetter");
-      const hasCompletion     = SELECTED_DOCS.some(d => d.key === "completion");
-      const hasCertificate    = SELECTED_DOCS.some(d => d.key === "certificate");
-      const hasBestPerformer  = SELECTED_DOCS.some(d => d.key === "bestPerformer");
+      const hasCertificate = SELECTED_DOCS.some(d => d.key === "certificate");
+      const hasBestPerformer = SELECTED_DOCS.some(d => d.key === "bestPerformer");
+      const hasCompletion = SELECTED_DOCS.some(d => d.key === "completion");
+      const hasOfferLetter = SELECTED_DOCS.some(d => d.key === "offerLetter");
+      const hasLoi = SELECTED_DOCS.some(d => d.key === "loi");
+      const hasJoiningLetter = SELECTED_DOCS.some(d => d.key === "joiningLetter");
 
-      if (hasOfferLetter)   { openVerifyStep(); return; }
-      if (hasLoi)           { openLoiVerifyStep(); return; }
+      if (hasOfferLetter) { openVerifyStep(); return; }
+      if (hasLoi) { openLoiVerifyStep(); return; }
       if (hasJoiningLetter) { openJlVerifyStep(); return; }
-      if (hasCompletion)    { openCompVerifyStep(); return; }
-      if (hasCertificate)   { openCertVerifyStep(); return; }
+      if (hasCertificate) { openCertVerifyStep(); return; }
       if (hasBestPerformer) { openBpVerifyStep(); return; }
+      if (hasCompletion) { openClVerifyStep(); return; }
 
       proceedToDocStep2();
     }
-    
+
 
     // ── LOI Verify Step open ──
     async function openLoiVerifyStep() {
@@ -4265,11 +4525,11 @@
       document.getElementById("docSendMsg").innerText = "📨 Generating & sending documents via email...";
 
       const data = await apiPOST({
-        action:       "adminSendDocuments",
-        adminId:      admin.adminId,
-        adminPass:    admin.adminPass,
-        internId:     CURRENT_DOC_INTERN.InternID,
-        documents:    docs,
+        action: "adminSendDocuments",
+        adminId: admin.adminId,
+        adminPass: admin.adminPass,
+        internId: CURRENT_DOC_INTERN.InternID,
+        documents: docs,
         emailTo,
         verifiedData: Object.keys(VERIFIED_DOC_DATA).length > 0 ? VERIFIED_DOC_DATA : null
       });
@@ -4309,7 +4569,7 @@
       phone = phone.replace(/^\+/, "");
 
       const docNames = SELECTED_DOCS.map(m => m.label).join(", ");
-      const intern   = CURRENT_DOC_INTERN;
+      const intern = CURRENT_DOC_INTERN;
 
       let msgText;
       if (GENERATED_DOC_LINK) {
