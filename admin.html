@@ -1726,9 +1726,25 @@
 
               <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;">
 
-                <div class="vfFieldGroup">
-                  <label>📋 Reference No.</label>
-                  <input id="vfRefNo" type="text" placeholder="COD/OL/2026/0001" />
+                <div class="vfFieldGroup" style="grid-column:1/-1;">
+                  <label>📋 Reference Number</label>
+                  <div style="background:rgba(124,0,255,0.07);border:1px solid rgba(124,0,255,0.20);
+    border-radius:14px;padding:14px;">
+                    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+                      <div style="font-size:13px;font-weight:800;color:#B100FF;" id="vfRefAutoPrefix">
+                        AST26-27/INS/ME/TC
+                      </div>
+                      <input id="vfRefSerial" type="number" min="1" max="9999" placeholder="52" oninput="buildVfRefNo()"
+                        style="width:80px;font-size:13px;" />
+                      <input id="vfRefNo" type="hidden" />
+                    </div>
+                    <div style="margin-top:8px;font-size:12px;font-weight:800;color:#B100FF;">
+                      Preview: <span id="vfRefPreview">—</span>
+                    </div>
+                    <div style="font-size:11px;color:var(--muted);margin-top:4px;">
+                      Branch batch se auto detect hoga · Sirf serial number daalo
+                    </div>
+                  </div>
                 </div>
 
                 <div class="vfFieldGroup">
@@ -1876,9 +1892,25 @@
 
               <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;">
 
-                <div class="vfFieldGroup">
-                  <label>📋 Reference No.</label>
-                  <input id="jlRefNo" type="text" placeholder="COD/JL/2026/0001" />
+                <div class="vfFieldGroup" style="grid-column:1/-1;">
+                  <label>📋 Reference Number</label>
+                  <div style="background:rgba(124,0,255,0.07);border:1px solid rgba(124,0,255,0.20);
+    border-radius:14px;padding:14px;">
+                    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+                      <div style="font-size:13px;font-weight:800;color:#B100FF;" id="jlRefAutoPrefix">
+                        AST26-27/INS/ME/TC
+                      </div>
+                      <input id="jlRefSerial" type="number" min="1" max="9999" placeholder="52" oninput="buildJlRefNo()"
+                        style="width:80px;font-size:13px;" />
+                      <input id="jlRefNo" type="hidden" />
+                    </div>
+                    <div style="margin-top:8px;font-size:12px;font-weight:800;color:#B100FF;">
+                      Preview: <span id="jlRefPreview">—</span>
+                    </div>
+                    <div style="font-size:11px;color:var(--muted);margin-top:4px;">
+                      Branch batch se auto detect hoga · Sirf serial number daalo
+                    </div>
+                  </div>
                 </div>
 
                 <div class="vfFieldGroup">
@@ -2076,6 +2108,7 @@
 
               </div>
 
+
               <div id="clVfMsg"
                 style="font-size:12px;color:var(--danger);min-height:16px;margin-bottom:10px;text-align:center;"></div>
 
@@ -2088,63 +2121,6 @@
               </div>
             </div>
 
-            <!-- ═══════════════════════════════════════════════════════ -->
-            <!-- STEP 1.5: VERIFY DETAILS — Completion Letter           -->
-            <!-- ═══════════════════════════════════════════════════════ -->
-            <div id="docStepVerifyCompletion" style="display:none;">
-              <div style="font-size:13px;font-weight:800;margin-bottom:6px;color:#B100FF;">✅ Verify Completion Letter
-                Details</div>
-              <p style="font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.6;">
-                Completion Letter mein print hone wali details verify karein.
-              </p>
-
-              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;">
-                <div class="vfFieldGroup">
-                  <label>👤 Intern Full Name</label>
-                  <input id="compFullName" type="text" placeholder="Full Name" />
-                </div>
-                <div class="vfFieldGroup">
-                  <label>📋 Reference No.</label>
-                  <input id="compRefNo" type="text" placeholder="COD/CL/2026/..." />
-                </div>
-                <div class="vfFieldGroup">
-                  <label>📅 Current Date</label>
-                  <input id="compCurrentDate" type="date" />
-                </div>
-                <div class="vfFieldGroup">
-                  <label>💼 Role / Position</label>
-                  <input id="compRole" type="text" placeholder="Software Development Intern" />
-                </div>
-                <div class="vfFieldGroup">
-                  <label>📅 Joining Date</label>
-                  <input id="compJoiningDate" type="date" />
-                </div>
-                <div class="vfFieldGroup">
-                  <label>⏳ Duration (Months)</label>
-                  <select id="compDuration" style="background:#1a1a24;border:1px solid rgba(255,255,255,0.1);color:var(--text);
-                           border-radius:10px;padding:9px 12px;font-size:13px;width:100%;">
-                    <option value="1">1 Month</option>
-                    <option value="2">2 Months</option>
-                    <option value="3">3 Months</option>
-                    <option value="6" selected>6 Months</option>
-                    <option value="9">9 Months</option>
-                    <option value="12">12 Months</option>
-                  </select>
-                </div>
-              </div>
-
-              <div id="compVfMsg" style="font-size:12px;color:var(--danger);min-height:16px;margin-bottom:10px;"></div>
-
-              <div style="display:flex;gap:10px;">
-                <button class="btn ghost" style="flex:0 0 auto;padding:12px 16px;" onclick="docCompVerifyBack()">←
-                  Back</button>
-                <button class="btn primary" style="flex:1;padding:13px;font-size:14px;"
-                  onclick="docCompVerifyConfirm()">
-                  ✅ Confirm & Continue →
-                </button>
-              </div>
-            </div>
-
             <div id="docStep2" style="display:none;">
               <div style="font-size:13px;font-weight:800;margin-bottom:14px;color:#B100FF;">🔗 Document Link Generated
               </div>
@@ -2152,48 +2128,6 @@
               <!-- Doc list summary -->
               <div id="docLinkDocList" style="display:flex;flex-direction:column;gap:6px;margin-bottom:16px;"></div>
 
-              <!-- Link Box -->
-              <div style="font-size:12px;color:var(--muted);font-weight:700;margin-bottom:6px;">Shareable Link</div>
-              <div style="display:flex;gap:8px;align-items:center;margin-bottom:16px;">
-                <input id="docGeneratedLink" readonly style="flex:1;font-size:12px;
-                  background:rgba(0,0,0,0.3);border:1px solid rgba(124,0,255,0.25);
-                  border-radius:12px;padding:10px 12px;color:var(--text);" />
-                <button class="btn" style="flex-shrink:0;padding:10px 14px;" onclick="copyDocLink()">📋 Copy</button>
-              </div>
-
-              <!-- Sharing Options -->
-              <div style="font-size:13px;font-weight:800;margin-bottom:10px;color:#B100FF;">🔐 Sharing Options</div>
-              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px;">
-
-                <label style="display:flex;align-items:center;gap:10px;cursor:pointer;
-                  padding:10px 12px;border-radius:12px;border:1px solid rgba(255,255,255,0.08);
-                  background:rgba(255,255,255,0.02);transition:0.2s;" id="shareOptPublic">
-                  <input type="radio" name="shareOpt" value="public" checked onchange="updateShareOpt()"
-                    style="accent-color:#B100FF;flex-shrink:0;" />
-                  <div>
-                    <div style="font-weight:700;font-size:12px;">🌐 Public Link</div>
-                    <div style="font-size:10px;color:var(--muted);margin-top:1px;">Anyone with link can view</div>
-                  </div>
-                </label>
-
-                <label style="display:flex;align-items:center;gap:10px;cursor:pointer;
-                  padding:10px 12px;border-radius:12px;border:1px solid rgba(255,255,255,0.08);
-                  background:rgba(255,255,255,0.02);transition:0.2s;" id="shareOptRestricted">
-                  <input type="radio" name="shareOpt" value="restricted" onchange="updateShareOpt()"
-                    style="accent-color:#B100FF;flex-shrink:0;" />
-                  <div>
-                    <div style="font-weight:700;font-size:12px;">🔒 Restricted</div>
-                    <div style="font-size:10px;color:var(--muted);margin-top:1px;">Only intern's email can open</div>
-                  </div>
-                </label>
-
-              </div>
-
-              <div id="shareOptMsg" style="font-size:11px;padding:8px 12px;border-radius:10px;
-                background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);
-                color:var(--muted);margin-bottom:16px;">
-                🌐 Public — Anyone with the link can view and download the documents.
-              </div>
 
               <div style="display:flex;gap:10px;">
                 <button class="btn ghost" style="flex:0 0 auto;padding:12px 16px;" onclick="docGoToStep1()">←
@@ -2606,6 +2540,46 @@
       closeAllMenus();
       if (!isOpen) menu.classList.add("open");
     }
+
+    function buildAstRefNo(serialInputId, prefixElId, previewElId, hiddenInputId) {
+      const today = new Date();
+      const yr = today.getFullYear();
+      const nextYr = String(yr + 1).slice(-2);
+      const session = String(yr).slice(-2) + "-" + nextYr;
+
+      const batchN = (CURRENT_DOC_INTERN?.BatchName || "").toLowerCase();
+      let branch = "TC";
+      if (batchN.includes("bansi") || batchN.includes("bn")) branch = "BN";
+      else if (batchN.includes("ramdev") || batchN.includes("rdb")) branch = "RDB";
+
+      const prefix = `AST${session}/INS/ME/${branch}`;
+      const serial = document.getElementById(serialInputId)?.value.trim() || "";
+
+      const prefixEl = document.getElementById(prefixElId);
+      const previewEl = document.getElementById(previewElId);
+      const hiddenEl = document.getElementById(hiddenInputId);
+
+      if (prefixEl) prefixEl.innerText = prefix;
+      const full = serial ? prefix + serial : "";
+      if (previewEl) previewEl.innerText = full || "— Serial number daalo";
+      if (hiddenEl) hiddenEl.value = full;
+    }
+
+    // Completion Letter
+    function buildClRefNo() {
+      buildAstRefNo("clRefSerial", "clRefAutoPrefix", "clRefPreview", "clRefNo");
+    }
+
+    // Offer Letter
+    function buildVfRefNo() {
+      buildAstRefNo("vfRefSerial", "vfRefAutoPrefix", "vfRefPreview", "vfRefNo");
+    }
+
+    // Joining Letter
+    function buildJlRefNo() {
+      buildAstRefNo("jlRefSerial", "jlRefAutoPrefix", "jlRefPreview", "jlRefNo");
+    }
+
 
     function closeAllMenus() {
       document.querySelectorAll(".actionMenu.open").forEach(m => m.classList.remove("open"));
@@ -3859,36 +3833,86 @@
       document.getElementById("stepPill3").style.borderRadius = "0 12px 12px 0";
     }
 
-    function openSendDocModal(internJson) {
+    async function openSendDocModal(internJson) {
       const i = typeof internJson === "string" ? JSON.parse(internJson) : internJson;
       CURRENT_DOC_INTERN = i;
       GENERATED_DOC_LINK = "";
       SELECTED_DOCS = [];
       VERIFIED_DOC_DATA = {};
 
-      // Reset checkboxes
+      // Reset checkboxes first
       ["chkLoi", "chkOfferLetter", "chkJoiningLetter", "chkCompletion", "chkCertificate", "chkBestPerformer"].forEach(id => {
         const el = document.getElementById(id);
-        if (el) el.checked = false;
+        if (el) { el.checked = false; el.disabled = false; }
       });
       ["docOptLoi", "docOptOfferLetter", "docOptJoiningLetter", "docOptCompletion", "docOptCertificate", "docOptBestPerformer"].forEach(id => {
         const el = document.getElementById(id);
-        if (el) { el.style.borderColor = "rgba(255,255,255,0.08)"; el.style.background = "rgba(255,255,255,0.02)"; }
+        if (el) { el.style.borderColor = "rgba(255,255,255,0.08)"; el.style.background = "rgba(255,255,255,0.02)"; el.style.opacity = "1"; }
       });
 
-      document.getElementById("docSelectedSummary").style.display = "none";
-      document.getElementById("docStep1Msg").innerText = "";
-      document.getElementById("docSendMsg").innerText = "";
-
+      // ... existing name/email/batch fill code ...
       document.getElementById("docInternAvatar").innerText = (i.Name || "?")[0].toUpperCase();
       document.getElementById("docInternName").innerText = i.Name || "-";
       document.getElementById("docInternEmail").innerText = i.Email || "-";
       document.getElementById("docInternBatch").innerText = `${i.BatchName || ""} · ${i.Duration || ""} · ID: ${i.InternID}`;
       document.getElementById("docModalMeta").innerText = `Intern: ${i.Email}`;
       document.getElementById("docEmailTo").value = i.Email || "";
+      document.getElementById("docSelectedSummary").style.display = "none";
+      document.getElementById("docStep1Msg").innerText = "";
+      document.getElementById("docSendMsg").innerText = "";
 
       _showDocStep(1);
       document.getElementById("sendDocModal").classList.add("show");
+
+      // ── Fetch already sent docs and disable them ──
+      try {
+        const statusData = await apiGET({
+          action: "getInternDocStatus",
+          adminId: admin.adminId,
+          adminPass: admin.adminPass,
+          internId: i.InternID
+        }, true);
+
+        if (statusData.success && statusData.status) {
+          const docMap = {
+            loi: { chk: "chkLoi", opt: "docOptLoi" },
+            offerLetter: { chk: "chkOfferLetter", opt: "docOptOfferLetter" },
+            joiningLetter: { chk: "chkJoiningLetter", opt: "docOptJoiningLetter" },
+            completion: { chk: "chkCompletion", opt: "docOptCompletion" },
+            certificate: { chk: "chkCertificate", opt: "docOptCertificate" },
+            bestPerformer: { chk: "chkBestPerformer", opt: "docOptBestPerformer" },
+          };
+
+          Object.entries(statusData.status).forEach(([docType, val]) => {
+            if (!val) return; // not sent yet
+            const ids = docMap[docType];
+            if (!ids) return;
+
+            const chkEl = document.getElementById(ids.chk);
+            const optEl = document.getElementById(ids.opt);
+
+            if (chkEl) { chkEl.disabled = true; chkEl.checked = false; }
+            if (optEl) {
+              optEl.style.opacity = "0.5";
+              optEl.style.cursor = "not-allowed";
+              optEl.style.borderColor = "rgba(0,200,100,0.3)";
+              optEl.style.background = "rgba(0,200,100,0.04)";
+
+              // "✅ Sent" badge add karo
+              const existingBadge = optEl.querySelector(".sentBadge");
+              if (!existingBadge) {
+                const badge = document.createElement("div");
+                badge.className = "sentBadge";
+                badge.style.cssText = "font-size:10px;font-weight:800;color:#00c864;margin-top:3px;letter-spacing:0.3px;";
+                badge.innerText = "✅ Already Sent — " + val.replace("✅ ", "");
+                optEl.querySelector("div").appendChild(badge);
+              }
+            }
+          });
+        }
+      } catch (e) {
+        console.log("Doc status fetch failed (non-critical):", e);
+      }
     }
 
     function closeSendDocModal() {
@@ -3897,6 +3921,7 @@
     }
 
     function updateDocOpt(chk, optId) {
+      if (chk.disabled) { chk.checked = false; return; } // disabled hai toh ignore
       const el = document.getElementById(optId);
       if (chk.checked) {
         el.style.borderColor = "rgba(124,0,255,0.4)";
@@ -3907,7 +3932,6 @@
       }
       updateDocSummary();
     }
-
     function updateDocSummary() {
       const map = [
         { id: "chkLoi", label: "LOI" },
@@ -3938,7 +3962,11 @@
       const idNum = (i.InternID || "").replace(/\D/g, "");
       const refNo = `COD/JL/${today.getFullYear()}/${idNum || "0001"}`;
 
-      document.getElementById("jlRefNo").value = refNo;
+      document.getElementById("jlRefAutoPrefix").innerText = "AST26-27/INS/ME/TC";
+      document.getElementById("jlRefSerial").value = "";
+      document.getElementById("jlRefPreview").innerText = "— Serial number daalo";
+      document.getElementById("jlRefNo").value = "";
+      buildJlRefNo();
       document.getElementById("jlFullName").value = i.Name || "";
       document.getElementById("jlCurrentDate").value = todayStr;
       document.getElementById("jlVfMsg").innerText = "";
@@ -3963,7 +3991,7 @@
       const joiningDate = document.getElementById("jlJoiningDate").value;
       const msgEl = document.getElementById("jlVfMsg");
 
-      if (!refNo) { msgEl.innerText = "⚠️ Reference No. required"; return; }
+      if (!refNo) { msgEl.innerText = "⚠️ Reference serial number daalo"; return; }
       if (!fullName) { msgEl.innerText = "⚠️ Intern Name required"; return; }
       if (!currentDate) { msgEl.innerText = "⚠️ Current Date required"; return; }
       if (!joiningDate) { msgEl.innerText = "⚠️ Joining Date required"; return; }
@@ -4102,6 +4130,23 @@
     </div>
   `).join("");
 
+      // ── Session + Branch preview ──
+      const yr = today.getFullYear();
+      const nextYr = String(yr + 1).slice(-2);
+      const session = String(yr).slice(-2) + "-" + nextYr;
+
+      const batchN = (CURRENT_DOC_INTERN?.BatchName || "").toLowerCase();
+      let branch = "TC";
+      if (batchN.includes("bansi") || batchN.includes("bn")) branch = "BN";
+      else if (batchN.includes("ramdev") || batchN.includes("rdb")) branch = "RDB";
+
+      window._clSession = session;
+      window._clBranch = branch;
+
+      const refSerialEl = document.getElementById("clRefSerial");
+      if (refSerialEl) refSerialEl.value = "";
+      buildClRefNo();
+
       _showDocStep("verifyCompletion");
     }
 
@@ -4141,12 +4186,15 @@
       const p3 = document.getElementById("clProject3").value.trim();
       const p4 = document.getElementById("clProject4").value.trim();
       const msgEl = document.getElementById("clVfMsg");
+      const serial = document.getElementById("clRefSerial")?.value.trim() || "";
+
 
       if (!fullName) { msgEl.innerText = "⚠️ Intern Name required"; return; }
       if (!college) { msgEl.innerText = "⚠️ College Name required"; return; }
       if (!role) { msgEl.innerText = "⚠️ Role required"; return; }
       if (!joiningDate) { msgEl.innerText = "⚠️ Joining Date required"; return; }
       if (!p1 || !p2 || !p3 || !p4) { msgEl.innerText = "⚠️ Sabhi 4 projects fill karein"; return; }
+      if (!serial) { msgEl.innerText = "⚠️ Reference serial number daalo"; return; }
 
       msgEl.innerText = "";
 
@@ -4163,65 +4211,10 @@
 
       VERIFIED_DOC_DATA = {
         docType: "completion",
+        serialNo: serial,
         fullName, gender, pronoun, pronounObj, pronounPoss,
         college, role, duration, joiningDate, endDate: endDateStr,
         project1: p1, project2: p2, project3: p3, project4: p4
-      };
-
-      proceedToDocStep2();
-    }
-
-    // ── Completion Letter Verify Step ──
-    function openCompVerifyStep() {
-      const i = CURRENT_DOC_INTERN;
-      if (!i) return;
-
-      const today = new Date();
-      const todayStr = today.toISOString().slice(0, 10);
-      const idNum = (i.InternID || "").replace(/\D/g, "");
-      const refNo = `COD/CL/${today.getFullYear()}/${idNum || "0001"}`;
-
-      document.getElementById("compFullName").value = i.Name || "";
-      document.getElementById("compRefNo").value = refNo;
-      document.getElementById("compCurrentDate").value = todayStr;
-      document.getElementById("compRole").value = "Software Development Intern";
-      document.getElementById("compVfMsg").innerText = "";
-
-      const durMonths = String(i.Duration || "6").includes("9") ? "9" : "6";
-      document.getElementById("compDuration").value = durMonths;
-
-      let joiningDate = toDateInputValue(i.CreatedAt || "");
-      if (!joiningDate) joiningDate = todayStr;
-      document.getElementById("compJoiningDate").value = joiningDate;
-
-      _showDocStep("verifyCompletion");
-    }
-
-    function docCompVerifyBack() { _showDocStep(1); }
-
-    function docCompVerifyConfirm() {
-      const fullName = document.getElementById("compFullName").value.trim();
-      const refNo = document.getElementById("compRefNo").value.trim();
-      const currentDate = document.getElementById("compCurrentDate").value;
-      const role = document.getElementById("compRole").value.trim();
-      const joiningDate = document.getElementById("compJoiningDate").value;
-      const duration = document.getElementById("compDuration").value;
-      const msgEl = document.getElementById("compVfMsg");
-
-      if (!fullName) { msgEl.innerText = "⚠️ Full Name required"; return; }
-      if (!currentDate) { msgEl.innerText = "⚠️ Current Date required"; return; }
-      if (!joiningDate) { msgEl.innerText = "⚠️ Joining Date required"; return; }
-      msgEl.innerText = "";
-
-      const d = new Date(joiningDate);
-      d.setMonth(d.getMonth() + parseInt(duration));
-      d.setDate(d.getDate() - 1);
-      const endDateStr = d.toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" });
-
-      VERIFIED_DOC_DATA = {
-        docType: "completion",
-        fullName, refNo, currentDate, role,
-        joiningDate, duration, endDate: endDateStr
       };
 
       proceedToDocStep2();
@@ -4351,12 +4344,12 @@
       const today = new Date();
       const todayStr = today.toISOString().slice(0, 10);
 
-      // Generate reference number: COD/OL/YEAR/InternID-number
-      const idNum = (i.InternID || "").replace(/\D/g, "");
-      const refNo = `COD/OL/${today.getFullYear()}/${idNum || "0001"}`;
-
       // Pre-fill fields
-      document.getElementById("vfRefNo").value = refNo;
+      document.getElementById("vfRefAutoPrefix").innerText = "AST26-27/INS/ME/TC";
+      document.getElementById("vfRefSerial").value = "";
+      document.getElementById("vfRefPreview").innerText = "— Serial number daalo";
+      document.getElementById("vfRefNo").value = "";
+      buildVfRefNo();
       document.getElementById("vfFullName").value = i.Name || "";
       document.getElementById("vfCurrentDate").value = todayStr;
       document.getElementById("vfEmail").value = i.Email || "";
@@ -4438,7 +4431,7 @@
 
       const msgEl = document.getElementById("vfMsg");
 
-      if (!refNo) { msgEl.innerText = "⚠️ Reference No. required"; return; }
+      if (!refNo) { msgEl.innerText = "⚠️ Reference serial number daalo"; return; }
       if (!fullName) { msgEl.innerText = "⚠️ Full Name required"; return; }
       if (!currentDate) { msgEl.innerText = "⚠️ Current Date required"; return; }
       if (!email) { msgEl.innerText = "⚠️ Email required"; return; }
@@ -4446,13 +4439,11 @@
 
       msgEl.innerText = "";
 
-      // Calculate end date string
       const d = new Date(joiningDate);
       d.setMonth(d.getMonth() + parseInt(duration));
       d.setDate(d.getDate() - 1);
       const endDateStr = d.toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" });
 
-      // Store verified data globally — used when sending docs
       VERIFIED_DOC_DATA = {
         refNo, fullName, currentDate, mobile, email, role,
         joiningDate, duration, endDate: endDateStr
