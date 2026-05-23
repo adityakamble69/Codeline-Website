@@ -421,6 +421,37 @@
       margin-bottom: 6px;
     }
 
+
+    .docOptRow {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      cursor: pointer;
+      padding: 11px 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.02);
+      transition: 0.2s;
+      user-select: none;
+    }
+
+    .docOptRow:hover:not(.sent) {
+      border-color: rgba(124, 0, 255, 0.3);
+      background: rgba(124, 0, 255, 0.05);
+    }
+
+    .docOptRow.selected {
+      border-color: rgba(124, 0, 255, 0.4);
+      background: rgba(124, 0, 255, 0.08);
+    }
+
+    .docOptRow.sent {
+      opacity: 0.6;
+      cursor: not-allowed;
+      border-color: rgba(0, 200, 100, 0.25);
+      background: rgba(0, 200, 100, 0.04);
+    }
+
     .colLabel {
       font-size: 12px;
       margin-top: 8px;
@@ -1625,78 +1656,108 @@
               <div style="font-size:13px;font-weight:800;margin-bottom:10px;color:#B100FF;">📋 Select Documents to
                 Create</div>
 
-              <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px;">
+              <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px;" id="docOptList">
 
-                <label style="display:flex;align-items:center;gap:12px;cursor:pointer;
-                  padding:11px 14px;border-radius:14px;border:1px solid rgba(255,255,255,0.08);
-                  background:rgba(255,255,255,0.02);transition:0.2s;" id="docOptLoi">
-                  <input type="checkbox" id="chkLoi" onchange="updateDocOpt(this,'docOptLoi')"
-                    style="width:16px;height:16px;accent-color:#B100FF;flex-shrink:0;" />
+                <div class="docOptRow" id="docOptLoi" data-key="loi" onclick="toggleDocOpt(this)">
+                  <input type="checkbox" id="chkLoi"
+                    style="width:16px;height:16px;accent-color:#B100FF;flex-shrink:0;pointer-events:none;" />
                   <div style="flex:1;">
                     <div style="font-weight:700;font-size:13px;">📝 Letter of Intent (LOI)</div>
                     <div style="font-size:11px;color:var(--muted);margin-top:2px;">Internship intent confirmation letter
                     </div>
+                    <div class="sentBadgeWrap" style="display:none;margin-top:6px;">
+                      <span style="display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:20px;
+          font-size:11px;font-weight:800;background:rgba(0,200,100,0.12);
+          border:1px solid rgba(0,200,100,0.35);color:#00c864;">
+                        ✅ Already Sent — <span class="sentDate"></span>
+                      </span>
+                    </div>
                   </div>
-                </label>
+                </div>
 
-                <label style="display:flex;align-items:center;gap:12px;cursor:pointer;
-                  padding:11px 14px;border-radius:14px;border:1px solid rgba(255,255,255,0.08);
-                  background:rgba(255,255,255,0.02);transition:0.2s;" id="docOptOfferLetter">
-                  <input type="checkbox" id="chkOfferLetter" onchange="updateDocOpt(this,'docOptOfferLetter')"
-                    style="width:16px;height:16px;accent-color:#B100FF;flex-shrink:0;" />
+                <div class="docOptRow" id="docOptOfferLetter" data-key="offerLetter" onclick="toggleDocOpt(this)">
+                  <input type="checkbox" id="chkOfferLetter"
+                    style="width:16px;height:16px;accent-color:#B100FF;flex-shrink:0;pointer-events:none;" />
                   <div style="flex:1;">
                     <div style="font-weight:700;font-size:13px;">📄 Offer Letter</div>
                     <div style="font-size:11px;color:var(--muted);margin-top:2px;">Official internship offer letter
                     </div>
+                    <div class="sentBadgeWrap" style="display:none;margin-top:6px;">
+                      <span style="display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:20px;
+          font-size:11px;font-weight:800;background:rgba(0,200,100,0.12);
+          border:1px solid rgba(0,200,100,0.35);color:#00c864;">
+                        ✅ Already Sent — <span class="sentDate"></span>
+                      </span>
+                    </div>
                   </div>
-                </label>
+                </div>
 
-                <label style="display:flex;align-items:center;gap:12px;cursor:pointer;
-                  padding:11px 14px;border-radius:14px;border:1px solid rgba(255,255,255,0.08);
-                  background:rgba(255,255,255,0.02);transition:0.2s;" id="docOptJoiningLetter">
-                  <input type="checkbox" id="chkJoiningLetter" onchange="updateDocOpt(this,'docOptJoiningLetter')"
-                    style="width:16px;height:16px;accent-color:#B100FF;flex-shrink:0;" />
+                <div class="docOptRow" id="docOptJoiningLetter" data-key="joiningLetter" onclick="toggleDocOpt(this)">
+                  <input type="checkbox" id="chkJoiningLetter"
+                    style="width:16px;height:16px;accent-color:#B100FF;flex-shrink:0;pointer-events:none;" />
                   <div style="flex:1;">
                     <div style="font-weight:700;font-size:13px;">🤝 Joining Letter</div>
                     <div style="font-size:11px;color:var(--muted);margin-top:2px;">Internship joining confirmation</div>
+                    <div class="sentBadgeWrap" style="display:none;margin-top:6px;">
+                      <span style="display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:20px;
+          font-size:11px;font-weight:800;background:rgba(0,200,100,0.12);
+          border:1px solid rgba(0,200,100,0.35);color:#00c864;">
+                        ✅ Already Sent — <span class="sentDate"></span>
+                      </span>
+                    </div>
                   </div>
-                </label>
+                </div>
 
-                <label style="display:flex;align-items:center;gap:12px;cursor:pointer;
-                  padding:11px 14px;border-radius:14px;border:1px solid rgba(255,255,255,0.08);
-                  background:rgba(255,255,255,0.02);transition:0.2s;" id="docOptCompletion">
-                  <input type="checkbox" id="chkCompletion" onchange="updateDocOpt(this,'docOptCompletion')"
-                    style="width:16px;height:16px;accent-color:#B100FF;flex-shrink:0;" />
+                <div class="docOptRow" id="docOptCompletion" data-key="completion" onclick="toggleDocOpt(this)">
+                  <input type="checkbox" id="chkCompletion"
+                    style="width:16px;height:16px;accent-color:#B100FF;flex-shrink:0;pointer-events:none;" />
                   <div style="flex:1;">
                     <div style="font-weight:700;font-size:13px;">📃 Completion Letter</div>
                     <div style="font-size:11px;color:var(--muted);margin-top:2px;">Official internship completion letter
                     </div>
+                    <div class="sentBadgeWrap" style="display:none;margin-top:6px;">
+                      <span style="display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:20px;
+          font-size:11px;font-weight:800;background:rgba(0,200,100,0.12);
+          border:1px solid rgba(0,200,100,0.35);color:#00c864;">
+                        ✅ Already Sent — <span class="sentDate"></span>
+                      </span>
+                    </div>
                   </div>
-                </label>
+                </div>
 
-                <label style="display:flex;align-items:center;gap:12px;cursor:pointer;
-                  padding:11px 14px;border-radius:14px;border:1px solid rgba(255,255,255,0.08);
-                  background:rgba(255,255,255,0.02);transition:0.2s;" id="docOptCertificate">
-                  <input type="checkbox" id="chkCertificate" onchange="updateDocOpt(this,'docOptCertificate')"
-                    style="width:16px;height:16px;accent-color:#B100FF;flex-shrink:0;" />
+                <div class="docOptRow" id="docOptCertificate" data-key="certificate" onclick="toggleDocOpt(this)">
+                  <input type="checkbox" id="chkCertificate"
+                    style="width:16px;height:16px;accent-color:#B100FF;flex-shrink:0;pointer-events:none;" />
                   <div style="flex:1;">
                     <div style="font-weight:700;font-size:13px;">🏅 Completion Certificate</div>
                     <div style="font-size:11px;color:var(--muted);margin-top:2px;">Official certificate of internship
                       completion</div>
+                    <div class="sentBadgeWrap" style="display:none;margin-top:6px;">
+                      <span style="display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:20px;
+          font-size:11px;font-weight:800;background:rgba(0,200,100,0.12);
+          border:1px solid rgba(0,200,100,0.35);color:#00c864;">
+                        ✅ Already Sent — <span class="sentDate"></span>
+                      </span>
+                    </div>
                   </div>
-                </label>
+                </div>
 
-                <label style="display:flex;align-items:center;gap:12px;cursor:pointer;
-                  padding:11px 14px;border-radius:14px;border:1px solid rgba(255,255,255,0.08);
-                  background:rgba(255,255,255,0.02);transition:0.2s;" id="docOptBestPerformer">
-                  <input type="checkbox" id="chkBestPerformer" onchange="updateDocOpt(this,'docOptBestPerformer')"
-                    style="width:16px;height:16px;accent-color:#B100FF;flex-shrink:0;" />
+                <div class="docOptRow" id="docOptBestPerformer" data-key="bestPerformer" onclick="toggleDocOpt(this)">
+                  <input type="checkbox" id="chkBestPerformer"
+                    style="width:16px;height:16px;accent-color:#B100FF;flex-shrink:0;pointer-events:none;" />
                   <div style="flex:1;">
                     <div style="font-weight:700;font-size:13px;">🏆 Best Performer Certificate</div>
                     <div style="font-size:11px;color:var(--muted);margin-top:2px;">Awarded to top performing interns
                     </div>
+                    <div class="sentBadgeWrap" style="display:none;margin-top:6px;">
+                      <span style="display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:20px;
+          font-size:11px;font-weight:800;background:rgba(0,200,100,0.12);
+          border:1px solid rgba(0,200,100,0.35);color:#00c864;">
+                        ✅ Already Sent — <span class="sentDate"></span>
+                      </span>
+                    </div>
                   </div>
-                </label>
+                </div>
 
               </div>
 
@@ -3741,29 +3802,56 @@
         return;
       }
 
+      const DOC_LABEL_MAP = {
+        loi: "LOI", offerLetter: "Offer", joiningLetter: "Joining",
+        completion: "Completion", certificate: "Certificate", bestPerformer: "Best"
+      };
+
       list.forEach((i, idx) => {
+        const docStatus = i.docStatus || {};
+        const sentBadges = Object.entries(docStatus)
+          .filter(([, val]) => val && String(val).trim() !== "")
+          .map(([key, val]) => {
+            const shortDate = String(val).replace("✅ ", "").trim();
+            return `<span style="display:inline-block;padding:2px 7px;border-radius:20px;font-size:10px;font-weight:700;
+                  background:rgba(0,200,100,0.12);border:1px solid rgba(0,200,100,0.35);color:#00c864;
+                  white-space:nowrap;" title="Sent: ${shortDate}">
+                  ✅ ${DOC_LABEL_MAP[key] || key}
+                </span>`;
+          }).join(" ");
+
+        const allSent = Object.values(docStatus).every(v => v && String(v).trim() !== "");
+        const btnStyle = allSent
+          ? `background:rgba(100,100,100,0.08);border-color:rgba(100,100,100,0.25);color:var(--muted);cursor:not-allowed;`
+          : ``;
+        const btnDisabled = allSent ? `disabled title="Saare documents already sent hain"` : ``;
+
         tb.innerHTML += `
-          <tr>
-            <td style="color:var(--muted);font-size:12px;">${idx + 1}</td>
-            <td>
-              <div style="font-weight:800;font-size:13px;">${escapeHTML(i.Name)}</div>
-              <div style="font-size:11px;color:var(--muted);margin-top:3px;">${escapeHTML(i.InternID)}</div>
-            </td>
-            <td style="font-size:12px;color:var(--muted);">${escapeHTML(i.Email)}</td>
-            <td>
-              <div style="font-weight:700;font-size:13px;">${escapeHTML(i.BatchName || "-")}</div>
-            </td>
-            <td>
-              <div style="font-weight:700;font-size:13px;">${escapeHTML(i.Duration || "-")}</div>
-            </td>
-            <td style="text-align:center;">
-              <button class="btn primary" style="font-size:12px;padding:8px 14px;"
-                onclick='openSendDocModal(${JSON.stringify(JSON.stringify(i))})'>
-                📄 Create Document
-              </button>
-            </td>
-          </tr>
-        `;
+      <tr>
+        <td style="color:var(--muted);font-size:12px;">${idx + 1}</td>
+        <td>
+          <div style="font-weight:800;font-size:13px;">${escapeHTML(i.Name)}</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:3px;">${escapeHTML(i.InternID)}</div>
+        </td>
+        <td style="font-size:12px;color:var(--muted);">${escapeHTML(i.Email)}</td>
+        <td>
+          <div style="font-weight:700;font-size:13px;">${escapeHTML(i.BatchName || "-")}</div>
+        </td>
+        <td>
+          <div style="font-weight:700;font-size:13px;">${escapeHTML(i.Duration || "-")}</div>
+        </td>
+        <td>
+          <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-start;">
+            ${sentBadges ? `<div style="display:flex;flex-wrap:wrap;gap:4px;">${sentBadges}</div>` : ""}
+            <button class="btn primary" style="font-size:12px;padding:8px 14px;${btnStyle}"
+              ${btnDisabled}
+              onclick='openSendDocModal(${JSON.stringify(JSON.stringify(i))})'>
+              📄 ${allSent ? "All Sent ✅" : "Create Document"}
+            </button>
+          </div>
+        </td>
+      </tr>
+    `;
       });
     }
 
@@ -3834,90 +3922,135 @@
     }
 
     async function openSendDocModal(internJson) {
-      const i = typeof internJson === "string" ? JSON.parse(internJson) : internJson;
-      CURRENT_DOC_INTERN = i;
-      GENERATED_DOC_LINK = "";
-      SELECTED_DOCS = [];
-      VERIFIED_DOC_DATA = {};
+  const i = typeof internJson === "string" ? JSON.parse(internJson) : internJson;
+  CURRENT_DOC_INTERN = i;
+  GENERATED_DOC_LINK = "";
+  SELECTED_DOCS = [];
+  VERIFIED_DOC_DATA = {};
+  window._currentDocStatus = {};
 
-      // Reset checkboxes first
-      ["chkLoi", "chkOfferLetter", "chkJoiningLetter", "chkCompletion", "chkCertificate", "chkBestPerformer"].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) { el.checked = false; el.disabled = false; }
-      });
-      ["docOptLoi", "docOptOfferLetter", "docOptJoiningLetter", "docOptCompletion", "docOptCertificate", "docOptBestPerformer"].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) { el.style.borderColor = "rgba(255,255,255,0.08)"; el.style.background = "rgba(255,255,255,0.02)"; el.style.opacity = "1"; }
-      });
+  // Reset all rows to default state
+  document.querySelectorAll(".docOptRow").forEach(row => {
+    row.classList.remove("sent", "selected");
+    row.style.opacity = "";
+    row.style.cursor = "";
+    row.style.borderColor = "";
+    row.style.background = "";
+    row.style.pointerEvents = "";
+    const chk = row.querySelector("input[type=checkbox]");
+    if (chk) { chk.checked = false; chk.disabled = false; }
+    const badge = row.querySelector(".sentBadgeWrap");
+    if (badge) badge.style.display = "none";
+  });
 
-      // ... existing name/email/batch fill code ...
-      document.getElementById("docInternAvatar").innerText = (i.Name || "?")[0].toUpperCase();
-      document.getElementById("docInternName").innerText = i.Name || "-";
-      document.getElementById("docInternEmail").innerText = i.Email || "-";
-      document.getElementById("docInternBatch").innerText = `${i.BatchName || ""} · ${i.Duration || ""} · ID: ${i.InternID}`;
-      document.getElementById("docModalMeta").innerText = `Intern: ${i.Email}`;
-      document.getElementById("docEmailTo").value = i.Email || "";
-      document.getElementById("docSelectedSummary").style.display = "none";
-      document.getElementById("docStep1Msg").innerText = "";
-      document.getElementById("docSendMsg").innerText = "";
+  // Fill intern info card
+  document.getElementById("docInternAvatar").innerText = (i.Name || "?")[0].toUpperCase();
+  document.getElementById("docInternName").innerText = i.Name || "-";
+  document.getElementById("docInternEmail").innerText = i.Email || "-";
+  document.getElementById("docInternBatch").innerText =
+    `${i.BatchName || ""} · ${i.Duration || ""} · ID: ${i.InternID}`;
+  document.getElementById("docModalMeta").innerText = `Intern: ${i.Email}`;
+  document.getElementById("docEmailTo").value = i.Email || "";
+  document.getElementById("docSelectedSummary").style.display = "none";
+  document.getElementById("docStep1Msg").innerText = "";
+  document.getElementById("docSendMsg").innerText = "";
 
-      _showDocStep(1);
-      document.getElementById("sendDocModal").classList.add("show");
+  _showDocStep(1);
+  document.getElementById("sendDocModal").classList.add("show");
 
-      // ── Fetch already sent docs and disable them ──
-      try {
-        const statusData = await apiGET({
-          action: "getInternDocStatus",
-          adminId: admin.adminId,
-          adminPass: admin.adminPass,
-          internId: i.InternID
-        }, true);
+  // Disable proceed button while loading status
+  const proceedBtn = document.querySelector("#docStep1 .btn.primary");
+  if (proceedBtn) {
+    proceedBtn.disabled = true;
+    proceedBtn.innerText = "⏳ Checking sent documents...";
+    proceedBtn.style.background = "";
+    proceedBtn.style.borderColor = "";
+    proceedBtn.style.color = "";
+  }
 
-        if (statusData.success && statusData.status) {
-          const docMap = {
-            loi: { chk: "chkLoi", opt: "docOptLoi" },
-            offerLetter: { chk: "chkOfferLetter", opt: "docOptOfferLetter" },
-            joiningLetter: { chk: "chkJoiningLetter", opt: "docOptJoiningLetter" },
-            completion: { chk: "chkCompletion", opt: "docOptCompletion" },
-            certificate: { chk: "chkCertificate", opt: "docOptCertificate" },
-            bestPerformer: { chk: "chkBestPerformer", opt: "docOptBestPerformer" },
-          };
+  try {
+    const statusData = await apiGET({
+      action: "getInternDocStatus",
+      adminId: admin.adminId,
+      adminPass: admin.adminPass,
+      internId: i.InternID
+    }, true);
 
-          Object.entries(statusData.status).forEach(([docType, val]) => {
-            if (!val) return; // not sent yet
-            const ids = docMap[docType];
-            if (!ids) return;
+    if (statusData.success && statusData.status) {
+      window._currentDocStatus = statusData.status;
 
-            const chkEl = document.getElementById(ids.chk);
-            const optEl = document.getElementById(ids.opt);
+      let unsentCount = 0;
 
-            if (chkEl) { chkEl.disabled = true; chkEl.checked = false; }
-            if (optEl) {
-              optEl.style.opacity = "0.5";
-              optEl.style.cursor = "not-allowed";
-              optEl.style.borderColor = "rgba(0,200,100,0.3)";
-              optEl.style.background = "rgba(0,200,100,0.04)";
+      document.querySelectorAll(".docOptRow").forEach(row => {
+        const key = row.dataset.key;
+        const val = statusData.status[key];
+        const chk = row.querySelector("input[type=checkbox]");
+        const badgeWrap = row.querySelector(".sentBadgeWrap");
+        const dateSpan = row.querySelector(".sentDate");
 
-              // "✅ Sent" badge add karo
-              const existingBadge = optEl.querySelector(".sentBadge");
-              if (!existingBadge) {
-                const badge = document.createElement("div");
-                badge.className = "sentBadge";
-                badge.style.cssText = "font-size:10px;font-weight:800;color:#00c864;margin-top:3px;letter-spacing:0.3px;";
-                badge.innerText = "✅ Already Sent — " + val.replace("✅ ", "");
-                optEl.querySelector("div").appendChild(badge);
-              }
-            }
-          });
+        if (val && String(val).trim() !== "") {
+          // Already sent — lock this row completely
+          row.classList.add("sent");
+          row.style.opacity = "0.6";
+          row.style.cursor = "not-allowed";
+          row.style.borderColor = "rgba(0,200,100,0.25)";
+          row.style.background = "rgba(0,200,100,0.04)";
+          row.style.pointerEvents = "none";
+          if (chk) { chk.disabled = true; chk.checked = false; }
+          if (badgeWrap) badgeWrap.style.display = "block";
+          if (dateSpan) dateSpan.innerText = String(val).replace("✅ ", "").trim();
+        } else {
+          // Not yet sent — enable
+          row.style.pointerEvents = "";
+          unsentCount++;
         }
-      } catch (e) {
-        console.log("Doc status fetch failed (non-critical):", e);
+      });
+
+      if (unsentCount === 0) {
+        // All documents already sent
+        document.getElementById("docStep1Msg").innerHTML =
+          `<span style="color:#00c864;font-weight:800;">✅ Saare documents pehle se send ho chuke hain.</span>`;
+        if (proceedBtn) {
+          proceedBtn.disabled = true;
+          proceedBtn.innerText = "✅ All Documents Already Sent";
+          proceedBtn.style.background = "rgba(0,200,100,0.10)";
+          proceedBtn.style.borderColor = "rgba(0,200,100,0.30)";
+          proceedBtn.style.color = "#00c864";
+        }
+        return;
       }
     }
+  } catch (e) {
+    console.log("Doc status fetch failed:", e);
+    window._currentDocStatus = {};
+  }
+
+  // Enable proceed button
+  if (proceedBtn) {
+    proceedBtn.disabled = false;
+    proceedBtn.innerText = "⚡ Create Documents → Get Link";
+    proceedBtn.style.background = "";
+    proceedBtn.style.borderColor = "";
+    proceedBtn.style.color = "";
+  }
+}
 
     function closeSendDocModal() {
       document.getElementById("sendDocModal").classList.remove("show");
       CURRENT_DOC_INTERN = null;
+    }
+
+    function toggleDocOpt(rowEl) {
+      if (rowEl.classList.contains("sent")) return; // sent hai toh click block
+      const chk = rowEl.querySelector("input[type=checkbox]");
+      if (!chk || chk.disabled) return;
+      chk.checked = !chk.checked;
+      if (chk.checked) {
+        rowEl.classList.add("selected");
+      } else {
+        rowEl.classList.remove("selected");
+      }
+      updateDocSummary();
     }
 
     function updateDocOpt(chk, optId) {
@@ -4236,7 +4369,24 @@
         document.getElementById("docStep1Msg").innerText = "⚠️ Please select at least one document.";
         return;
       }
+
+      
       document.getElementById("docStep1Msg").innerText = "";
+
+      // Already-sent docs filter karo
+      const alreadySentKeys = Object.entries(
+        (window._currentDocStatus || {})
+      ).filter(([, v]) => v && String(v).trim() !== "").map(([k]) => k);
+
+      const notYetSent = SELECTED_DOCS.filter(d => !alreadySentKeys.includes(d.key));
+
+      if (notYetSent.length === 0) {
+        document.getElementById("docStep1Msg").innerText =
+          "⚠️ Yeh saare documents pehle se send ho chuke hain. Naye documents select karo.";
+        return;
+      }
+
+      SELECTED_DOCS = notYetSent;
 
       const hasCertificate = SELECTED_DOCS.some(d => d.key === "certificate");
       const hasBestPerformer = SELECTED_DOCS.some(d => d.key === "bestPerformer");
