@@ -1094,6 +1094,7 @@
           <div class="rolePill" id="adminPill">Admin</div>
         </div>
 
+        <button class="sideCloseBtn" onclick="toggleSidebar()">✕</button>
         <!-- MENU -->
         <div class="nav" id="adminNav">
           <a class="active" href="javascript:void(0)" onclick="switchPage('studentsPage', this)">👨‍🎓 Students</a>
@@ -1584,6 +1585,7 @@
                   <th>Reason</th>
                   <th>Joined</th>
                   <th>Removed</th>
+                  <th>Undo</th>
                 </tr>
               </thead>
               <tbody id="removedTableBody">
@@ -1594,6 +1596,73 @@
             </table>
           </div>
         </section>
+
+        <!-- UNDO REMOVE INTERN MODAL -->
+        <div id="undoRemoveModal" class="modalOverlay">
+          <div class="modalCard" style="width:min(480px,95vw);">
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:18px;">
+              <div style="font-family:Orbitron,Inter;font-size:16px;font-weight:900;">↩️ Undo Remove Intern</div>
+              <button class="btn danger" onclick="closeUndoRemoveModal()">Close</button>
+            </div>
+
+            <!-- Intern summary card -->
+            <div style="background:rgba(0,200,100,0.06);border:1px solid rgba(0,200,100,0.25);
+                        border-radius:14px;padding:16px;margin-bottom:16px;">
+              <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;">
+                <div id="undoAvatar" style="width:44px;height:44px;border-radius:50%;
+                     background:rgba(0,200,100,0.15);border:1px solid rgba(0,200,100,0.3);
+                     display:flex;align-items:center;justify-content:center;
+                     font-size:16px;font-weight:900;color:#00c864;flex-shrink:0;">?</div>
+                <div>
+                  <div style="font-weight:900;font-size:15px;" id="undoName">—</div>
+                  <div style="font-size:12px;color:var(--muted);" id="undoEmail">—</div>
+                </div>
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:13px;">
+                <div>
+                  <div style="font-size:11px;color:var(--muted);margin-bottom:2px;">Intern ID</div>
+                  <div style="font-weight:700;color:#a78bfa;" id="undoInternId">—</div>
+                </div>
+                <div>
+                  <div style="font-size:11px;color:var(--muted);margin-bottom:2px;">Batch</div>
+                  <div style="font-weight:700;" id="undoBatch">—</div>
+                </div>
+                <div>
+                  <div style="font-size:11px;color:var(--muted);margin-bottom:2px;">Duration</div>
+                  <div style="font-weight:700;" id="undoDuration">—</div>
+                </div>
+                <div>
+                  <div style="font-size:11px;color:var(--muted);margin-bottom:2px;">Removal Reason</div>
+                  <div id="undoReason">—</div>
+                </div>
+              </div>
+            </div>
+
+            <div style="background:rgba(255,200,0,0.06);border:1px solid rgba(255,200,0,0.25);
+                        border-radius:12px;padding:12px;margin-bottom:16px;font-size:13px;
+                        color:#f0c040;line-height:1.6;">
+              ⚠️ Yeh intern wapas active ho jayega. Unka <b>InternID aur Batch</b> restore ho jayega aur woh apna kaam continue kar sakenge.
+              Removed Interns list se bhi record hata diya jayega.
+            </div>
+
+            <div style="margin-bottom:14px;">
+              <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:6px;">Select Batch (restore mein)</label>
+              <select id="undoBatchSelect" style="width:100%;background:#1a1a24;border:1px solid rgba(255,255,255,0.1);
+                       color:var(--text);padding:8px 12px;border-radius:10px;"></select>
+            </div>
+
+            <div id="undoMsg" style="font-size:12px;min-height:18px;margin-bottom:10px;text-align:center;color:var(--danger);"></div>
+
+            <div style="display:flex;gap:10px;">
+              <button class="btn ghost" style="flex:0 0 auto;padding:12px 16px;" onclick="closeUndoRemoveModal()">Cancel</button>
+              <button class="btn primary" style="flex:1;padding:13px;font-size:14px;font-weight:800;
+                       background:rgba(0,200,100,0.15);border-color:rgba(0,200,100,0.4);color:#00c864;"
+                onclick="confirmUndoRemove()">
+                ↩️ Confirm Undo & Restore Intern
+              </button>
+            </div>
+          </div>
+        </div>
 
         <!-- SEND DOCUMENT MODAL — 3-Step Wizard (with Verify Step for Offer Letter) -->
         <div id="sendDocModal" class="modalOverlay">
@@ -4205,8 +4274,8 @@
 
       document.getElementById("clFullName").value = i.Name || "";
       document.getElementById("clRole").value = "Software Development Intern";
-      document.getElementById("clCollege").value = "";
-      document.getElementById("clVfMsg").innerText = "⏳ Intern ke projects load ho rahe hain...";
+      document.getElementById("clCollege").value = i.College || "";
+      document.getElementById("clVfMsg").innerText = "⏳ Intern ke projects aur college load ho rahe hain...";
 
       const durMonths = String(i.Duration || "6").includes("9") ? "9" : "6";
       document.getElementById("clDuration").value = durMonths;
@@ -4244,6 +4313,29 @@
         }
       } catch (e) {
         document.getElementById("clVfMsg").innerText = "⚠️ Projects load nahi hue. Manually type karo.";
+      }
+
+      // ── Auto-fetch College from Joining Interns sheet ──
+      if (!i.College) {
+        try {
+          const jData = await apiGET({
+            action: "getJoiningInterns",
+            adminId: admin.adminId,
+            adminPass: admin.adminPass,
+            status: ""
+          }, true);
+          if (jData.success && jData.joiningInterns) {
+            const match = jData.joiningInterns.find(j =>
+              (j["Email"] || j.Email || "").trim().toLowerCase() === (i.Email || "").trim().toLowerCase()
+            );
+            if (match) {
+              const college = match["College"] || match.College || "";
+              if (college) {
+                document.getElementById("clCollege").value = college;
+              }
+            }
+          }
+        } catch (e) { /* college auto-fill failed silently */ }
       }
 
       const optHtml = projectOptions.join("");
@@ -5296,6 +5388,16 @@
           <td style="padding:11px 14px;white-space:nowrap;">
             <span style="color:#f87171;font-size:12px;font-weight:600;">${removedAt || "—"}</span>
           </td>
+          <td style="padding:11px 14px;">
+            <button onclick='openUndoRemoveModal(${JSON.stringify(JSON.stringify(r))})'
+              style="background:rgba(0,200,100,0.10);border:1px solid rgba(0,200,100,0.30);
+                     color:#00c864;border-radius:10px;padding:6px 12px;cursor:pointer;
+                     font-size:12px;font-weight:800;white-space:nowrap;transition:0.2s;"
+              onmouseover="this.style.background='rgba(0,200,100,0.22)'"
+              onmouseout="this.style.background='rgba(0,200,100,0.10)'">
+              ↩️ Undo
+            </button>
+          </td>
         </tr>`;
       }).join("");
     }
@@ -5316,6 +5418,85 @@
       );
       renderRemovedTable(filtered);
       renderRemovedStats(filtered);
+    }
+
+    // ══════════════════════════════════════════════════════════
+    //  UNDO REMOVE INTERN
+    // ══════════════════════════════════════════════════════════
+
+    let _undoInternData = null;
+
+    function openUndoRemoveModal(internJson) {
+      const r = typeof internJson === "string" ? JSON.parse(internJson) : internJson;
+      _undoInternData = r;
+
+      document.getElementById("undoAvatar").innerText = (r.Name || "?")[0].toUpperCase();
+      document.getElementById("undoName").innerText = r.Name || "—";
+      document.getElementById("undoEmail").innerText = r.Email || "—";
+      document.getElementById("undoInternId").innerText = r.InternID || "—";
+      document.getElementById("undoBatch").innerText = r.BatchName || r.BatchID || "—";
+      document.getElementById("undoDuration").innerText = r.Duration || "—";
+      document.getElementById("undoReason").innerHTML = reasonBadge(r.Reason || "other");
+      document.getElementById("undoMsg").innerText = "";
+
+      // Populate batch dropdown with current batches
+      const batchSel = document.getElementById("undoBatchSelect");
+      const sourceSel = document.getElementById("inBatch");
+      batchSel.innerHTML = sourceSel ? sourceSel.innerHTML : '<option value="">— Select Batch —</option>';
+
+      // Try to pre-select intern's original batch
+      for (let i = 0; i < batchSel.options.length; i++) {
+        if (batchSel.options[i].text.trim() === (r.BatchName || "").trim() ||
+            batchSel.options[i].value === (r.BatchID || "")) {
+          batchSel.selectedIndex = i;
+          break;
+        }
+      }
+
+      document.getElementById("undoRemoveModal").classList.add("show");
+    }
+
+    function closeUndoRemoveModal() {
+      document.getElementById("undoRemoveModal").classList.remove("show");
+      _undoInternData = null;
+    }
+
+    async function confirmUndoRemove() {
+      if (!_undoInternData) { toast("Koi intern select nahi ❌", "error"); return; }
+
+      const batchId = document.getElementById("undoBatchSelect").value;
+      if (!batchId) { document.getElementById("undoMsg").innerText = "⚠️ Please select a batch"; return; }
+
+      const msgEl = document.getElementById("undoMsg");
+      msgEl.style.color = "var(--muted)";
+      msgEl.innerText = "⏳ Restoring intern...";
+
+      const data = await apiPOST({
+        action: "undoRemoveIntern",
+        adminId: admin.adminId,
+        adminPass: admin.adminPass,
+        internId: _undoInternData.InternID,
+        batchId: batchId,
+        name: _undoInternData.Name,
+        email: _undoInternData.Email,
+        phone: _undoInternData.Phone || "",
+        duration: _undoInternData.Duration || "6 Months"
+      });
+
+      if (data.success) {
+        toast("Intern successfully restored ✅", "success");
+        msgEl.style.color = "#00c864";
+        msgEl.innerText = "✅ " + (data.message || "Intern restored!");
+        Object.keys(_cache).forEach(k => cacheInvalidate(k));
+        setTimeout(() => {
+          closeUndoRemoveModal();
+          loadRemovedInterns(false);
+        }, 1200);
+      } else {
+        msgEl.style.color = "var(--danger)";
+        msgEl.innerText = "❌ " + (data.message || "Restore failed");
+        toast(data.message || "Restore failed ❌", "error");
+      }
     }
 
     init();
