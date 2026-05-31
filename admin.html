@@ -1262,6 +1262,7 @@
 
                 <label>Email</label>
                 <input id="inEmail" type="email" autocomplete="email" placeholder="intern@gmail.com" />
+                <span id="emailHint" style="font-size:11px;color:var(--muted);margin-top:4px;display:block;min-height:14px;"></span>
 
                 <label>Select Batch</label>
                 <select id="inBatch"></select>
@@ -2777,10 +2778,19 @@
       const emailInput = document.getElementById("inEmail");
 
       if (emailInput) {
+        emailInput.addEventListener("keydown", function (e) {
+          if (e.key === "Tab" && this.value.endsWith("@")) {
+            e.preventDefault();
+            this.value = this.value + "gmail.com";
+          }
+        });
         emailInput.addEventListener("input", function () {
-          let value = this.value;
-          if (value.endsWith("@")) {
-            this.value = value + "gmail.com";
+          const val = this.value;
+          const hint = document.getElementById("emailHint");
+          if (val.endsWith("@") && hint) {
+            hint.innerText = "→ Tab dabao gmail.com ke liye";
+          } else if (hint) {
+            hint.innerText = "";
           }
         });
       }
@@ -3803,7 +3813,18 @@
     async function submitEnrolledDecision(decision) {
       if (!CURRENT_ENROLLED_ID) { toast("No enrollment selected ❌", "error"); return; }
 
-      const statusMap = { "Approved": "Accepted", "Rejected": "Declined" };
+      // Delegate to the proper handlers that also create/decline intern correctly
+      if (decision === "Approved") {
+        switchReviewAction("accept");
+        return;
+      }
+      if (decision === "Rejected") {
+        switchReviewAction("reject");
+        return;
+      }
+
+      // Fallback for any other status string (e.g. "Accepted" / "Declined" passed directly)
+      const statusMap = { "Accepted": "Accepted", "Declined": "Declined" };
       const newStatus = statusMap[decision] || decision;
 
       document.getElementById("reviewMsg").innerText = "Processing...";
@@ -3824,6 +3845,7 @@
 
         setTimeout(() => {
           closeEnrolledReview();
+          Object.keys(_cache).forEach(k => cacheInvalidate(k));
           loadEnrolledStudents(false);
         }, 1200);
 
@@ -3950,7 +3972,6 @@
         "verifyCompletion": "docStepVerifyCompletion",
         "verifyCertificate": "docStepVerifyCertificate",
         "verifyBestPerformer": "docStepVerifyBestPerformer",
-        "verifyCompletion": "docStepVerifyCompletion",
         2: "docStep2",
         3: "docStep3"
       };
@@ -3970,7 +3991,6 @@
         "verifyCompletion": [done, active, idle, idle],
         "verifyCertificate": [done, active, idle, idle],
         "verifyBestPerformer": [done, active, idle, idle],
-        "verifyCompletion": [done, active, idle, idle],
         2: [done, done, active, idle],
         3: [done, done, done, active]
       };
@@ -4718,6 +4738,7 @@
       _showDocStep(1);
     }
 
+
     function updateShareOpt() {
       const val = document.querySelector("input[name='shareOpt']:checked")?.value || "public";
       document.getElementById("shareOptMsg").innerText = val === "public"
@@ -4727,13 +4748,29 @@
 
     function copyDocLink() {
       if (!GENERATED_DOC_LINK) return;
-      navigator.clipboard.writeText(GENERATED_DOC_LINK).then(() => {
-        toast("Link copied ✅", "success");
-      }).catch(() => {
-        document.getElementById("docGeneratedLink").select();
-        document.execCommand("copy");
-        toast("Link copied ✅", "success");
-      });
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(GENERATED_DOC_LINK).then(() => {
+          toast("Link copied ✅", "success");
+        }).catch(() => {
+          toast("Copy failed — link manually select karo ❌", "error");
+        });
+      } else {
+        // Fallback for non-secure contexts
+        const temp = document.createElement("textarea");
+        temp.value = GENERATED_DOC_LINK;
+        temp.style.position = "fixed";
+        temp.style.opacity = "0";
+        document.body.appendChild(temp);
+        temp.focus();
+        temp.select();
+        try {
+          document.execCommand("copy");
+          toast("Link copied ✅", "success");
+        } catch (e) {
+          toast("Copy failed — link manually select karo ❌", "error");
+        }
+        document.body.removeChild(temp);
+      }
     }
 
     function docGoToStep3() {
@@ -5330,7 +5367,10 @@
       const thisMonth = new Date().toISOString().slice(0, 7);
       const monthCount = list.filter(x => String(x["Removed At"] || "").startsWith(thisMonth)).length;
       const voluntary = list.filter(x => String(x["Reason"] || "").toLowerCase() === "voluntary").length;
-      const terminated = list.filter(x => String(x["Reason"] || "").toLowerCase() !== "voluntary").length;
+      const terminated = list.filter(x => {
+        const r = String(x["Reason"] || "").toLowerCase();
+        return r !== "voluntary" && r !== "other" && r !== "";
+      }).length;
 
       const s = id => document.getElementById(id);
       if (s("removedStatTotal")) s("removedStatTotal").textContent = list.length;
