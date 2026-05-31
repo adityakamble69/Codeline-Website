@@ -2244,20 +2244,16 @@
                 <div style="display:flex;align-items:center;gap:8px;">
                   <span style="font-size:12px;color:var(--muted);">Kitne projects?</span>
                   <div style="display:flex;gap:4px;" id="clProjectCountBtns">
-                    <button onclick="setClProjectCount(1)" id="clPCBtn1"
-                      style="width:28px;height:28px;border-radius:8px;border:1px solid rgba(124,0,255,0.3);
+                    <button onclick="setClProjectCount(1)" id="clPCBtn1" style="width:28px;height:28px;border-radius:8px;border:1px solid rgba(124,0,255,0.3);
                       background:rgba(124,0,255,0.08);color:var(--text);font-size:12px;font-weight:800;
                       cursor:pointer;transition:0.2s;">1</button>
-                    <button onclick="setClProjectCount(2)" id="clPCBtn2"
-                      style="width:28px;height:28px;border-radius:8px;border:1px solid rgba(124,0,255,0.3);
+                    <button onclick="setClProjectCount(2)" id="clPCBtn2" style="width:28px;height:28px;border-radius:8px;border:1px solid rgba(124,0,255,0.3);
                       background:rgba(124,0,255,0.08);color:var(--text);font-size:12px;font-weight:800;
                       cursor:pointer;transition:0.2s;">2</button>
-                    <button onclick="setClProjectCount(3)" id="clPCBtn3"
-                      style="width:28px;height:28px;border-radius:8px;border:1px solid rgba(124,0,255,0.3);
+                    <button onclick="setClProjectCount(3)" id="clPCBtn3" style="width:28px;height:28px;border-radius:8px;border:1px solid rgba(124,0,255,0.3);
                       background:rgba(124,0,255,0.08);color:var(--text);font-size:12px;font-weight:800;
                       cursor:pointer;transition:0.2s;">3</button>
-                    <button onclick="setClProjectCount(4)" id="clPCBtn4"
-                      style="width:28px;height:28px;border-radius:8px;border:1px solid rgba(124,0,255,0.5);
+                    <button onclick="setClProjectCount(4)" id="clPCBtn4" style="width:28px;height:28px;border-radius:8px;border:1px solid rgba(124,0,255,0.5);
                       background:rgba(124,0,255,0.25);color:#B100FF;font-size:12px;font-weight:800;
                       cursor:pointer;transition:0.2s;">4</button>
                   </div>
@@ -2277,8 +2273,7 @@
                     <div style="font-size:13px;font-weight:800;color:#B100FF;" id="clRefAutoPrefix">
                       COD/COMP/TC
                     </div>
-                    <input id="clRefSerial" type="number" min="1" max="9999" placeholder="01"
-                      oninput="buildClRefNo()"
+                    <input id="clRefSerial" type="number" min="1" max="9999" placeholder="01" oninput="buildClRefNo()"
                       style="width:80px;font-size:13px;background:#1a1a24;border:1px solid rgba(255,255,255,0.1);
                       color:var(--text);padding:8px 12px;border-radius:10px;" />
                     <input id="clRefNo" type="hidden" />
@@ -3730,13 +3725,17 @@
       const msgEl = document.getElementById("reviewMsg");
       msgEl.innerText = "Processing...";
 
+      // Single call — status update + intern create + combined mail sab backend mein
       const statusData = await apiPOST({
         action: "updateJoiningStatus",
         adminId: admin.adminId,
         adminPass: admin.adminPass,
         email,
         joiningDate: joinDate,
-        status: "Accepted"
+        status: "Accepted",
+        name,        // ← intern create ke liye
+        batchId,     // ← intern create ke liye
+        duration     // ← intern create ke liye
       });
 
       if (!statusData.success) {
@@ -3745,28 +3744,17 @@
         return;
       }
 
-      const internData = await apiGET({
-        action: "adminCreateInternGET",
-        adminId: admin.adminId,
-        adminPass: admin.adminPass,
-        name, email, batchId, duration
-      });
+      const internId = statusData.internId || "";
+      toast(`✅ Accepted! ${internId ? "Intern ID: " + internId : ""}`, "success");
+      msgEl.innerText = `✅ Accepted! ${internId ? "Intern ID: " + internId : "Intern created."}`;
 
-      if (internData.success) {
-        toast(`✅ Accepted! Intern ID: ${internData.internId}`, "success");
-        msgEl.innerText = `✅ Accepted! Intern ID: ${internData.internId} added.`;
-
-        setTimeout(() => {
-          closeEnrolledReview();
-          cacheInvalidate("interns_all");
-          cacheInvalidate("interns_");
-          Object.keys(_cache).forEach(k => cacheInvalidate(k));
-          loadEnrolledStudents(false);
-        }, 1500);
-      } else {
-        msgEl.innerText = "Status updated but intern creation failed: " + internData.message;
-        toast(internData.message, "error");
-      }
+      setTimeout(() => {
+        closeEnrolledReview();
+        cacheInvalidate("interns_all");
+        cacheInvalidate("interns_");
+        Object.keys(_cache).forEach(k => cacheInvalidate(k));
+        loadEnrolledStudents(false);
+      }, 1500);
     }
 
     async function confirmReject() {
@@ -3917,6 +3905,8 @@
     let SELECTED_DOCS = [];
     // Verified data from Step 1.5 — passed to backend on send
     let VERIFIED_DOC_DATA = {};
+    // Institute name used in WhatsApp message — pulled from admin config if available
+    let INSTITUTE_NAME = (typeof admin !== "undefined" && admin?.instituteName) ? admin.instituteName : "";
 
     async function loadActiveInterns(silent = false) {
       const data = await apiGET({
@@ -4507,7 +4497,7 @@
     function setClProjectCount(n) {
       window._clProjectCount = n;
       // Update button styles
-      [1,2,3,4].forEach(k => {
+      [1, 2, 3, 4].forEach(k => {
         const btn = document.getElementById("clPCBtn" + k);
         if (!btn) return;
         if (k === n) {
@@ -4531,7 +4521,7 @@
       const wrap = document.getElementById("clProjectsWrap");
       if (!wrap) return;
 
-      wrap.innerHTML = Array.from({length: count}, (_, idx) => {
+      wrap.innerHTML = Array.from({ length: count }, (_, idx) => {
         const n = idx + 1;
         const field = useDropdown
           ? `<select id="clProject${n}" style="flex:1;font-size:13px;background:#1a1a24;
@@ -4779,9 +4769,9 @@
     }
 
     function toProperCase(str) {
-  if (!str) return "";
-  return String(str).toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
-}
+      if (!str) return "";
+      return String(str).toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
+    }
 
     // ── Open Verify Step and pre-fill fields ──
     async function openVerifyStep() {
@@ -4994,7 +4984,9 @@
       if (sendBtn) { sendBtn.disabled = false; sendBtn.innerText = "Send"; }
 
       if (data.success) {
-        // Store Drive link for WhatsApp sharing
+        // Store individual doc links for WhatsApp sharing
+        window._lastDocLinks = data.docLinks || [];
+
         if (data.driveLink) {
           GENERATED_DOC_LINK = data.driveLink;
           const linkEl = document.getElementById("docGeneratedLink");
@@ -5025,30 +5017,33 @@
       if (!phone) { toast("Enter phone number ❌", "error"); return; }
       phone = phone.replace(/^\+/, "");
 
-      const docNames = SELECTED_DOCS.map(m => m.label).join(", ");
       const intern = CURRENT_DOC_INTERN;
 
-      let msgText;
-      if (GENERATED_DOC_LINK) {
-        msgText =
-          `Hello ${intern?.Name || ""},\n\n` +
-          `Your internship document(s) have been sent to your email *${intern?.Email || ""}*.\n\n` +
-          `📄 *Documents:*\n${docNames}\n\n` +
-          `📁 *Drive Link:*\n${GENERATED_DOC_LINK}\n\n` +
-          `— CODELINE.AI Team`;
+      // Build per-document lines using individual docLinks if available
+      let docLines = "";
+      if (window._lastDocLinks && window._lastDocLinks.length > 0) {
+        docLines = window._lastDocLinks.map((d, i) =>
+          `${i + 1}. *${d.label}*\n${d.url}`
+        ).join("\n\n");
+      } else if (GENERATED_DOC_LINK) {
+        docLines = `All Documents:\n${GENERATED_DOC_LINK}`;
       } else {
-        msgText =
-          `Hello ${intern?.Name || ""},\n\n` +
-          `Your internship document(s) have been sent to your email *${intern?.Email || ""}*.\n\n` +
-          `📄 *Documents:* ${docNames}\n\n` +
-          `Please check your inbox. 📧\n\n` +
-          `— CODELINE.AI Team`;
+        docLines = SELECTED_DOCS.map(m => m.label).join(", ");
       }
+
+      const msgText =
+        `Hello ${intern?.Name || ""},\n\n` +
+        `Your internship documents from *${INSTITUTE_NAME || "CODELINE.AI"}* are ready.\n\n` +
+        `📄 *Your Documents:*\n\n` +
+        `${docLines}\n\n` +
+        `Please save these for your records.\n\n` +
+        `— ${INSTITUTE_NAME || "CODELINE.AI"} Team`;
 
       const waUrl = `https://wa.me/${phone}?text=${encodeURIComponent(msgText)}`;
       window.open(waUrl, "_blank");
       toast("WhatsApp opened ✅", "success");
     }
+
 
     // ===============================
     // UTILITY FUNCTIONS
@@ -5116,23 +5111,26 @@
 
     let CURRENT_WARN_INTERN = null;
     let CURRENT_WARN_LEVEL = 1;
+    // Track which warning levels have been sent per intern
+    // Key: internId, Value: Set of levels sent (1, 2, 3)
+    const _warnSentLevels = {};
     let CURRENT_REMOVE_INTERN = null;
 
     const WARN_PREVIEWS = {
       1: {
-        absent: "⚠️ First Notice: Aapki attendance mein kami dekhi gayi hai. Please regular aayein.",
-        late_submit: "⚠️ First Notice: Aapki task submissions late ho rahi hain. Deadlines follow karna zaroori hai.",
-        incomplete: "⚠️ First Notice: Aapka assigned project/task incomplete pada hai."
+        absent: "⚠️ First Notice: Your attendance has been irregular. Please ensure you are present regularly.",
+        late_submit: "⚠️ First Notice: Your task submissions have been late. Please follow deadlines strictly.",
+        incomplete: "⚠️ First Notice: Your assigned project/task has been found incomplete."
       },
       2: {
-        absent: "⚠️⚠️ Second Warning: Humne pehle bhi notice diya tha, phir bhi attendance improve nahi hui.",
-        late_submit: "⚠️⚠️ Second Warning: Task submissions repeatedly late ho rahi hain.",
-        incomplete: "⚠️⚠️ Second Warning: Projects incomplete hain — yeh doosri formal warning hai."
+        absent: "⚠️ Second Warning: Despite a prior notice, your attendance has not improved. This is your second formal warning.",
+        late_submit: "⚠️ Second Warning: Task submissions continue to be late. This is your second formal warning.",
+        incomplete: "⚠️ Second Warning: Your projects remain incomplete. This is your second formal warning."
       },
       3: {
-        absent: "🔴 FINAL NOTICE: Yeh aapki last warning hai. Agar attendance mein sudhar nahi aaya toh remove kiya jayega.",
-        late_submit: "🔴 FINAL NOTICE: Yeh last warning hai regarding late submissions.",
-        incomplete: "🔴 FINAL NOTICE: Aapke projects/tasks consistently incomplete hain. Final notice."
+        absent: "🔴 Final Notice: This is your last warning. If attendance does not improve, you will be removed from the program.",
+        late_submit: "🔴 Final Notice: This is your last warning regarding late submissions. Further violations will result in removal.",
+        incomplete: "🔴 Final Notice: Your projects/tasks are consistently incomplete. This is your final notice before removal."
       }
     };
 
@@ -5143,6 +5141,25 @@
       document.getElementById("warnInternMeta").innerText = `${i.Name} (${i.InternID}) · ${i.Email}`;
       document.getElementById("warnMsg").innerText = "";
       document.getElementById("warnReason").value = "absent";
+
+      // Restore disabled state for already-sent levels
+      const sent = _warnSentLevels[i.InternID] || new Set();
+      [1, 2, 3].forEach(l => {
+        const btn = document.getElementById("warnLvl" + l + "Btn");
+        if (!btn) return;
+        if (sent.has(l)) {
+          btn.disabled = true;
+          btn.style.opacity = "0.35";
+          btn.style.cursor = "not-allowed";
+          btn.style.pointerEvents = "none";
+        } else {
+          btn.disabled = false;
+          btn.style.opacity = "";
+          btn.style.cursor = "";
+          btn.style.pointerEvents = "";
+        }
+      });
+
       setWarnLevel(1);
       document.getElementById("warnModal").classList.add("show");
     }
@@ -5192,17 +5209,30 @@
       const msgEl = document.getElementById("warnMsg");
       msgEl.innerText = "📨 Sending warning email...";
 
-      // ✅ FIX
       const preview = WARN_PREVIEWS[CURRENT_WARN_LEVEL]?.[reason] || "";
       const data = await apiPOST({
         action: "warnIntern",
         adminId: admin.adminId,
         adminPass: admin.adminPass,
         internId: CURRENT_WARN_INTERN.InternID,
-        message: preview   // ← backend "message" field expect karta hai
+        message: preview
       });
 
       if (data.success) {
+        // Track this level as sent for this intern
+        const id = CURRENT_WARN_INTERN.InternID;
+        if (!_warnSentLevels[id]) _warnSentLevels[id] = new Set();
+        _warnSentLevels[id].add(CURRENT_WARN_LEVEL);
+
+        // Disable the sent button immediately
+        const sentBtn = document.getElementById("warnLvl" + CURRENT_WARN_LEVEL + "Btn");
+        if (sentBtn) {
+          sentBtn.disabled = true;
+          sentBtn.style.opacity = "0.35";
+          sentBtn.style.cursor = "not-allowed";
+          sentBtn.style.pointerEvents = "none";
+        }
+
         toast(`Warning ${CURRENT_WARN_LEVEL} sent ✅`, "success");
         msgEl.innerText = `✅ Warning email sent to ${CURRENT_WARN_INTERN.Email}`;
         setTimeout(() => closeWarnModal(), 1800);
