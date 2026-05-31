@@ -1106,6 +1106,7 @@
           <a href="javascript:void(0)" onclick="switchPage('editRequestsPage', this)">🔐 Edit Requests</a>
           <a href="javascript:void(0)" onclick="switchPage('sendDocsPage', this)">📄 Send Documents</a>
           <a href="javascript:void(0)" onclick="switchPage('removedPage', this)">🗑️ Removed Interns</a>
+          <a href="javascript:void(0)" onclick="switchPage('completedPage', this)">🎓 Completed Interns</a>
         </div>
 
         <div class="sideFooter">
@@ -1598,6 +1599,150 @@
             </table>
           </div>
         </section>
+
+        <!-- PAGE: COMPLETED INTERNS -->
+        <section class="card pageSection" id="completedPage">
+          <div class="pageTop">
+            <div>
+              <h2>🎓 Completed Interns</h2>
+              <p>Interns jinki internship successfully complete ho gayi hai</p>
+            </div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+              <select id="completedBatchFilter" onchange="filterCompletedInterns()" style="background:#1a1a24;border:1px solid rgba(255,255,255,0.1);color:var(--text);
+                       padding:8px 12px;border-radius:10px;font-size:13px;cursor:pointer;">
+                <option value="">All Batches</option>
+              </select>
+              <input id="completedSearch" type="text" placeholder="🔍 Search name / ID / email..."
+                oninput="filterCompletedInterns()" style="background:#1a1a24;border:1px solid rgba(255,255,255,0.1);color:var(--text);
+                       padding:8px 14px;border-radius:10px;font-size:13px;width:220px;outline:none;" />
+              <button onclick="loadCompletedInterns()" class="dotBtn" title="Refresh">↻</button>
+            </div>
+          </div>
+
+          <!-- Stats Row -->
+          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px;">
+            <div class="card" style="flex:1;min-width:130px;padding:14px 18px;">
+              <div
+                style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:4px;">
+                Total Completed</div>
+              <div id="completedStatTotal" style="font-size:26px;font-weight:900;color:#00c864;">—</div>
+            </div>
+            <div class="card" style="flex:1;min-width:130px;padding:14px 18px;">
+              <div
+                style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:4px;">
+                This Month</div>
+              <div id="completedStatMonth" style="font-size:26px;font-weight:900;color:#a78bfa;">—</div>
+            </div>
+            <div class="card" style="flex:1;min-width:130px;padding:14px 18px;">
+              <div
+                style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:4px;">
+                6 Months</div>
+              <div id="completedStat6M" style="font-size:26px;font-weight:900;color:#38bdf8;">—</div>
+            </div>
+            <div class="card" style="flex:1;min-width:130px;padding:14px 18px;">
+              <div
+                style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:4px;">
+                9 Months</div>
+              <div id="completedStat9M" style="font-size:26px;font-weight:900;color:#fb923c;">—</div>
+            </div>
+          </div>
+
+          <div class="tableWrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Intern ID</th>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Phone</th>
+                  <th>Batch</th>
+                  <th>Duration</th>
+                  <th>Joining Date</th>
+                  <th>End Date</th>
+                  <th>Projects</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="completedTableBody">
+                <tr>
+                  <td colspan="10" style="padding:40px;text-align:center;color:var(--muted);">Click page to load...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- COMPLETED INTERN DETAIL MODAL -->
+        <div id="completedDetailModal" class="modalOverlay">
+          <div class="modalCard" style="width:min(580px,95vw);">
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:18px;">
+              <div style="font-family:Orbitron,Inter;font-size:16px;font-weight:900;">🎓 Completed Intern Details</div>
+              <button class="btn danger" onclick="closeCompletedDetail()">Close</button>
+            </div>
+            <div
+              style="background:rgba(0,200,100,0.06);border:1px solid rgba(0,200,100,0.25);border-radius:14px;padding:18px;margin-bottom:14px;">
+              <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px;">
+                <div id="cdAvatar" style="width:52px;height:52px;border-radius:50%;
+                     background:rgba(0,200,100,0.15);border:2px solid rgba(0,200,100,0.4);
+                     display:flex;align-items:center;justify-content:center;
+                     font-size:20px;font-weight:900;color:#00c864;flex-shrink:0;">?</div>
+                <div>
+                  <div style="font-weight:900;font-size:17px;" id="cdName">—</div>
+                  <div style="font-size:12px;color:var(--muted);margin-top:2px;" id="cdEmail">—</div>
+                </div>
+                <div style="margin-left:auto;">
+                  <span style="display:inline-block;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:800;
+                    background:rgba(0,200,100,0.15);border:1px solid rgba(0,200,100,0.4);color:#00c864;">✅
+                    Completed</span>
+                </div>
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;font-size:13px;">
+                <div>
+                  <div style="font-size:11px;color:var(--muted);margin-bottom:3px;">🆔 Intern ID</div>
+                  <div style="font-weight:800;color:#a78bfa;" id="cdInternId">—</div>
+                </div>
+                <div>
+                  <div style="font-size:11px;color:var(--muted);margin-bottom:3px;">📱 Phone</div>
+                  <div style="font-weight:700;" id="cdPhone">—</div>
+                </div>
+                <div>
+                  <div style="font-size:11px;color:var(--muted);margin-bottom:3px;">🧩 Batch</div>
+                  <div style="font-weight:700;" id="cdBatch">—</div>
+                </div>
+                <div>
+                  <div style="font-size:11px;color:var(--muted);margin-bottom:3px;">⏳ Duration</div>
+                  <div style="font-weight:700;" id="cdDuration">—</div>
+                </div>
+                <div>
+                  <div style="font-size:11px;color:var(--muted);margin-bottom:3px;">📅 Joining Date</div>
+                  <div style="font-weight:700;color:#38bdf8;" id="cdJoiningDate">—</div>
+                </div>
+                <div>
+                  <div style="font-size:11px;color:var(--muted);margin-bottom:3px;">🏁 End Date</div>
+                  <div style="font-weight:700;color:#00c864;" id="cdEndDate">—</div>
+                </div>
+              </div>
+            </div>
+            <div
+              style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:16px;margin-bottom:14px;">
+              <div
+                style="font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:12px;font-weight:700;">
+                📁 Projects Completed</div>
+              <div id="cdProjectsList" style="display:flex;flex-direction:column;gap:8px;">
+                <div style="color:var(--muted);font-size:13px;">Loading...</div>
+              </div>
+            </div>
+            <div
+              style="background:rgba(177,0,255,0.05);border:1px solid rgba(177,0,255,0.20);border-radius:14px;padding:14px;">
+              <div
+                style="font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:10px;font-weight:700;">
+                📄 Documents Sent</div>
+              <div id="cdDocStatus" style="display:flex;flex-wrap:wrap;gap:8px;">
+                <div style="color:var(--muted);font-size:13px;">Loading...</div>
+              </div>
+            </div>
+          </div>
+        </div>
 
         <!-- UNDO REMOVE INTERN MODAL -->
         <div id="undoRemoveModal" class="modalOverlay">
@@ -2809,6 +2954,7 @@
       if (pageId === "editRequestsPage") await loadEditRequests(!firstTime);
       if (pageId === "sendDocsPage") await loadActiveInterns(!firstTime);
       if (pageId === "removedPage") await loadRemovedInterns(!firstTime);
+      if (pageId === "completedPage") await loadCompletedInterns(!firstTime);
     }
 
     function switchBatchTab(tabId, el) {
@@ -3062,10 +3208,12 @@
       document.getElementById("modalMeta").innerText =
         `ID: ${I.InternID} | Name: ${escapeHTML(I.Name)} | Email: ${I.Email} | Batch: ${I.BatchName} | Duration: ${I.Duration}`;
 
+      // ✅ GAS returns data.stats — not data.submissions
+      const stats = data.stats || {};
       document.getElementById("mStreak").innerText = data.streak || 0;
-      document.getElementById("mTotalSub").innerText = data.submissions.total || 0;
-      document.getElementById("mPending").innerText = data.submissions.pending.length || 0;
-      document.getElementById("mApproved").innerText = data.submissions.approved.length || 0;
+      document.getElementById("mTotalSub").innerText = stats.submitted || 0;
+      document.getElementById("mPending").innerText = stats.pending || 0;
+      document.getElementById("mApproved").innerText = stats.approved || 0;
 
       const tb = document.getElementById("modalHistory");
       tb.innerHTML = "";
@@ -3073,31 +3221,31 @@
       const history = (data.history || []).slice(0, 50);
 
       if (history.length === 0) {
-        tb.innerHTML = `<tr><td colspan="5">No history found ✅</td></tr>`;
+        tb.innerHTML = `<tr><td colspan="5">No history found</td></tr>`;
         return;
       }
 
       history.forEach(h => {
-        const subLink = h.SubmissionLink
-          ? `<a href="${h.SubmissionLink}" target="_blank" style="color:var(--p3);font-weight:900;">Open</a>`
+        // ✅ GAS returns h.Link — not h.SubmissionLink
+        const subLink = h.Link
+          ? `<a href="${h.Link}" target="_blank" style="color:var(--p3);font-weight:900;">Open</a>`
           : "-";
 
         tb.innerHTML += `
-          <tr>
-            <td>${formatDate(h.Date)}</td>
-            <td>
-              <b>${h.Title}</b>
-              <div class="taskDesc">${h.Description || ""}</div>
-              ${h.Description ? `<span class="viewBtn" onclick="toggleDesc(this)">View More</span>` : ""}
-            </td>
-            <td>${h.Status || "-"}</td>
-            <td><b>${h.Grade || "Not Seen"}</b></td>
-            <td>${subLink}</td>
-          </tr>
-        `;
+      <tr>
+        <td>${formatDate(h.Date)}</td>
+        <td>
+          <b>${escapeHTML(h.Title)}</b>
+          <div class="taskDesc">${h.Description || ""}</div>
+          ${h.Description ? `<span class="viewBtn" onclick="toggleDesc(this)">View More</span>` : ""}
+        </td>
+        <td>${h.FinalStatus || "-"}</td>
+        <td><b>${h.Grade || "Not Seen"}</b></td>
+        <td>${subLink}</td>
+      </tr>
+    `;
       });
     }
-
     async function loadIncomplete(silent = false) {
 
       const data = await apiGET({
@@ -5753,6 +5901,307 @@
         msgEl.innerText = "❌ " + (data.message || "Restore failed");
         toast(data.message || "Restore failed ❌", "error");
       }
+    }
+
+    // ══════════════════════════════════════════════════════════
+    //  COMPLETED INTERNS
+    // ══════════════════════════════════════════════════════════
+
+    let _completedAll = [];
+
+    // Calculate end date from joining date + duration months
+    function calcEndDate(joiningDateStr, durationStr) {
+      if (!joiningDateStr) return "";
+      try {
+        const months = parseInt(String(durationStr || "6").match(/\d+/)?.[0] || "6");
+        const d = new Date(joiningDateStr);
+        if (isNaN(d)) return "";
+        d.setMonth(d.getMonth() + months);
+        d.setDate(d.getDate() - 1);
+        return d.toISOString().slice(0, 10);
+      } catch (e) { return ""; }
+    }
+
+    // Determine if an intern is "completed" —
+    // either Completion_Sent or Certificate_Sent column has a date value,
+    // OR their calculated end date has passed
+    function isInternCompleted(intern) {
+      const completionSent = String(intern["Completion_Sent"] || intern["CompletionLetter_Sent"] || "").trim();
+      const certSent = String(intern["Certificate_Sent"] || "").trim();
+      if (completionSent || certSent) return true;
+
+      // Fallback: check if end date is in the past
+      const joiningDate = String(intern.CreatedAt || "").trim();
+      if (joiningDate) {
+        const endDate = calcEndDate(joiningDate, intern.Duration || "6 Months");
+        if (endDate && endDate < new Date().toISOString().slice(0, 10)) return true;
+      }
+      return false;
+    }
+
+    // Get phone from intern or joining sheet match
+    function getInternPhone(intern, joinList) {
+      let phone = String(intern.Phone || intern.Mobile || "").trim();
+      if (!phone && joinList && joinList.length) {
+        const match = joinList.find(j =>
+          (j["Email"] || j.Email || "").trim().toLowerCase() === (intern.Email || "").trim().toLowerCase()
+        );
+        if (match) phone = String(match["Phone"] || match.Phone || "").trim();
+      }
+      return phone || "—";
+    }
+
+    async function loadCompletedInterns(silent = false) {
+      const tbody = document.getElementById("completedTableBody");
+      if (!silent) tbody.innerHTML = '<tr><td colspan="10" style="padding:30px;text-align:center;color:var(--muted);">⏳ Loading...</td></tr>';
+
+      // Fetch all active interns
+      const data = await apiGET({
+        action: "getInternsList",
+        adminId: admin.adminId,
+        adminPass: admin.adminPass,
+        batchId: ""
+      }, silent);
+
+      if (!data || !data.success) {
+        tbody.innerHTML = '<tr><td colspan="10" style="padding:30px;text-align:center;color:#f87171;">' +
+          escapeHTML(data?.message || "Failed to load ❌") + '</td></tr>';
+        return;
+      }
+
+      // Also fetch joining interns for phone numbers
+      let joinList = [];
+      try {
+        const jData = await apiGET({ action: "getJoiningInterns", adminId: admin.adminId, adminPass: admin.adminPass, status: "" }, true);
+        if (jData.success) joinList = jData.joiningInterns || [];
+      } catch (e) { }
+
+      const allInterns = data.interns || [];
+
+      // Filter completed ones
+      _completedAll = allInterns
+        .filter(i => isInternCompleted(i))
+        .map(i => ({
+          ...i,
+          _phone: getInternPhone(i, joinList),
+          _endDate: calcEndDate(String(i.CreatedAt || ""), i.Duration || "6 Months")
+        }));
+
+      populateCompletedBatchFilter(_completedAll);
+      renderCompletedStats(_completedAll);
+      renderCompletedTable(_completedAll);
+    }
+
+    function populateCompletedBatchFilter(list) {
+      const sel = document.getElementById("completedBatchFilter");
+      if (!sel) return;
+      const batches = [...new Set(list.map(x => (x.BatchName || "").trim()).filter(Boolean))].sort();
+      const current = sel.value;
+      sel.innerHTML = '<option value="">All Batches</option>';
+      batches.forEach(b => {
+        const opt = document.createElement("option");
+        opt.value = b; opt.textContent = b;
+        if (b === current) opt.selected = true;
+        sel.appendChild(opt);
+      });
+    }
+
+    function renderCompletedStats(list) {
+      const thisMonth = new Date().toISOString().slice(0, 7);
+      const monthCount = list.filter(x => {
+        const sent = String(x["Completion_Sent"] || x["CompletionLetter_Sent"] || x["Certificate_Sent"] || x._endDate || "");
+        return sent.startsWith(thisMonth);
+      }).length;
+      const six = list.filter(x => String(x.Duration || "").includes("6")).length;
+      const nine = list.filter(x => String(x.Duration || "").includes("9")).length;
+
+      const s = id => document.getElementById(id);
+      if (s("completedStatTotal")) s("completedStatTotal").textContent = list.length;
+      if (s("completedStatMonth")) s("completedStatMonth").textContent = monthCount;
+      if (s("completedStat6M")) s("completedStat6M").textContent = six;
+      if (s("completedStat9M")) s("completedStat9M").textContent = nine;
+    }
+
+    function renderCompletedTable(list) {
+      const tbody = document.getElementById("completedTableBody");
+      if (!tbody) return;
+
+      if (!list || list.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="10" style="padding:48px;text-align:center;color:var(--muted);">' +
+          '<div style="font-size:32px;margin-bottom:10px;">🎓</div>' +
+          '<div style="font-size:14px;">Koi completed intern nahi mila</div></td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = list.map((r, idx) => {
+        const evenRow = idx % 2 === 0 ? "" : "background:rgba(255,255,255,0.02);";
+        const internId = escapeHTML(r.InternID || "—");
+        const name = escapeHTML(r.Name || "—");
+        const email = escapeHTML(r.Email || "—");
+        const phone = escapeHTML(r._phone || "—");
+        const batchName = escapeHTML(r.BatchName || r.BatchID || "—");
+        const duration = escapeHTML(r.Duration || "—");
+        const joiningDate = formatDate(r.CreatedAt || "");
+        const endDate = r._endDate ? formatDate(r._endDate) : "—";
+
+        // Projects: pull from submissions — show count as a badge
+        const projectsJson = JSON.stringify(r);
+
+        return `<tr style="${evenRow}border-bottom:1px solid rgba(255,255,255,0.04);transition:background 0.15s;"
+                    onmouseover="this.style.background='rgba(0,200,100,0.05)'"
+                    onmouseout="this.style.background='${idx % 2 !== 0 ? 'rgba(255,255,255,0.02)' : 'transparent'}'">
+          <td style="padding:11px 14px;white-space:nowrap;">
+            <span style="font-family:monospace;font-size:12px;font-weight:700;
+                         color:#a78bfa;background:rgba(167,139,250,0.1);
+                         padding:3px 8px;border-radius:6px;">${internId}</span>
+          </td>
+          <td style="padding:11px 14px;font-weight:700;color:var(--text);">${name}</td>
+          <td style="padding:11px 14px;color:var(--muted);font-size:12px;">
+            <a href="mailto:${email}" style="color:var(--muted);text-decoration:none;">${email}</a>
+          </td>
+          <td style="padding:11px 14px;color:var(--muted);font-size:12px;white-space:nowrap;">
+            ${phone !== "—" ? `<a href="tel:${phone}" style="color:var(--muted);text-decoration:none;">${phone}</a>` : "—"}
+          </td>
+          <td style="padding:11px 14px;">
+            <div style="font-size:13px;font-weight:600;">${batchName}</div>
+          </td>
+          <td style="padding:11px 14px;color:var(--muted);font-size:12px;white-space:nowrap;">${duration}</td>
+          <td style="padding:11px 14px;font-size:12px;font-weight:600;color:#38bdf8;white-space:nowrap;">${joiningDate || "—"}</td>
+          <td style="padding:11px 14px;white-space:nowrap;">
+            <span style="color:#00c864;font-size:12px;font-weight:700;">${endDate}</span>
+          </td>
+          <td style="padding:11px 14px;">
+            <button onclick='openCompletedProjectsView("${escapeHTML(r.InternID || "")}")'
+              style="background:rgba(177,0,255,0.10);border:1px solid rgba(177,0,255,0.30);
+                     color:#B100FF;border-radius:10px;padding:5px 11px;cursor:pointer;
+                     font-size:11px;font-weight:800;white-space:nowrap;transition:0.2s;"
+              onmouseover="this.style.background='rgba(177,0,255,0.22)'"
+              onmouseout="this.style.background='rgba(177,0,255,0.10)'">
+              📁 View
+            </button>
+          </td>
+          <td style="padding:11px 14px;">
+            <button onclick='openCompletedDetail(${JSON.stringify(JSON.stringify(r))})'
+              style="background:rgba(0,200,100,0.10);border:1px solid rgba(0,200,100,0.30);
+                     color:#00c864;border-radius:10px;padding:6px 12px;cursor:pointer;
+                     font-size:12px;font-weight:800;white-space:nowrap;transition:0.2s;"
+              onmouseover="this.style.background='rgba(0,200,100,0.22)'"
+              onmouseout="this.style.background='rgba(0,200,100,0.10)'">
+              🎓 Details
+            </button>
+          </td>
+        </tr>`;
+      }).join("");
+    }
+
+    function filterCompletedInterns() {
+      const q = (document.getElementById("completedSearch")?.value || "").toLowerCase().trim();
+      const batchFilter = (document.getElementById("completedBatchFilter")?.value || "").trim();
+      let filtered = _completedAll;
+      if (batchFilter) filtered = filtered.filter(r => (r.BatchName || "").trim() === batchFilter);
+      if (q) {
+        filtered = filtered.filter(r =>
+          String(r.InternID || "").toLowerCase().includes(q) ||
+          String(r.Name || "").toLowerCase().includes(q) ||
+          String(r.Email || "").toLowerCase().includes(q) ||
+          String(r.BatchName || "").toLowerCase().includes(q)
+        );
+      }
+      renderCompletedTable(filtered);
+      renderCompletedStats(filtered);
+    }
+
+    // ── Open Completed Detail Modal ──
+    async function openCompletedDetail(internJson) {
+      const r = typeof internJson === "string" ? JSON.parse(internJson) : internJson;
+      document.getElementById("completedDetailModal").classList.add("show");
+
+      // Basic info
+      document.getElementById("cdAvatar").innerText = (r.Name || "?")[0].toUpperCase();
+      document.getElementById("cdName").innerText = r.Name || "—";
+      document.getElementById("cdEmail").innerText = r.Email || "—";
+      document.getElementById("cdInternId").innerText = r.InternID || "—";
+      document.getElementById("cdPhone").innerText = r._phone || "—";
+      document.getElementById("cdBatch").innerText = r.BatchName || r.BatchID || "—";
+      document.getElementById("cdDuration").innerText = r.Duration || "—";
+      document.getElementById("cdJoiningDate").innerText = formatDate(r.CreatedAt || "") || "—";
+      document.getElementById("cdEndDate").innerText = r._endDate ? formatDate(r._endDate) : "—";
+
+      // Doc status
+      const docLabels = {
+        loi: "LOI", offerLetter: "Offer Letter", joiningLetter: "Joining Letter",
+        completion: "Completion Letter", certificate: "Certificate", bestPerformer: "Best Performer"
+      };
+      const docColMap = {
+        loi: "LOI_Sent", offerLetter: "OfferLetter_Sent", joiningLetter: "JoiningLetter_Sent",
+        completion: "CompletionLetter_Sent", certificate: "Certificate_Sent", bestPerformer: "BestPerformer_Sent"
+      };
+      const cdDocEl = document.getElementById("cdDocStatus");
+      cdDocEl.innerHTML = Object.keys(docLabels).map(key => {
+        const colVal = r[docColMap[key]] || r[key + "_Sent"] || "";
+        const sent = String(colVal).trim();
+        if (sent) {
+          return `<span style="display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border-radius:20px;
+            font-size:11px;font-weight:800;background:rgba(0,200,100,0.12);
+            border:1px solid rgba(0,200,100,0.35);color:#00c864;">
+            ✅ ${docLabels[key]}<span style="opacity:0.7;font-weight:400;">${formatDate(sent)}</span></span>`;
+        }
+        return `<span style="display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border-radius:20px;
+          font-size:11px;font-weight:700;background:rgba(255,255,255,0.04);
+          border:1px solid rgba(255,255,255,0.10);color:var(--muted);">
+          — ${docLabels[key]}</span>`;
+      }).join("");
+
+      // Load projects from intern overview
+      document.getElementById("cdProjectsList").innerHTML = '<div style="color:var(--muted);font-size:12px;">⏳ Loading submissions...</div>';
+      try {
+        const ovData = await apiGET({
+          action: "adminInternOverview",
+          adminId: admin.adminId,
+          adminPass: admin.adminPass,
+          internId: r.InternID
+        }, true);
+
+        if (ovData && ovData.success && ovData.history) {
+          const approved = (ovData.history || []).filter(h =>
+            String(h.FinalStatus || "").toLowerCase() === "approved"
+          );
+          if (approved.length === 0) {
+            document.getElementById("cdProjectsList").innerHTML =
+              '<div style="color:var(--muted);font-size:13px;">No approved submissions found</div>';
+          } else {
+            document.getElementById("cdProjectsList").innerHTML = approved.map((h, i) => `
+              <div style="display:flex;align-items:flex-start;gap:10px;padding:10px 12px;
+                border-radius:10px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.07);">
+                <div style="font-size:12px;font-weight:900;color:#B100FF;min-width:24px;margin-top:1px;">${i + 1}.</div>
+                <div style="flex:1;">
+                  <div style="font-size:13px;font-weight:700;">${escapeHTML(h.Title || h.AssignedTaskID || "—")}</div>
+                  <div style="font-size:11px;color:var(--muted);margin-top:3px;">
+                    📅 ${formatDate(h.Date || h.SubmittedAt || "")}
+                    ${h.Grade ? ` · 🏆 Grade: <b style="color:#00c864;">${escapeHTML(h.Grade)}</b>` : ""}
+                  </div>
+                  ${h.Link ? `<a href="${escapeHTML(h.Link)}" target="_blank" style="font-size:11px;color:#B100FF;font-weight:700;margin-top:3px;display:inline-block;">📎 View Submission</a>` : ""}
+                </div>
+              </div>`).join("");
+          }
+        } else {
+          document.getElementById("cdProjectsList").innerHTML =
+            '<div style="color:var(--muted);font-size:13px;">Could not load projects</div>';
+        }
+      } catch (e) {
+        document.getElementById("cdProjectsList").innerHTML =
+          '<div style="color:var(--muted);font-size:13px;">Error loading projects</div>';
+      }
+    }
+
+    async function openCompletedProjectsView(internId) {
+      const intern = _completedAll.find(i => i.InternID === internId);
+      if (!intern) return;
+      openCompletedDetail(JSON.stringify(intern));
+    }
+
+    function closeCompletedDetail() {
+      document.getElementById("completedDetailModal").classList.remove("show");
     }
 
     init();
