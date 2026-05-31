@@ -1262,7 +1262,8 @@
 
                 <label>Email</label>
                 <input id="inEmail" type="email" autocomplete="email" placeholder="intern@gmail.com" />
-                <span id="emailHint" style="font-size:11px;color:var(--muted);margin-top:4px;display:block;min-height:14px;"></span>
+                <span id="emailHint"
+                  style="font-size:11px;color:var(--muted);margin-top:4px;display:block;min-height:14px;"></span>
 
                 <label>Select Batch</label>
                 <select id="inBatch"></select>
@@ -1642,20 +1643,24 @@
             <div style="background:rgba(255,200,0,0.06);border:1px solid rgba(255,200,0,0.25);
                         border-radius:12px;padding:12px;margin-bottom:16px;font-size:13px;
                         color:#f0c040;line-height:1.6;">
-              ⚠️ Yeh intern wapas active ho jayega. Unka <b>InternID aur Batch</b> restore ho jayega aur woh apna kaam continue kar sakenge.
+              ⚠️ Yeh intern wapas active ho jayega. Unka <b>InternID aur Batch</b> restore ho jayega aur woh apna kaam
+              continue kar sakenge.
               Removed Interns list se bhi record hata diya jayega.
             </div>
 
             <div style="margin-bottom:14px;">
-              <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:6px;">Select Batch (restore mein)</label>
+              <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:6px;">Select Batch (restore
+                mein)</label>
               <select id="undoBatchSelect" style="width:100%;background:#1a1a24;border:1px solid rgba(255,255,255,0.1);
                        color:var(--text);padding:8px 12px;border-radius:10px;"></select>
             </div>
 
-            <div id="undoMsg" style="font-size:12px;min-height:18px;margin-bottom:10px;text-align:center;color:var(--danger);"></div>
+            <div id="undoMsg"
+              style="font-size:12px;min-height:18px;margin-bottom:10px;text-align:center;color:var(--danger);"></div>
 
             <div style="display:flex;gap:10px;">
-              <button class="btn ghost" style="flex:0 0 auto;padding:12px 16px;" onclick="closeUndoRemoveModal()">Cancel</button>
+              <button class="btn ghost" style="flex:0 0 auto;padding:12px 16px;"
+                onclick="closeUndoRemoveModal()">Cancel</button>
               <button class="btn primary" style="flex:1;padding:13px;font-size:14px;font-weight:800;
                        background:rgba(0,200,100,0.15);border-color:rgba(0,200,100,0.4);color:#00c864;"
                 onclick="confirmUndoRemove()">
@@ -1917,6 +1922,18 @@
                   </select>
                 </div>
 
+                <div class="vfFieldGroup">
+                  <label>💰 Stipend</label>
+                  <select id="vfStipend" style="background:#1a1a24;border:1px solid rgba(255,255,255,0.1);
+           color:var(--text);padding:8px 12px;border-radius:10px;">
+                    <option value="Unpaid">Unpaid</option>
+                    <option value="₹2,000/month">₹2,000/month</option>
+                    <option value="₹3,000/month">₹3,000/month</option>
+                    <option value="₹5,000/month">₹5,000/month</option>
+                    <option value="Performance Based">Performance Based</option>
+                  </select>
+                </div>
+
                 <!-- End Date — full width -->
                 <div class="vfEndDateBox">
                   <div>
@@ -1963,6 +1980,17 @@
                 <div class="vfFieldGroup">
                   <label>📅 Current Date</label>
                   <input id="loiCurrentDate" type="date" />
+                </div>
+
+                <div class="vfFieldGroup">
+                  <label>📞 Mobile No.</label>
+                  <input id="loiMobile" type="tel" placeholder="+91 XXXXX XXXXX" />
+                </div>
+
+
+                <div class="vfFieldGroup">
+                  <label>🏫 College Name</label>
+                  <input id="loiCollege" type="text" placeholder="e.g. RTMNU, Nagpur" />
                 </div>
 
                 <div class="vfFieldGroup">
@@ -2047,6 +2075,11 @@
                 <div class="vfFieldGroup">
                   <label>👤 Intern Name</label>
                   <input id="jlFullName" type="text" placeholder="Intern Full Name" />
+                </div>
+
+                <div class="vfFieldGroup">
+                  <label>📞 Mobile No.</label>
+                  <input id="jlMobile" type="tel" placeholder="+91 XXXXX XXXXX" />
                 </div>
 
                 <div class="vfFieldGroup">
@@ -2205,40 +2238,59 @@
 
               </div>
 
-              <!-- 4 Projects Section -->
-              <div style="font-size:13px;font-weight:800;margin-bottom:10px;color:#B100FF;">📁 Select 4 Projects</div>
+              <!-- Projects Section (1–4 dynamic) -->
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+                <div style="font-size:13px;font-weight:800;color:#B100FF;">📁 Projects</div>
+                <div style="display:flex;align-items:center;gap:8px;">
+                  <span style="font-size:12px;color:var(--muted);">Kitne projects?</span>
+                  <div style="display:flex;gap:4px;" id="clProjectCountBtns">
+                    <button onclick="setClProjectCount(1)" id="clPCBtn1"
+                      style="width:28px;height:28px;border-radius:8px;border:1px solid rgba(124,0,255,0.3);
+                      background:rgba(124,0,255,0.08);color:var(--text);font-size:12px;font-weight:800;
+                      cursor:pointer;transition:0.2s;">1</button>
+                    <button onclick="setClProjectCount(2)" id="clPCBtn2"
+                      style="width:28px;height:28px;border-radius:8px;border:1px solid rgba(124,0,255,0.3);
+                      background:rgba(124,0,255,0.08);color:var(--text);font-size:12px;font-weight:800;
+                      cursor:pointer;transition:0.2s;">2</button>
+                    <button onclick="setClProjectCount(3)" id="clPCBtn3"
+                      style="width:28px;height:28px;border-radius:8px;border:1px solid rgba(124,0,255,0.3);
+                      background:rgba(124,0,255,0.08);color:var(--text);font-size:12px;font-weight:800;
+                      cursor:pointer;transition:0.2s;">3</button>
+                    <button onclick="setClProjectCount(4)" id="clPCBtn4"
+                      style="width:28px;height:28px;border-radius:8px;border:1px solid rgba(124,0,255,0.5);
+                      background:rgba(124,0,255,0.25);color:#B100FF;font-size:12px;font-weight:800;
+                      cursor:pointer;transition:0.2s;">4</button>
+                  </div>
+                </div>
+              </div>
               <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px;" id="clProjectsWrap">
-
-                <div style="display:flex;align-items:center;gap:10px;">
-                  <div style="width:24px;height:24px;border-radius:50%;background:rgba(124,0,255,0.15);
-                    border:1px solid rgba(124,0,255,0.3);display:flex;align-items:center;justify-content:center;
-                    font-size:11px;font-weight:900;color:#B100FF;flex-shrink:0;">1</div>
-                  <input id="clProject1" type="text" placeholder="Project 1 name" style="flex:1;font-size:13px;" />
-                </div>
-
-                <div style="display:flex;align-items:center;gap:10px;">
-                  <div style="width:24px;height:24px;border-radius:50%;background:rgba(124,0,255,0.15);
-                    border:1px solid rgba(124,0,255,0.3);display:flex;align-items:center;justify-content:center;
-                    font-size:11px;font-weight:900;color:#B100FF;flex-shrink:0;">2</div>
-                  <input id="clProject2" type="text" placeholder="Project 2 name" style="flex:1;font-size:13px;" />
-                </div>
-
-                <div style="display:flex;align-items:center;gap:10px;">
-                  <div style="width:24px;height:24px;border-radius:50%;background:rgba(124,0,255,0.15);
-                    border:1px solid rgba(124,0,255,0.3);display:flex;align-items:center;justify-content:center;
-                    font-size:11px;font-weight:900;color:#B100FF;flex-shrink:0;">3</div>
-                  <input id="clProject3" type="text" placeholder="Project 3 name" style="flex:1;font-size:13px;" />
-                </div>
-
-                <div style="display:flex;align-items:center;gap:10px;">
-                  <div style="width:24px;height:24px;border-radius:50%;background:rgba(124,0,255,0.15);
-                    border:1px solid rgba(124,0,255,0.3);display:flex;align-items:center;justify-content:center;
-                    font-size:11px;font-weight:900;color:#B100FF;flex-shrink:0;">4</div>
-                  <input id="clProject4" type="text" placeholder="Project 4 name" style="flex:1;font-size:13px;" />
-                </div>
-
+                <!-- Dynamically filled by JS -->
               </div>
 
+
+              <!-- Reference Number -->
+              <div class="vfFieldGroup" style="margin-bottom:14px;">
+                <label>📋 Reference Number</label>
+                <div style="background:rgba(124,0,255,0.07);border:1px solid rgba(124,0,255,0.20);
+                  border-radius:14px;padding:14px;">
+                  <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+                    <div style="font-size:13px;font-weight:800;color:#B100FF;" id="clRefAutoPrefix">
+                      COD/COMP/TC
+                    </div>
+                    <input id="clRefSerial" type="number" min="1" max="9999" placeholder="01"
+                      oninput="buildClRefNo()"
+                      style="width:80px;font-size:13px;background:#1a1a24;border:1px solid rgba(255,255,255,0.1);
+                      color:var(--text);padding:8px 12px;border-radius:10px;" />
+                    <input id="clRefNo" type="hidden" />
+                  </div>
+                  <div style="margin-top:8px;font-size:12px;font-weight:800;color:#B100FF;">
+                    Preview: <span id="clRefPreview">—</span>
+                  </div>
+                  <div style="font-size:11px;color:var(--muted);margin-top:4px;">
+                    Branch batch se auto detect hoga · Sirf serial number daalo
+                  </div>
+                </div>
+              </div>
 
               <div id="clVfMsg"
                 style="font-size:12px;color:var(--danger);min-height:16px;margin-bottom:10px;text-align:center;"></div>
@@ -3899,19 +3951,38 @@
       };
 
       list.forEach((i, idx) => {
-        const docStatus = i.docStatus || {};
+        // Exact column names from sheet (verified via console)
+        const DOC_SHEET_COLS = {
+          loi: "LOI_Sent",
+          offerLetter: "OfferLetter_Sent",
+          joiningLetter: "JoiningLetter_Sent",
+          completion: "CompletionLetter_Sent",
+          certificate: "Certificate_Sent",
+          bestPerformer: "BestPerformer_Sent"
+        };
+
+        // Build docStatus from actual sheet columns on intern object
+        const docStatus = {};
+        Object.entries(DOC_SHEET_COLS).forEach(([key, col]) => {
+          const val = i[col];
+          docStatus[key] = (val !== undefined && val !== null && String(val).trim() !== "")
+            ? String(val).trim() : "";
+        });
+
         const sentBadges = Object.entries(docStatus)
-          .filter(([, val]) => val && String(val).trim() !== "")
-          .map(([key, val]) => {
-            const shortDate = String(val).replace("✅ ", "").trim();
+          .filter(([, val]) => val !== "")
+          .map(([key]) => {
             return `<span style="display:inline-block;padding:2px 7px;border-radius:20px;font-size:10px;font-weight:700;
                   background:rgba(0,200,100,0.12);border:1px solid rgba(0,200,100,0.35);color:#00c864;
-                  white-space:nowrap;" title="Sent: ${shortDate}">
+                  white-space:nowrap;">
                   ✅ ${DOC_LABEL_MAP[key] || key}
                 </span>`;
           }).join(" ");
 
-        const allSent = Object.values(docStatus).every(v => v && String(v).trim() !== "");
+        // allSent: sirf tabhi true jab SAARE 6 docs sent hon (sentCount > 0 bhi zaruri)
+        const sentCount = Object.values(docStatus).filter(v => v !== "").length;
+        const allSent = sentCount === Object.keys(docStatus).length && sentCount > 0;
+
         const btnStyle = allSent
           ? `background:rgba(100,100,100,0.08);border-color:rgba(100,100,100,0.25);color:var(--muted);cursor:not-allowed;`
           : ``;
@@ -4011,118 +4082,118 @@
     }
 
     async function openSendDocModal(internJson) {
-  const i = typeof internJson === "string" ? JSON.parse(internJson) : internJson;
-  CURRENT_DOC_INTERN = i;
-  GENERATED_DOC_LINK = "";
-  SELECTED_DOCS = [];
-  VERIFIED_DOC_DATA = {};
-  window._currentDocStatus = {};
+      const i = typeof internJson === "string" ? JSON.parse(internJson) : internJson;
+      CURRENT_DOC_INTERN = i;
+      GENERATED_DOC_LINK = "";
+      SELECTED_DOCS = [];
+      VERIFIED_DOC_DATA = {};
+      window._currentDocStatus = {};
 
-  // Reset all rows to default state
-  document.querySelectorAll(".docOptRow").forEach(row => {
-    row.classList.remove("sent", "selected");
-    row.style.opacity = "";
-    row.style.cursor = "";
-    row.style.borderColor = "";
-    row.style.background = "";
-    row.style.pointerEvents = "";
-    const chk = row.querySelector("input[type=checkbox]");
-    if (chk) { chk.checked = false; chk.disabled = false; }
-    const badge = row.querySelector(".sentBadgeWrap");
-    if (badge) badge.style.display = "none";
-  });
-
-  // Fill intern info card
-  document.getElementById("docInternAvatar").innerText = (i.Name || "?")[0].toUpperCase();
-  document.getElementById("docInternName").innerText = i.Name || "-";
-  document.getElementById("docInternEmail").innerText = i.Email || "-";
-  document.getElementById("docInternBatch").innerText =
-    `${i.BatchName || ""} · ${i.Duration || ""} · ID: ${i.InternID}`;
-  document.getElementById("docModalMeta").innerText = `Intern: ${i.Email}`;
-  document.getElementById("docEmailTo").value = i.Email || "";
-  document.getElementById("docSelectedSummary").style.display = "none";
-  document.getElementById("docStep1Msg").innerText = "";
-  document.getElementById("docSendMsg").innerText = "";
-
-  _showDocStep(1);
-  document.getElementById("sendDocModal").classList.add("show");
-
-  // Disable proceed button while loading status
-  const proceedBtn = document.querySelector("#docStep1 .btn.primary");
-  if (proceedBtn) {
-    proceedBtn.disabled = true;
-    proceedBtn.innerText = "⏳ Checking sent documents...";
-    proceedBtn.style.background = "";
-    proceedBtn.style.borderColor = "";
-    proceedBtn.style.color = "";
-  }
-
-  try {
-    const statusData = await apiGET({
-      action: "getInternDocStatus",
-      adminId: admin.adminId,
-      adminPass: admin.adminPass,
-      internId: i.InternID
-    }, true);
-
-    if (statusData.success && statusData.status) {
-      window._currentDocStatus = statusData.status;
-
-      let unsentCount = 0;
-
+      // Reset all rows to default state
       document.querySelectorAll(".docOptRow").forEach(row => {
-        const key = row.dataset.key;
-        const val = statusData.status[key];
+        row.classList.remove("sent", "selected");
+        row.style.opacity = "";
+        row.style.cursor = "";
+        row.style.borderColor = "";
+        row.style.background = "";
+        row.style.pointerEvents = "";
         const chk = row.querySelector("input[type=checkbox]");
-        const badgeWrap = row.querySelector(".sentBadgeWrap");
-        const dateSpan = row.querySelector(".sentDate");
-
-        if (val && String(val).trim() !== "") {
-          // Already sent — lock this row completely
-          row.classList.add("sent");
-          row.style.opacity = "0.6";
-          row.style.cursor = "not-allowed";
-          row.style.borderColor = "rgba(0,200,100,0.25)";
-          row.style.background = "rgba(0,200,100,0.04)";
-          row.style.pointerEvents = "none";
-          if (chk) { chk.disabled = true; chk.checked = false; }
-          if (badgeWrap) badgeWrap.style.display = "block";
-          if (dateSpan) dateSpan.innerText = String(val).replace("✅ ", "").trim();
-        } else {
-          // Not yet sent — enable
-          row.style.pointerEvents = "";
-          unsentCount++;
-        }
+        if (chk) { chk.checked = false; chk.disabled = false; }
+        const badge = row.querySelector(".sentBadgeWrap");
+        if (badge) badge.style.display = "none";
       });
 
-      if (unsentCount === 0) {
-        // All documents already sent
-        document.getElementById("docStep1Msg").innerHTML =
-          `<span style="color:#00c864;font-weight:800;">✅ Saare documents pehle se send ho chuke hain.</span>`;
-        if (proceedBtn) {
-          proceedBtn.disabled = true;
-          proceedBtn.innerText = "✅ All Documents Already Sent";
-          proceedBtn.style.background = "rgba(0,200,100,0.10)";
-          proceedBtn.style.borderColor = "rgba(0,200,100,0.30)";
-          proceedBtn.style.color = "#00c864";
+      // Fill intern info card
+      document.getElementById("docInternAvatar").innerText = (i.Name || "?")[0].toUpperCase();
+      document.getElementById("docInternName").innerText = i.Name || "-";
+      document.getElementById("docInternEmail").innerText = i.Email || "-";
+      document.getElementById("docInternBatch").innerText =
+        `${i.BatchName || ""} · ${i.Duration || ""} · ID: ${i.InternID}`;
+      document.getElementById("docModalMeta").innerText = `Intern: ${i.Email}`;
+      document.getElementById("docEmailTo").value = i.Email || "";
+      document.getElementById("docSelectedSummary").style.display = "none";
+      document.getElementById("docStep1Msg").innerText = "";
+      document.getElementById("docSendMsg").innerText = "";
+
+      _showDocStep(1);
+      document.getElementById("sendDocModal").classList.add("show");
+
+      // Disable proceed button while loading status
+      const proceedBtn = document.querySelector("#docStep1 .btn.primary");
+      if (proceedBtn) {
+        proceedBtn.disabled = true;
+        proceedBtn.innerText = "⏳ Checking sent documents...";
+        proceedBtn.style.background = "";
+        proceedBtn.style.borderColor = "";
+        proceedBtn.style.color = "";
+      }
+
+      try {
+        const statusData = await apiGET({
+          action: "getInternDocStatus",
+          adminId: admin.adminId,
+          adminPass: admin.adminPass,
+          internId: i.InternID
+        }, true);
+
+        if (statusData.success && statusData.status) {
+          window._currentDocStatus = statusData.status;
+
+          let unsentCount = 0;
+
+          document.querySelectorAll(".docOptRow").forEach(row => {
+            const key = row.dataset.key;
+            const val = statusData.status[key];
+            const chk = row.querySelector("input[type=checkbox]");
+            const badgeWrap = row.querySelector(".sentBadgeWrap");
+            const dateSpan = row.querySelector(".sentDate");
+
+            if (val && String(val).trim() !== "") {
+              // Already sent — lock this row completely
+              row.classList.add("sent");
+              row.style.opacity = "0.6";
+              row.style.cursor = "not-allowed";
+              row.style.borderColor = "rgba(0,200,100,0.25)";
+              row.style.background = "rgba(0,200,100,0.04)";
+              row.style.pointerEvents = "none";
+              if (chk) { chk.disabled = true; chk.checked = false; }
+              if (badgeWrap) badgeWrap.style.display = "block";
+              if (dateSpan) dateSpan.innerText = String(val).replace("✅ ", "").trim();
+            } else {
+              // Not yet sent — enable
+              row.style.pointerEvents = "";
+              unsentCount++;
+            }
+          });
+
+          if (unsentCount === 0) {
+            // All documents already sent
+            document.getElementById("docStep1Msg").innerHTML =
+              `<span style="color:#00c864;font-weight:800;">✅ Saare documents pehle se send ho chuke hain.</span>`;
+            if (proceedBtn) {
+              proceedBtn.disabled = true;
+              proceedBtn.innerText = "✅ All Documents Already Sent";
+              proceedBtn.style.background = "rgba(0,200,100,0.10)";
+              proceedBtn.style.borderColor = "rgba(0,200,100,0.30)";
+              proceedBtn.style.color = "#00c864";
+            }
+            return;
+          }
         }
-        return;
+      } catch (e) {
+        console.log("Doc status fetch failed:", e);
+        window._currentDocStatus = {};
+      }
+
+      // Enable proceed button
+      if (proceedBtn) {
+        proceedBtn.disabled = false;
+        proceedBtn.innerText = "⚡ Create Documents → Get Link";
+        proceedBtn.style.background = "";
+        proceedBtn.style.borderColor = "";
+        proceedBtn.style.color = "";
       }
     }
-  } catch (e) {
-    console.log("Doc status fetch failed:", e);
-    window._currentDocStatus = {};
-  }
-
-  // Enable proceed button
-  if (proceedBtn) {
-    proceedBtn.disabled = false;
-    proceedBtn.innerText = "⚡ Create Documents → Get Link";
-    proceedBtn.style.background = "";
-    proceedBtn.style.borderColor = "";
-    proceedBtn.style.color = "";
-  }
-}
 
     function closeSendDocModal() {
       document.getElementById("sendDocModal").classList.remove("show");
@@ -4174,21 +4245,19 @@
     }
 
     // ── Joining Letter Verify Step open ──
-    function openJlVerifyStep() {
+    async function openJlVerifyStep() {
       const i = CURRENT_DOC_INTERN;
       if (!i) return;
 
       const today = new Date();
       const todayStr = today.toISOString().slice(0, 10);
 
-      const idNum = (i.InternID || "").replace(/\D/g, "");
-      const refNo = `COD/JL/${today.getFullYear()}/${idNum || "0001"}`;
-
       document.getElementById("jlRefAutoPrefix").innerText = "AST26-27/INS/ME/TC";
       document.getElementById("jlRefSerial").value = "";
       document.getElementById("jlRefPreview").innerText = "— Serial number daalo";
       document.getElementById("jlRefNo").value = "";
       buildJlRefNo();
+
       document.getElementById("jlFullName").value = i.Name || "";
       document.getElementById("jlCurrentDate").value = todayStr;
       document.getElementById("jlVfMsg").innerText = "";
@@ -4197,8 +4266,31 @@
       if (!joiningDate) joiningDate = todayStr;
       document.getElementById("jlJoiningDate").value = joiningDate;
 
+      // FIX 5b: Auto-fetch mobile
+      let mobile = i.Phone || i.Mobile || "";
+      if (!mobile) {
+        try {
+          const jData = await apiGET({
+            action: "getJoiningInterns",
+            adminId: admin.adminId,
+            adminPass: admin.adminPass,
+            status: ""
+          }, true);
+          if (jData.success && jData.joiningInterns) {
+            const match = jData.joiningInterns.find(j =>
+              (j["Email"] || j.Email || "").trim().toLowerCase() ===
+              (i.Email || "").trim().toLowerCase()
+            );
+            if (match) mobile = match["Phone"] || match.Phone || "";
+          }
+        } catch (e) { /* silent */ }
+      }
+
+      if (document.getElementById("jlMobile")) document.getElementById("jlMobile").value = mobile;
+
       _showDocStep("verifyJoining");
     }
+
 
     // ── Joining Letter Verify Back ──
     function docJlVerifyBack() {
@@ -4211,6 +4303,8 @@
       const fullName = document.getElementById("jlFullName").value.trim();
       const currentDate = document.getElementById("jlCurrentDate").value;
       const joiningDate = document.getElementById("jlJoiningDate").value;
+      const mobile = document.getElementById("jlMobile")?.value.trim() || ""; // FIX 3
+
       const msgEl = document.getElementById("jlVfMsg");
 
       if (!refNo) { msgEl.innerText = "⚠️ Reference serial number daalo"; return; }
@@ -4222,7 +4316,8 @@
 
       VERIFIED_DOC_DATA = {
         docType: "joiningLetter",
-        refNo, fullName, currentDate, joiningDate
+        refNo, fullName, currentDate, joiningDate,
+        mobile  // FIX 3
       };
 
       proceedToDocStep2();
@@ -4292,7 +4387,7 @@
       const today = new Date();
       const todayStr = today.toISOString().slice(0, 10);
 
-      document.getElementById("clFullName").value = i.Name || "";
+      document.getElementById("clFullName").value = toProperCase(i.Name || "");
       document.getElementById("clRole").value = "Software Development Intern";
       document.getElementById("clCollege").value = i.College || "";
       document.getElementById("clVfMsg").innerText = "⏳ Intern ke projects aur college load ho rahe hain...";
@@ -4316,8 +4411,9 @@
         }, true);
 
         if (data.success && data.history) {
+          // FIX: backend 'FinalStatus' return karta hai, 'Status' nahi
           const approvedTasks = data.history.filter(h =>
-            String(h.Status).toLowerCase().includes("approved") && h.Title
+            (String(h.FinalStatus || h.Status || "").toLowerCase().includes("approved")) && h.Title
           );
 
           if (approvedTasks.length > 0) {
@@ -4326,7 +4422,8 @@
                 `<option value="${escapeHTML(task.Title)}">${escapeHTML(task.Title)}</option>`
               );
             });
-            document.getElementById("clVfMsg").innerText = "";
+            document.getElementById("clVfMsg").innerText =
+              "✅ " + approvedTasks.length + " approved task" + (approvedTasks.length > 1 ? "s" : "") + " mili — dropdown se select karo.";
           } else {
             document.getElementById("clVfMsg").innerText = "⚠️ Koi approved task nahi mila. Manually type karo.";
           }
@@ -4358,22 +4455,13 @@
         } catch (e) { /* college auto-fill failed silently */ }
       }
 
-      const optHtml = projectOptions.join("");
+      // Store project options globally so setClProjectCount can use them
+      window._clProjectOptions = projectOptions;
 
-      // ── Replace 4 text inputs with dropdowns ──
-      const wrap = document.getElementById("clProjectsWrap");
-      wrap.innerHTML = [1, 2, 3, 4].map(n => `
-    <div style="display:flex;align-items:center;gap:10px;">
-      <div style="width:24px;height:24px;border-radius:50%;background:rgba(124,0,255,0.15);
-        border:1px solid rgba(124,0,255,0.3);display:flex;align-items:center;justify-content:center;
-        font-size:11px;font-weight:900;color:#B100FF;flex-shrink:0;">${n}</div>
-      <select id="clProject${n}" style="flex:1;font-size:13px;background:#1a1a24;
-        border:1px solid rgba(255,255,255,0.1);color:var(--text);
-        padding:8px 12px;border-radius:10px;">
-        ${optHtml}
-      </select>
-    </div>
-  `).join("");
+      // Default 4 projects, render using helper
+      window._clProjectCount = 4;
+      renderClProjects(projectOptions);
+      setClProjectCount(4);
 
       // ── Session + Branch preview ──
       const yr = today.getFullYear();
@@ -4415,6 +4503,53 @@
       document.getElementById("clDurationDisplay").innerText = dur + " Months";
     }
 
+    // ── Completion Letter: set how many projects (1-4) ──
+    function setClProjectCount(n) {
+      window._clProjectCount = n;
+      // Update button styles
+      [1,2,3,4].forEach(k => {
+        const btn = document.getElementById("clPCBtn" + k);
+        if (!btn) return;
+        if (k === n) {
+          btn.style.background = "rgba(124,0,255,0.35)";
+          btn.style.borderColor = "rgba(124,0,255,0.7)";
+          btn.style.color = "#B100FF";
+        } else {
+          btn.style.background = "rgba(124,0,255,0.08)";
+          btn.style.borderColor = "rgba(124,0,255,0.3)";
+          btn.style.color = "var(--text)";
+        }
+      });
+      renderClProjects(window._clProjectOptions || ["<option value=''>— Select Project —</option>"]);
+    }
+
+    // ── Render project rows based on current count ──
+    function renderClProjects(projectOptions) {
+      const count = window._clProjectCount || 4;
+      const optHtml = (projectOptions || []).join("");
+      const useDropdown = projectOptions && projectOptions.length > 1;
+      const wrap = document.getElementById("clProjectsWrap");
+      if (!wrap) return;
+
+      wrap.innerHTML = Array.from({length: count}, (_, idx) => {
+        const n = idx + 1;
+        const field = useDropdown
+          ? `<select id="clProject${n}" style="flex:1;font-size:13px;background:#1a1a24;
+              border:1px solid rgba(255,255,255,0.1);color:var(--text);
+              padding:8px 12px;border-radius:10px;">${optHtml}</select>`
+          : `<input id="clProject${n}" type="text" placeholder="Project ${n} name"
+              style="flex:1;font-size:13px;background:#1a1a24;border:1px solid rgba(255,255,255,0.1);
+              color:var(--text);padding:8px 12px;border-radius:10px;" />`;
+        return `
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div style="width:24px;height:24px;border-radius:50%;background:rgba(124,0,255,0.15);
+            border:1px solid rgba(124,0,255,0.3);display:flex;align-items:center;justify-content:center;
+            font-size:11px;font-weight:900;color:#B100FF;flex-shrink:0;">${n}</div>
+          ${field}
+        </div>`;
+      }).join("");
+    }
+
     // ── Completion Letter Verify Back ──
     function docClVerifyBack() { _showDocStep(1); }
 
@@ -4426,19 +4561,31 @@
       const role = document.getElementById("clRole").value.trim();
       const duration = document.getElementById("clDuration").value;
       const joiningDate = document.getElementById("clJoiningDate").value;
-      const p1 = document.getElementById("clProject1").value.trim();
-      const p2 = document.getElementById("clProject2").value.trim();
-      const p3 = document.getElementById("clProject3").value.trim();
-      const p4 = document.getElementById("clProject4").value.trim();
       const msgEl = document.getElementById("clVfMsg");
       const serial = document.getElementById("clRefSerial")?.value.trim() || "";
 
+      const count = window._clProjectCount || 4;
+
+      // Collect only active project fields
+      const projects = [];
+      for (let n = 1; n <= count; n++) {
+        const el = document.getElementById("clProject" + n);
+        projects.push(el ? el.value.trim() : "");
+      }
+      // Pad remaining slots with ""
+      while (projects.length < 4) projects.push("");
+      const [p1, p2, p3, p4] = projects;
 
       if (!fullName) { msgEl.innerText = "⚠️ Intern Name required"; return; }
       if (!college) { msgEl.innerText = "⚠️ College Name required"; return; }
       if (!role) { msgEl.innerText = "⚠️ Role required"; return; }
       if (!joiningDate) { msgEl.innerText = "⚠️ Joining Date required"; return; }
-      if (!p1 || !p2 || !p3 || !p4) { msgEl.innerText = "⚠️ Sabhi 4 projects fill karein"; return; }
+
+      const missing = projects.slice(0, count).some(p => !p);
+      if (missing) {
+        msgEl.innerText = "⚠️ Sabhi " + count + " project" + (count > 1 ? "s" : "") + " fill karein";
+        return;
+      }
       if (!serial) { msgEl.innerText = "⚠️ Reference serial number daalo"; return; }
 
       msgEl.innerText = "";
@@ -4482,7 +4629,7 @@
         return;
       }
 
-      
+
       document.getElementById("docStep1Msg").innerText = "";
 
       // Already-sent docs filter karo
@@ -4537,10 +4684,39 @@
       let joiningDate = toDateInputValue(i.CreatedAt || "");
       if (!joiningDate) joiningDate = todayStr;
       document.getElementById("loiJoiningDate").value = joiningDate;
-
       calcLoiEndDate();
+
+      // FIX 5: Auto-fetch mobile + college from joining sheet
+      let mobile = i.Phone || i.Mobile || "";
+      let college = i.College || "";
+
+      if (!mobile || !college) {
+        try {
+          const jData = await apiGET({
+            action: "getJoiningInterns",
+            adminId: admin.adminId,
+            adminPass: admin.adminPass,
+            status: ""
+          }, true);
+          if (jData.success && jData.joiningInterns) {
+            const match = jData.joiningInterns.find(j =>
+              (j["Email"] || j.Email || "").trim().toLowerCase() ===
+              (i.Email || "").trim().toLowerCase()
+            );
+            if (match) {
+              if (!mobile) mobile = match["Phone"] || match.Phone || "";
+              if (!college) college = match["College"] || match.College || "";
+            }
+          }
+        } catch (e) { /* silent */ }
+      }
+
+      if (document.getElementById("loiMobile")) document.getElementById("loiMobile").value = mobile;
+      if (document.getElementById("loiCollege")) document.getElementById("loiCollege").value = college;
+
       _showDocStep("verifyLoi");
     }
+
 
     // ── LOI End Date auto-calculate ──
     function calcLoiEndDate() {
@@ -4574,6 +4750,9 @@
       const role = document.getElementById("loiRole").value.trim();
       const joiningDate = document.getElementById("loiJoiningDate").value;
       const duration = document.getElementById("loiDuration").value;
+      const mobile = document.getElementById("loiMobile")?.value.trim() || ""; // FIX 2
+      const college = document.getElementById("loiCollege")?.value.trim() || ""; // FIX 2
+
       const msgEl = document.getElementById("loiVfMsg");
 
       if (!fullName) { msgEl.innerText = "⚠️ Full Name required"; return; }
@@ -4591,11 +4770,18 @@
       VERIFIED_DOC_DATA = {
         docType: "loi",
         fullName, currentDate, role,
-        joiningDate, duration, endDate: endDateStr
+        joiningDate, duration, endDate: endDateStr,
+        mobile,   // FIX 2
+        college   // FIX 2
       };
 
       proceedToDocStep2();
     }
+
+    function toProperCase(str) {
+  if (!str) return "";
+  return String(str).toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
+}
 
     // ── Open Verify Step and pre-fill fields ──
     async function openVerifyStep() {
@@ -4690,6 +4876,7 @@
       const role = document.getElementById("vfRole").value.trim();
       const joiningDate = document.getElementById("vfJoiningDate").value;
       const duration = document.getElementById("vfDuration").value;
+      const stipend = document.getElementById("vfStipend")?.value || "Unpaid"; // FIX 1
 
       const msgEl = document.getElementById("vfMsg");
 
@@ -4708,12 +4895,12 @@
 
       VERIFIED_DOC_DATA = {
         refNo, fullName, currentDate, mobile, email, role,
-        joiningDate, duration, endDate: endDateStr
+        joiningDate, duration, endDate: endDateStr,
+        stipend   // FIX 1: stipend added
       };
 
       proceedToDocStep2();
     }
-
     // ── Proceed to Step 2 (link step) after verify (or directly) ──
     function proceedToDocStep2() {
       const linkEl = document.getElementById("docGeneratedLink");
@@ -5005,15 +5192,14 @@
       const msgEl = document.getElementById("warnMsg");
       msgEl.innerText = "📨 Sending warning email...";
 
+      // ✅ FIX
+      const preview = WARN_PREVIEWS[CURRENT_WARN_LEVEL]?.[reason] || "";
       const data = await apiPOST({
         action: "warnIntern",
         adminId: admin.adminId,
         adminPass: admin.adminPass,
         internId: CURRENT_WARN_INTERN.InternID,
-        internName: CURRENT_WARN_INTERN.Name,
-        internEmail: CURRENT_WARN_INTERN.Email,
-        warnLevel: CURRENT_WARN_LEVEL,
-        reason
+        message: preview   // ← backend "message" field expect karta hai
       });
 
       if (data.success) {
@@ -5487,7 +5673,7 @@
       // Try to pre-select intern's original batch
       for (let i = 0; i < batchSel.options.length; i++) {
         if (batchSel.options[i].text.trim() === (r.BatchName || "").trim() ||
-            batchSel.options[i].value === (r.BatchID || "")) {
+          batchSel.options[i].value === (r.BatchID || "")) {
           batchSel.selectedIndex = i;
           break;
         }

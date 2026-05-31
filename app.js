@@ -1,6 +1,6 @@
 // ✅ YOUR WEB APP URL (must end with /exec)
 const API_URL =
-  "https://script.google.com/macros/s/AKfycbyNKxS2og3kHyfUmR_diGqJgxl_13FwWKVjHP24rDCbNToAGTsfC8YCO7WdENCYAD4Z/exec";
+  "https://script.google.com/macros/s/AKfycbxlJPuo-vIKTG6yrBLkry_t59pV9pfv9bFrppPKZWBTSiBZvhhpIuG6_YSmbH1nQaTX/exec";
 
 // ===============================
 // ⚡ CACHE LAYER
@@ -132,13 +132,105 @@ function logout() {
 }
 
 // ===============================
+// Request Queue — simultaneous requests throttle karo
+// GAS 302 redirect issue fix: ek saath max 3 requests
+// ===============================
+const _requestQueue = [];
+let _activeRequests = 0;
+const MAX_CONCURRENT = 3;
+
+function _processQueue() {
+  if (_activeRequests >= MAX_CONCURRENT || _requestQueue.length === 0) return;
+  const { params, silent, resolve } = _requestQueue.shift();
+  _activeRequests++;
+  _jsonpGET(params, silent).then(data => {
+    _activeRequests--;
+    resolve(data);
+    _processQueue();
+  });
+}
+
+// ===============================
+// JSONP Helper — CORS bypass for GET
+// Google Apps Script ContentService CORS
+// headers support nahi karta, isliye JSONP
+// use karte hain GET requests ke liye.
+// onerror pe fetch fallback — GAS redirect handle karta hai
+// ===============================
+function _jsonpGET(params, silent = false) {
+  return new Promise((resolve) => {
+    const cbName = "_jcb_" + Date.now() + "_" + Math.floor(Math.random() * 9999);
+    const script = document.createElement("script");
+
+    // Timeout — 20 seconds
+    const timer = setTimeout(() => {
+      cleanup();
+      console.warn("JSONP timeout for action:", params.action);
+      resolve({ success: false, message: "Request timeout ❌" });
+    }, 20000);
+
+    function cleanup() {
+      clearTimeout(timer);
+      delete window[cbName];
+      if (script.parentNode) script.parentNode.removeChild(script);
+      if (!silent) showLoader(false);
+    }
+
+    window[cbName] = function (data) {
+      cleanup();
+      resolve(data);
+    };
+
+    // JSONP fail hone par fetch fallback try karo
+    // GAS kabhi kabhi JSONP requests ko redirect karta hai
+    // fetch redirect follow kar sakta hai, script tag nahi
+    script.onerror = async function () {
+      cleanup();
+      try {
+        const urlParams = new URLSearchParams(Object.assign({}, params));
+        const res = await fetch(API_URL + "?" + urlParams.toString(), {
+          redirect: "follow",
+          mode: "cors"
+        });
+        const text = await res.text();
+        // GAS response JSONP wrapper ke saath ya bina bhi aa sakta hai
+        // dono cases handle karo
+        const clean = text.replace(/^[^\(]*\(/, "").replace(/\);?\s*$/, "").trim();
+        try {
+          resolve(JSON.parse(clean));
+        } catch {
+          try {
+            resolve(JSON.parse(text));
+          } catch {
+            console.error("JSONP + Fetch parse failed for action:", params.action);
+            resolve({ success: false, message: "Parse error ❌" });
+          }
+        }
+      } catch (fetchErr) {
+        console.error("JSONP + Fetch both failed for action:", params.action, fetchErr.message);
+        resolve({ success: false, message: "Server connection failed ❌" });
+      }
+    };
+
+    const urlParams = Object.assign({}, params, { callback: cbName });
+    script.src = API_URL + "?" + new URLSearchParams(urlParams).toString();
+
+    if (!silent) showLoader(true, "Loading...");
+    document.head.appendChild(script);
+  });
+}
+
+// ===============================
 // API Calls
 // ===============================
+
+// POST — CORS se exempt hai jab Content-Type: text/plain ho
 async function apiPOST(payload, silent = false) {
   try {
     showLoader(true, "Loading...", silent);
     const res = await fetch(API_URL, {
       method: "POST",
+      redirect: "follow",
       headers: { "Content-Type": "text/plain;charset=utf-8" },
       body: JSON.stringify(payload),
     });
@@ -152,19 +244,13 @@ async function apiPOST(payload, silent = false) {
   }
 }
 
+// GET — Queue ke through JSONP use karta hai
+// Max 3 concurrent requests — GAS redirect errors fix
 async function apiGET(params = {}, silent = false) {
-  try {
-    showLoader(true, "Loading...", silent);
-    const url = API_URL + "?" + new URLSearchParams(params).toString();
-    const res = await fetch(url, { method: "GET" });
-    const text = await res.text();
-    return JSON.parse(text);
-  } catch (err) {
-    console.error("GET Error:", err);
-    return { success: false, message: "Server connection failed ❌" };
-  } finally {
-    showLoader(false, "", silent);
-  }
+  return new Promise((resolve) => {
+    _requestQueue.push({ params, silent, resolve });
+    _processQueue();
+  });
 }
 
 // ===============================
