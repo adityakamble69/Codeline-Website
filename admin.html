@@ -2842,6 +2842,8 @@
   <div id="toast" class="toast"></div>
 
   <script src="app.js"></script>
+  <script src="admin_perf_patch.js"></script>
+
 
   <script>
 
@@ -4121,6 +4123,9 @@
         const sentCount = Object.values(docStatus).filter(v => v !== "").length;
         const allSent = sentCount === Object.keys(docStatus).length && sentCount > 0;
 
+        // Agar saare documents already sent hain to is intern ko table mein show mat karo
+        if (allSent) return;
+
         const btnStyle = allSent
           ? `background:rgba(100,100,100,0.08);border-color:rgba(100,100,100,0.25);color:var(--muted);cursor:not-allowed;`
           : ``;
@@ -4157,12 +4162,22 @@
 
     function filterDocInterns() {
       const q = document.getElementById("docSearchInput").value.toLowerCase().trim();
-      if (!q) { renderDocInternTable(ALL_ACTIVE_INTERNS); return; }
-      const filtered = ALL_ACTIVE_INTERNS.filter(i =>
-        (i.Name || "").toLowerCase().includes(q) ||
-        (i.InternID || "").toLowerCase().includes(q) ||
-        (i.Email || "").toLowerCase().includes(q)
-      );
+      const DOC_SHEET_COLS_F = ["LOI_Sent","OfferLetter_Sent","JoiningLetter_Sent","CompletionLetter_Sent","Certificate_Sent","BestPerformer_Sent"];
+      // Pehle allSent interns ko filter out karo
+      let filtered = ALL_ACTIVE_INTERNS.filter(i => {
+        const sentCount = DOC_SHEET_COLS_F.filter(col => {
+          const val = i[col];
+          return val !== undefined && val !== null && String(val).trim() !== "";
+        }).length;
+        return sentCount < DOC_SHEET_COLS_F.length;
+      });
+      if (q) {
+        filtered = filtered.filter(i =>
+          (i.Name || "").toLowerCase().includes(q) ||
+          (i.InternID || "").toLowerCase().includes(q) ||
+          (i.Email || "").toLowerCase().includes(q)
+        );
+      }
       renderDocInternTable(filtered);
     }
 
@@ -6204,10 +6219,13 @@
       document.getElementById("completedDetailModal").classList.remove("show");
     }
 
+    
     init();
     startAutoRefreshAdmin();
     fetchNotifications();
     startNotifAutoRefresh();
+
+    
 
   </script>
 </body>
