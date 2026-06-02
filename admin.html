@@ -1342,21 +1342,24 @@
           <input id="taskTitle" placeholder="Day X: Task name" />
 
           <label>Description</label>
-          <textarea id="taskDesc" placeholder="Write full task details..."></textarea>
+          <textarea id="taskDescription" placeholder="Write full task details..."></textarea>
 
           <div class="row2">
             <div>
               <label>Assign Batch-wise</label>
               <select id="assignBatch"></select>
               <button class="btn primary" onclick="assignBatchTask()">Assign Batch Task</button>
+              <div class="small" id="assignBatchMsg" style="margin-top:8px;"></div>
             </div>
 
             <div>
               <label>Assign Individual Intern</label>
-              <input id="assignInternId" placeholder="INT0001" />
+              <input id="assignInternId" placeholder="COD0001" />
               <button class="btn" onclick="assignIndividualTask()">Assign Individual Task</button>
+              <div class="small" id="assignIndivMsg" style="margin-top:8px;"></div>
             </div>
           </div>
+
         </section>
 
         <!-- PAGE 4: SUBMISSIONS -->
@@ -2842,7 +2845,7 @@
   <div id="toast" class="toast"></div>
 
   <script src="app.js"></script>
-  <script src="admin_perf_patch.js"></script>
+
 
 
   <script>
@@ -3063,7 +3066,13 @@
       const date = document.getElementById("taskDate").value;
       const batchId = document.getElementById("assignBatch").value;
       const title = document.getElementById("taskTitle").value.trim();
-      const description = document.getElementById("taskDesc").value.trim();
+      const description = document.getElementById("taskDescription").value.trim();
+      const msgEl = document.getElementById("assignBatchMsg");
+
+      if (!title) { msgEl.innerText = "⚠️ Task title required"; return; }
+      if (!batchId) { msgEl.innerText = "⚠️ Batch select karo"; return; }
+
+      msgEl.innerText = "⏳ Assigning...";
 
       const data = await apiPOST({
         action: "adminAssignBatchTask",
@@ -3071,17 +3080,32 @@
         adminPass: admin.adminPass,
         date, batchId, title, description
       });
-      showLoader(false);
 
-      if (data.success) toast("Batch Task Assigned ✅", "success");
-      else toast(data.message, "error");
+      if (data.success) {
+        toast("Batch Task Assigned ✅", "success");
+        msgEl.style.color = "#00c864";
+        msgEl.innerText = "✅ " + (data.message || "Task assigned!");
+        // Fields clear karo
+        document.getElementById("taskTitle").value = "";
+        document.getElementById("taskDescription").value = "";
+      } else {
+        msgEl.style.color = "#f87171";
+        msgEl.innerText = "❌ " + data.message;
+        toast(data.message, "error");
+      }
     }
 
     async function assignIndividualTask() {
       const date = document.getElementById("taskDate").value;
       const internId = document.getElementById("assignInternId").value.trim();
       const title = document.getElementById("taskTitle").value.trim();
-      const description = document.getElementById("taskDesc").value.trim();
+      const description = document.getElementById("taskDescription").value.trim();
+      const msgEl = document.getElementById("assignIndivMsg");
+
+      if (!title) { msgEl.innerText = "⚠️ Task title required"; return; }
+      if (!internId) { msgEl.innerText = "⚠️ Intern ID required"; return; }
+
+      msgEl.innerText = "⏳ Assigning...";
 
       const data = await apiPOST({
         action: "adminAssignIndividualTask",
@@ -3089,10 +3113,19 @@
         adminPass: admin.adminPass,
         date, internId, title, description
       });
-      showLoader(false);
 
-      if (data.success) toast("Individual Task Assigned ✅", "success");
-      else toast(data.message, "error");
+      if (data.success) {
+        toast("Individual Task Assigned ✅", "success");
+        msgEl.style.color = "#00c864";
+        msgEl.innerText = "✅ " + (data.message || "Task assigned!");
+        document.getElementById("taskTitle").value = "";
+        document.getElementById("taskDescription").value = "";
+        document.getElementById("assignInternId").value = "";
+      } else {
+        msgEl.style.color = "#f87171";
+        msgEl.innerText = "❌ " + data.message;
+        toast(data.message, "error");
+      }
     }
 
     async function loadSubmissions(silent = false) {
@@ -3162,21 +3195,21 @@
       if (data.success) {
         toast(finalStatus === "Approved" ? "Approved ✅" : "Rejected ❌", "success");
 
+        // Row DOM se hata do
         const row = approveBtn ? approveBtn.closest("tr") : null;
         if (row) {
           row.style.transition = "opacity 0.4s, transform 0.4s";
           row.style.opacity = "0";
           row.style.transform = "translateX(30px)";
-          setTimeout(async () => {
-            await loadSubmissions(true);
-            cacheInvalidate("submissions");
-            await fetchNotifications();
-          }, 400);
-        } else {
-          await loadSubmissions(true);
-          cacheInvalidate("submissions");
-          await fetchNotifications();
+          setTimeout(() => { if (row.parentNode) row.parentNode.removeChild(row); }, 400);
         }
+
+        // ✅ FIX: 4s wait + force fresh reload (silent=false taaki loader dikhe)
+        setTimeout(async () => {
+          await loadSubmissions(false);   // ← silent nahi, fresh fetch
+          await fetchNotifications();
+        }, 4000);
+
       } else {
         toast(data.message || "Failed ❌", "error");
         if (approveBtn) { approveBtn.disabled = false; approveBtn.innerText = "Approve"; }
@@ -3254,7 +3287,7 @@
         action: "getIncompleteStudents",
         adminId: admin.adminId,
         adminPass: admin.adminPass
-      });
+      }, silent);
 
       if (!data.success) {
         toast(data.message, "error");
@@ -3389,7 +3422,7 @@
           await loadChatMessages(true);
         }
 
-      }, 4000);
+      }, 30000);
     }
 
     async function loadInterns(silent = false) {
@@ -4162,7 +4195,7 @@
 
     function filterDocInterns() {
       const q = document.getElementById("docSearchInput").value.toLowerCase().trim();
-      const DOC_SHEET_COLS_F = ["LOI_Sent","OfferLetter_Sent","JoiningLetter_Sent","CompletionLetter_Sent","Certificate_Sent","BestPerformer_Sent"];
+      const DOC_SHEET_COLS_F = ["LOI_Sent", "OfferLetter_Sent", "JoiningLetter_Sent", "CompletionLetter_Sent", "Certificate_Sent", "BestPerformer_Sent"];
       // Pehle allSent interns ko filter out karo
       let filtered = ALL_ACTIVE_INTERNS.filter(i => {
         const sentCount = DOC_SHEET_COLS_F.filter(col => {
@@ -5055,23 +5088,61 @@
       proceedToDocStep2();
     }
     // ── Proceed to Step 2 (link step) after verify (or directly) ──
-    function proceedToDocStep2() {
-      const linkEl = document.getElementById("docGeneratedLink");
-      if (linkEl) linkEl.value = "Document link will be available after sending via email.";
-
+    async function proceedToDocStep2() {
       const listEl = document.getElementById("docLinkDocList");
       if (listEl) {
-        listEl.innerHTML = SELECTED_DOCS.map(m => `
-          <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;
-            border-radius:10px;background:rgba(255,255,255,0.02);
-            border:1px solid rgba(255,255,255,0.06);">
-            <span style="font-size:16px;">✅</span>
-            <span style="font-size:13px;font-weight:700;">${m.label}</span>
-          </div>
-        `).join("");
+        listEl.innerHTML = `<div style="padding:14px;text-align:center;color:var(--muted);font-size:13px;">
+      ⏳ Generating PDFs...
+    </div>`;
       }
 
       _showDocStep(2);
+
+      // PDF generate karo abhi
+      const docs = SELECTED_DOCS.map(m => m.key);
+      const data = await apiPOST({
+        action: "adminSendDocuments",
+        adminId: admin.adminId,
+        adminPass: admin.adminPass,
+        internId: CURRENT_DOC_INTERN.InternID,
+        documents: docs,
+        emailTo: null,          // sirf generate karo, mail mat bhejo
+        skipEmail: true,        // GAS side pe handle karenge
+        verifiedData: Object.keys(VERIFIED_DOC_DATA).length > 0 ? VERIFIED_DOC_DATA : null
+      });
+
+      if (!data.success) {
+        if (listEl) listEl.innerHTML = `<div style="color:#f87171;font-size:13px;padding:10px;">❌ ${data.message}</div>`;
+        return;
+      }
+
+      // Links store karo
+      window._lastDocLinks = data.docLinks || [];
+      GENERATED_DOC_LINK = data.driveLink || "";
+
+      // Doc list with View buttons render karo
+      if (listEl) {
+        listEl.innerHTML = (data.docLinks || []).map((d, i) => `
+      <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;
+        border-radius:10px;background:rgba(255,255,255,0.02);
+        border:1px solid rgba(255,255,255,0.06);">
+        <span style="font-size:16px;">✅</span>
+        <span style="font-size:13px;font-weight:700;flex:1;">${d.label}</span>
+        <a href="${d.url}" target="_blank"
+          style="font-size:11px;font-weight:800;padding:5px 12px;border-radius:8px;
+          background:rgba(124,0,255,0.15);border:1px solid rgba(124,0,255,0.35);
+          color:#B100FF;text-decoration:none;white-space:nowrap;">
+          👁 View
+        </a>
+      </div>
+    `).join("");
+      }
+
+      // Intern ka phone pre-fill karo WhatsApp ke liye
+      const waInput = document.getElementById("docWhatsappNum");
+      if (waInput && !waInput.value) {
+        waInput.value = CURRENT_DOC_INTERN?.Phone || "";
+      }
     }
 
     function docGoToStep1() {
@@ -5134,6 +5205,8 @@
       if (sendBtn) { sendBtn.disabled = true; sendBtn.innerText = "📨 Sending..."; }
       document.getElementById("docSendMsg").innerText = "📨 Generating & sending documents via email...";
 
+      // Agar links pehle se generate ho chuke hain toh dobara generate mat karo
+      // Sirf mail bhejo with already-generated links
       const data = await apiPOST({
         action: "adminSendDocuments",
         adminId: admin.adminId,
@@ -5141,6 +5214,7 @@
         internId: CURRENT_DOC_INTERN.InternID,
         documents: docs,
         emailTo,
+        preGeneratedLinks: window._lastDocLinks || [],
         verifiedData: Object.keys(VERIFIED_DOC_DATA).length > 0 ? VERIFIED_DOC_DATA : null
       });
 
@@ -6219,13 +6293,13 @@
       document.getElementById("completedDetailModal").classList.remove("show");
     }
 
-    
+
     init();
     startAutoRefreshAdmin();
     fetchNotifications();
     startNotifAutoRefresh();
 
-    
+
 
   </script>
 </body>
