@@ -1,6 +1,6 @@
 // ✅ YOUR WEB APP URL (must end with /exec)
 const API_URL =
-  "https://script.google.com/macros/s/AKfycbwOAEob_XmjAJBsTH23Zc3E3ueySZXBm2dlaojIK2zucJOB8AkscOUttE-iyRZMjnL4/exec";
+  "https://script.google.com/macros/s/AKfycbzudL-tcxnWjsDVBL42orplRjc-LHmKwzS2JoS5vN6PAXt7THooioRJT8_c2MHAoyc/exec";
 
 // ===============================
 // ⚡ CACHE LAYER

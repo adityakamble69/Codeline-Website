@@ -3139,48 +3139,63 @@
       const tb = document.getElementById("subsTable");
       tb.innerHTML = "";
 
-      if ((data.submissions || []).length === 0) {
+      // FIX: ghost rows filter karo — SubmissionID ya InternID blank ho toh skip
+      const validSubs = (data.submissions || []).filter(s =>
+        s.SubmissionID && String(s.SubmissionID).trim() !== "" &&
+        s.InternID && String(s.InternID).trim() !== ""
+      );
+
+      if (validSubs.length === 0) {
         tb.innerHTML = `<tr><td colspan="9" style="text-align:center;padding:30px;color:var(--muted);">✅ No pending submissions</td></tr>`;
         return;
       }
 
-      data.submissions.forEach(s => {
-        tb.innerHTML += `
-          <tr>
-            <td>${s.SubmissionID}</td>
+      validSubs.forEach(s => {
+        const sid = s.SubmissionID;
+        const tr = document.createElement("tr");
+        tr.id = "subrow_" + sid;
+        tr.innerHTML = `
+            <td>${escapeHTML(sid)}</td>
             <td class="internCell">
-              <b>${s.AssignedTaskID}</b>
+              <b>${escapeHTML(s.AssignedTaskID || "—")}</b>
               <span class="internTooltip">
-                <b>${s.Title}</b><br/>
-                ${s.Description || ""}
+                <b>${escapeHTML(s.Title || "")}</b><br/>
+                ${escapeHTML(s.Description || "")}
               </span>
             </td>
             <td class="internCell">
-              <b>${s.InternID}</b>
-              <span class="internTooltip">${s.Name}</span>
+              <b>${escapeHTML(s.InternID || "—")}</b>
+              <span class="internTooltip">${escapeHTML(s.Name || "")}</span>
             </td>
-            <td><a href="${s.Link}" target="_blank" style="color:var(--p3);font-weight:900;">Open</a></td>
+            <td>${s.Link ? `<a href="${s.Link}" target="_blank" style="color:var(--p3);font-weight:900;">Open</a>` : "-"}</td>
             <td>${escapeHTML(s.Details || "-")}</td>
             <td>${formatDate(s.SubmittedAt)}</td>
-            <td><input id="g_${s.SubmissionID}" placeholder="A / 10"/></td>
-            <td><input id="r_${s.SubmissionID}" placeholder="remarks"/></td>
+            <td><input id="g_${sid}" placeholder="A / 10"/></td>
+            <td><input id="r_${sid}" placeholder="remarks"/></td>
             <td style="display:flex;gap:8px;flex-wrap:wrap;">
-              <button class="btn primary" onclick="grade('${s.SubmissionID}','Approved')">Approve</button>
-              <button class="btn danger" onclick="grade('${s.SubmissionID}','Rejected')">Reject</button>
+              <button id="appbtn_${sid}" class="btn primary">Approve</button>
+              <button id="rejbtn_${sid}" class="btn danger">Reject</button>
             </td>
-          </tr>
         `;
+        tb.appendChild(tr);
+
+        // FIX: onclick inline se hatao — ID se button dhoondo, no querySelector escape issue
+        document.getElementById("appbtn_" + sid).addEventListener("click", () => grade(sid, "Approved"));
+        document.getElementById("rejbtn_" + sid).addEventListener("click", () => grade(sid, "Rejected"));
       });
     }
 
     async function grade(submissionId, finalStatus) {
-      const gradeVal = document.getElementById("g_" + submissionId).value.trim();
-      const remarks = document.getElementById("r_" + submissionId).value.trim();
+      const gradeInput = document.getElementById("g_" + submissionId);
+      const remarksInput = document.getElementById("r_" + submissionId);
+      const gradeVal = gradeInput ? gradeInput.value.trim() : "";
+      const remarks = remarksInput ? remarksInput.value.trim() : "";
 
-      const approveBtn = document.querySelector(`button[onclick="grade('${submissionId}','Approved')"]`);
-      const rejectBtn = document.querySelector(`button[onclick="grade('${submissionId}','Rejected')"]`);
+      // FIX: ID se directly dhoondo — querySelector escape issue nahi hoga
+      const approveBtn = document.getElementById("appbtn_" + submissionId);
+      const rejectBtn  = document.getElementById("rejbtn_"  + submissionId);
       if (approveBtn) { approveBtn.disabled = true; approveBtn.innerText = "..."; }
-      if (rejectBtn) { rejectBtn.disabled = true; rejectBtn.innerText = "..."; }
+      if (rejectBtn)  { rejectBtn.disabled  = true; rejectBtn.innerText  = "..."; }
 
       const data = await apiPOST({
         action: "adminGradeSubmission",
@@ -3195,8 +3210,8 @@
       if (data.success) {
         toast(finalStatus === "Approved" ? "Approved ✅" : "Rejected ❌", "success");
 
-        // Row DOM se hata do
-        const row = approveBtn ? approveBtn.closest("tr") : null;
+        // FIX: row ID se seedha hataao — closest("tr") pe depend nahi
+        const row = document.getElementById("subrow_" + submissionId);
         if (row) {
           row.style.transition = "opacity 0.4s, transform 0.4s";
           row.style.opacity = "0";
@@ -3204,16 +3219,15 @@
           setTimeout(() => { if (row.parentNode) row.parentNode.removeChild(row); }, 400);
         }
 
-        // ✅ FIX: 4s wait + force fresh reload (silent=false taaki loader dikhe)
         setTimeout(async () => {
-          await loadSubmissions(false);   // ← silent nahi, fresh fetch
+          await loadSubmissions(false);
           await fetchNotifications();
         }, 4000);
 
       } else {
         toast(data.message || "Failed ❌", "error");
         if (approveBtn) { approveBtn.disabled = false; approveBtn.innerText = "Approve"; }
-        if (rejectBtn) { rejectBtn.disabled = false; rejectBtn.innerText = "Reject"; }
+        if (rejectBtn)  { rejectBtn.disabled  = false; rejectBtn.innerText  = "Reject";  }
       }
     }
 
