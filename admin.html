@@ -2859,6 +2859,44 @@
         .replace(/'/g, "&#039;");
     }
 
+    function firstValue(obj, keys, fallback = "") {
+      if (!obj) return fallback;
+      for (const key of keys) {
+        const val = obj[key];
+        if (val !== undefined && val !== null && String(val).trim() !== "") return val;
+      }
+      return fallback;
+    }
+
+    function normalizeDocLink(link, fallbackLabel = "Document") {
+      if (!link) return null;
+      if (typeof link === "string") return { label: fallbackLabel, url: link };
+      const url = firstValue(link, ["url", "link", "Link", "driveLink", "fileUrl", "pdfUrl", "downloadUrl"]);
+      if (!url) return null;
+      return {
+        label: firstValue(link, ["label", "name", "docName", "document", "type"], fallbackLabel),
+        url
+      };
+    }
+
+    function normalizeDocLinks(data) {
+      const rawLinks = []
+        .concat(data?.docLinks || [])
+        .concat(data?.documents || [])
+        .concat(data?.links || []);
+
+      const links = rawLinks
+        .map((d, i) => normalizeDocLink(d, `Document ${i + 1}`))
+        .filter(Boolean);
+
+      const singleLink = firstValue(data, ["driveLink", "documentLink", "docLink", "link", "url", "fileUrl", "pdfUrl"]);
+      if (singleLink && links.length === 0) {
+        links.push({ label: "Document Link", url: singleLink });
+      }
+
+      return links;
+    }
+
     // ── Action Dropdown Menu ──
     function toggleActionMenu(internId, e) {
       e.stopPropagation();
@@ -3140,60 +3178,71 @@
       tb.innerHTML = "";
 
       // FIX: ghost rows filter karo — SubmissionID ya InternID blank ho toh skip
-      const validSubs = (data.submissions || []).filter(s =>
-        s.SubmissionID && String(s.SubmissionID).trim() !== "" &&
-        s.InternID && String(s.InternID).trim() !== ""
-      );
+      const rawSubs = data.submissions || data.pendingSubmissions || data.pending || [];
+      const validSubs = rawSubs.map(s => ({
+        ...s,
+        _sid: firstValue(s, ["SubmissionID", "submissionId", "SubmissionId", "ID"]),
+        _internId: firstValue(s, ["InternID", "internId", "InternId"]),
+        _taskId: firstValue(s, ["AssignedTaskID", "assignedTaskId", "TaskID"], "-"),
+        _link: firstValue(s, ["Link", "SubmissionLink", "submissionLink", "URL"]),
+        _details: firstValue(s, ["Details", "details", "Description"], "-"),
+        _submittedAt: firstValue(s, ["SubmittedAt", "submittedAt", "CreatedAt", "Timestamp"])
+      })).filter(s => String(s._sid).trim() !== "" && String(s._internId).trim() !== "");
 
       if (validSubs.length === 0) {
         tb.innerHTML = `<tr><td colspan="9" style="text-align:center;padding:30px;color:var(--muted);">✅ No pending submissions</td></tr>`;
         return;
       }
 
-      validSubs.forEach(s => {
-        const sid = s.SubmissionID;
+      validSubs.forEach((s, idx) => {
+        const sid = String(s._sid);
+        const rowId = "subrow_" + idx;
+        const gradeId = "g_sub_" + idx;
+        const remarksId = "r_sub_" + idx;
+        const approveId = "appbtn_sub_" + idx;
+        const rejectId = "rejbtn_sub_" + idx;
         const tr = document.createElement("tr");
-        tr.id = "subrow_" + sid;
+        tr.id = rowId;
         tr.innerHTML = `
             <td>${escapeHTML(sid)}</td>
             <td class="internCell">
-              <b>${escapeHTML(s.AssignedTaskID || "—")}</b>
+              <b>${escapeHTML(s._taskId || "—")}</b>
               <span class="internTooltip">
                 <b>${escapeHTML(s.Title || "")}</b><br/>
                 ${escapeHTML(s.Description || "")}
               </span>
             </td>
             <td class="internCell">
-              <b>${escapeHTML(s.InternID || "—")}</b>
+              <b>${escapeHTML(s._internId || "—")}</b>
               <span class="internTooltip">${escapeHTML(s.Name || "")}</span>
             </td>
-            <td>${s.Link ? `<a href="${s.Link}" target="_blank" style="color:var(--p3);font-weight:900;">Open</a>` : "-"}</td>
-            <td>${escapeHTML(s.Details || "-")}</td>
-            <td>${formatDate(s.SubmittedAt)}</td>
-            <td><input id="g_${sid}" placeholder="A / 10"/></td>
-            <td><input id="r_${sid}" placeholder="remarks"/></td>
+            <td>${s._link ? `<a href="${escapeHTML(s._link)}" target="_blank" style="color:var(--p3);font-weight:900;">Open</a>` : "-"}</td>
+            <td>${escapeHTML(s._details || "-")}</td>
+            <td>${formatDate(s._submittedAt)}</td>
+            <td><input id="${gradeId}" placeholder="A / 10"/></td>
+            <td><input id="${remarksId}" placeholder="remarks"/></td>
             <td style="display:flex;gap:8px;flex-wrap:wrap;">
-              <button id="appbtn_${sid}" class="btn primary">Approve</button>
-              <button id="rejbtn_${sid}" class="btn danger">Reject</button>
+              <button id="${approveId}" class="btn primary">Approve</button>
+              <button id="${rejectId}" class="btn danger">Reject</button>
             </td>
         `;
         tb.appendChild(tr);
 
         // FIX: onclick inline se hatao — ID se button dhoondo, no querySelector escape issue
-        document.getElementById("appbtn_" + sid).addEventListener("click", () => grade(sid, "Approved"));
-        document.getElementById("rejbtn_" + sid).addEventListener("click", () => grade(sid, "Rejected"));
+        document.getElementById(approveId).addEventListener("click", () => grade(sid, "Approved", { rowId, gradeId, remarksId, approveId, rejectId }));
+        document.getElementById(rejectId).addEventListener("click", () => grade(sid, "Rejected", { rowId, gradeId, remarksId, approveId, rejectId }));
       });
     }
 
-    async function grade(submissionId, finalStatus) {
-      const gradeInput = document.getElementById("g_" + submissionId);
-      const remarksInput = document.getElementById("r_" + submissionId);
+    async function grade(submissionId, finalStatus, ids = {}) {
+      const gradeInput = document.getElementById(ids.gradeId || "g_" + submissionId);
+      const remarksInput = document.getElementById(ids.remarksId || "r_" + submissionId);
       const gradeVal = gradeInput ? gradeInput.value.trim() : "";
       const remarks = remarksInput ? remarksInput.value.trim() : "";
 
       // FIX: ID se directly dhoondo — querySelector escape issue nahi hoga
-      const approveBtn = document.getElementById("appbtn_" + submissionId);
-      const rejectBtn  = document.getElementById("rejbtn_"  + submissionId);
+      const approveBtn = document.getElementById(ids.approveId || "appbtn_" + submissionId);
+      const rejectBtn  = document.getElementById(ids.rejectId || "rejbtn_"  + submissionId);
       if (approveBtn) { approveBtn.disabled = true; approveBtn.innerText = "..."; }
       if (rejectBtn)  { rejectBtn.disabled  = true; rejectBtn.innerText  = "..."; }
 
@@ -3211,7 +3260,7 @@
         toast(finalStatus === "Approved" ? "Approved ✅" : "Rejected ❌", "success");
 
         // FIX: row ID se seedha hataao — closest("tr") pe depend nahi
-        const row = document.getElementById("subrow_" + submissionId);
+        const row = document.getElementById(ids.rowId || "subrow_" + submissionId);
         if (row) {
           row.style.transition = "opacity 0.4s, transform 0.4s";
           row.style.opacity = "0";
@@ -3528,36 +3577,73 @@
       );
     }
 
-    async function loadAnalytics() {
+    function setText(id, value) {
+      const el = document.getElementById(id);
+      if (el) el.innerText = value;
+    }
+
+    function getAnalyticsPayload(data) {
+      const kpis = data?.kpis || data?.stats || {};
+      const charts = data?.charts || {};
+      const batch = charts.batch || data?.batch || data?.batchPerformance || {};
+      const topInterns = charts.topInterns || data?.topInterns || {};
+
+      return {
+        kpis: {
+          totalInterns: firstValue(kpis, ["totalInterns", "total", "interns"], 0),
+          activeInterns: firstValue(kpis, ["activeInterns", "active"], 0),
+          pending: firstValue(kpis, ["pending", "pendingSubmissions"], 0),
+          approved: firstValue(kpis, ["approved", "approvedSubmissions"], 0),
+          approvalPercent: firstValue(kpis, ["approvalPercent", "approvalRate", "percent"], 0),
+          avgGrade: firstValue(kpis, ["avgGrade", "averageGrade", "avg"], 0),
+          mostActiveDay: firstValue(kpis, ["mostActiveDay", "activeDay"], "-")
+        },
+        batch: {
+          labels: batch.labels || batch.names || Object.keys(batch.data || batch || {}),
+          data: Array.isArray(batch.data) ? batch.data : Object.values(batch.data || batch || {})
+        },
+        topInterns
+      };
+    }
+
+    async function loadAnalytics(silent = false) {
 
       const data = await apiGET({
         action: "getAdminAnalytics",
         adminId: admin.adminId,
         adminPass: admin.adminPass
-      });
+      }, silent);
 
       if (!data.success) {
-        toast(data.message, "error");
+        if (!silent) toast(data.message, "error");
         return;
       }
 
-      const k = data.kpis;
+      const payload = getAnalyticsPayload(data);
+      const k = payload.kpis;
 
-      document.getElementById("kTotal").innerText = k.totalInterns;
-      document.getElementById("kActive").innerText = k.activeInterns;
-      document.getElementById("kPending").innerText = k.pending;
-      document.getElementById("kApproved").innerText = k.approved;
-      document.getElementById("kPercent").innerText = k.approvalPercent + "%";
-      document.getElementById("kAvg").innerText = k.avgGrade || 0;
-      document.getElementById("kDay").innerText = k.mostActiveDay || "-";
+      setText("kTotal", k.totalInterns);
+      setText("kActive", k.activeInterns);
+      setText("kPending", k.pending);
+      setText("kApproved", k.approved);
+      setText("kPercent", String(k.approvalPercent).includes("%") ? k.approvalPercent : k.approvalPercent + "%");
+      setText("kAvg", k.avgGrade || 0);
+      setText("kDay", k.mostActiveDay || "-");
 
-      const b = data.charts.batch;
+      const b = payload.batch;
       const box = document.getElementById("batchPerformanceBox");
 
       box.innerHTML = "";
 
-      b.labels.forEach((label, i) => {
-        const percent = b.data[i];
+      const labels = Array.isArray(b.labels) ? b.labels : [];
+      const values = Array.isArray(b.data) ? b.data : [];
+
+      if (labels.length === 0) {
+        box.innerHTML = `<div style="padding:24px;text-align:center;color:var(--muted);">No batch analytics available yet</div>`;
+      }
+
+      labels.forEach((label, i) => {
+        const percent = Math.max(0, Math.min(100, Number(values[i]) || 0));
         box.innerHTML += `
           <div class="colItem">
             <div class="colPercent">${percent}%</div>
@@ -3584,13 +3670,18 @@
       const topBox = document.getElementById("topInternsBox");
       topBox.innerHTML = "";
 
-      const topData = data.charts.topInterns || {};
+      const topData = payload.topInterns || {};
+
+      if (Object.keys(topData).length === 0) {
+        topBox.innerHTML = `<div style="padding:24px;text-align:center;color:var(--muted);">No ranked interns yet</div>`;
+        return;
+      }
 
       Object.keys(topData).forEach(batchName => {
 
-        const batchInterns = topData[batchName];
+        const batchInterns = Array.isArray(topData[batchName]) ? topData[batchName] : [];
 
-        let html = `<div class="topBatchBlock"><div class="topBatchTitle">${batchName}</div>`;
+        let html = `<div class="topBatchBlock"><div class="topBatchTitle">${escapeHTML(batchName)}</div>`;
 
         batchInterns.slice(0, 3).forEach((intern, index) => {
           let medal = "";
@@ -3603,9 +3694,9 @@
             <div class="topInternCard">
               <div class="topInternLeft">
                 <div class="rankBadge">${medal}</div>
-                <div class="topInternName">${intern.name}</div>
+                <div class="topInternName">${escapeHTML(firstValue(intern, ["name", "Name", "InternID"], "-"))}</div>
               </div>
-              <div class="topInternScore">${intern.avg}/100</div>
+              <div class="topInternScore">${firstValue(intern, ["avg", "average", "grade"], 0)}/100</div>
             </div>
           `;
         });
@@ -3613,7 +3704,7 @@
         html += `
           <button class="btn ghost"
             style="margin-top:8px;font-size:11px;"
-            onclick="openFullBatchAnalysis('${batchName}')">
+            onclick='openFullBatchAnalysis(${JSON.stringify(batchName)})'>
             View Full Analysis
           </button>
         `;
@@ -3636,18 +3727,25 @@
         return;
       }
 
-      const batchInterns = data.charts.topInterns[batchName] || [];
+      const payload = getAnalyticsPayload(data);
+      const batchInterns = payload.topInterns[batchName] || [];
 
       const tb = document.getElementById("analysisTable");
       tb.innerHTML = "";
+
+      if (batchInterns.length === 0) {
+        tb.innerHTML = `<tr><td colspan="4" style="text-align:center;color:var(--muted);padding:24px;">No analysis available</td></tr>`;
+        document.getElementById("analysisModal").classList.add("show");
+        return;
+      }
 
       batchInterns.forEach((intern, index) => {
         tb.innerHTML += `
           <tr>
             <td>#${index + 1}</td>
-            <td>${intern.name}</td>
-            <td>${intern.avg}/100</td>
-            <td>${intern.approvedCount}</td>
+            <td>${escapeHTML(firstValue(intern, ["name", "Name", "InternID"], "-"))}</td>
+            <td>${firstValue(intern, ["avg", "average", "grade"], 0)}/100</td>
+            <td>${firstValue(intern, ["approvedCount", "approved", "submitted"], 0)}</td>
           </tr>
         `;
       });
@@ -4226,6 +4324,30 @@
         );
       }
       renderDocInternTable(filtered);
+    }
+
+    function markDocOptionSent(key, sentValue) {
+      const row = document.querySelector(`.docOptRow[data-key="${key}"]`);
+      if (!row) return;
+
+      const chk = row.querySelector("input[type=checkbox]");
+      const badgeWrap = row.querySelector(".sentBadgeWrap");
+      const dateSpan = row.querySelector(".sentDate");
+
+      row.classList.remove("selected");
+      row.classList.add("sent");
+      row.style.opacity = "0.6";
+      row.style.cursor = "not-allowed";
+      row.style.borderColor = "rgba(0,200,100,0.25)";
+      row.style.background = "rgba(0,200,100,0.04)";
+      row.style.pointerEvents = "none";
+
+      if (chk) { chk.disabled = true; chk.checked = false; }
+      if (badgeWrap) badgeWrap.style.display = "block";
+      if (dateSpan) dateSpan.innerText = String(sentValue || new Date().toISOString()).replace("✅ ", "").trim();
+
+      window._currentDocStatus = window._currentDocStatus || {};
+      window._currentDocStatus[key] = sentValue || new Date().toISOString();
     }
 
     // ── Step pill updater ──
@@ -5120,7 +5242,7 @@
         adminPass: admin.adminPass,
         internId: CURRENT_DOC_INTERN.InternID,
         documents: docs,
-        emailTo: null,          // sirf generate karo, mail mat bhejo
+        emailTo: CURRENT_DOC_INTERN.Email || "",          // keep backend validators happy
         skipEmail: true,        // GAS side pe handle karenge
         verifiedData: Object.keys(VERIFIED_DOC_DATA).length > 0 ? VERIFIED_DOC_DATA : null
       });
@@ -5131,18 +5253,25 @@
       }
 
       // Links store karo
-      window._lastDocLinks = data.docLinks || [];
-      GENERATED_DOC_LINK = data.driveLink || "";
+      window._lastDocLinks = normalizeDocLinks(data);
+      GENERATED_DOC_LINK = firstValue(data, ["driveLink", "documentLink", "docLink", "link", "url", "fileUrl", "pdfUrl"], "");
+      if (!GENERATED_DOC_LINK && window._lastDocLinks.length > 0) {
+        GENERATED_DOC_LINK = window._lastDocLinks[0].url;
+      }
 
       // Doc list with View buttons render karo
       if (listEl) {
-        listEl.innerHTML = (data.docLinks || []).map((d, i) => `
+        if (window._lastDocLinks.length === 0) {
+          listEl.innerHTML = `<div style="color:#f87171;font-size:13px;padding:10px;">❌ Documents generated, but no document link was returned.</div>`;
+          return;
+        }
+        listEl.innerHTML = window._lastDocLinks.map((d, i) => `
       <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;
         border-radius:10px;background:rgba(255,255,255,0.02);
         border:1px solid rgba(255,255,255,0.06);">
         <span style="font-size:16px;">✅</span>
-        <span style="font-size:13px;font-weight:700;flex:1;">${d.label}</span>
-        <a href="${d.url}" target="_blank"
+        <span style="font-size:13px;font-weight:700;flex:1;">${escapeHTML(d.label)}</span>
+        <a href="${escapeHTML(d.url)}" target="_blank"
           style="font-size:11px;font-weight:800;padding:5px 12px;border-radius:8px;
           background:rgba(124,0,255,0.15);border:1px solid rgba(124,0,255,0.35);
           color:#B100FF;text-decoration:none;white-space:nowrap;">
@@ -5236,17 +5365,24 @@
 
       if (data.success) {
         // Store individual doc links for WhatsApp sharing
-        window._lastDocLinks = data.docLinks || [];
+        const returnedLinks = normalizeDocLinks(data);
+        if (returnedLinks.length > 0) window._lastDocLinks = returnedLinks;
 
-        if (data.driveLink) {
-          GENERATED_DOC_LINK = data.driveLink;
+        const returnedDriveLink = firstValue(data, ["driveLink", "documentLink", "docLink", "link", "url", "fileUrl", "pdfUrl"], "");
+        if (returnedDriveLink) {
+          GENERATED_DOC_LINK = returnedDriveLink;
           const linkEl = document.getElementById("docGeneratedLink");
-          if (linkEl) linkEl.value = data.driveLink;
+          if (linkEl) linkEl.value = returnedDriveLink;
+        } else if (!GENERATED_DOC_LINK && window._lastDocLinks?.length) {
+          GENERATED_DOC_LINK = window._lastDocLinks[0].url;
         }
 
         const msg = `✅ ${docs.length} document(s) emailed to ${emailTo}`;
         toast(msg, "success");
         document.getElementById("docSendMsg").innerText = msg;
+
+        const sentAt = data.sentAt || new Date().toISOString();
+        docs.forEach(docType => markDocOptionSent(docType, sentAt));
 
         // Pre-fill WhatsApp number if available
         const waInput = document.getElementById("docWhatsappNum");
@@ -5272,14 +5408,19 @@
 
       // Build per-document lines using individual docLinks if available
       let docLines = "";
-      if (window._lastDocLinks && window._lastDocLinks.length > 0) {
-        docLines = window._lastDocLinks.map((d, i) =>
+      const shareLinks = (window._lastDocLinks || [])
+        .map((d, i) => normalizeDocLink(d, SELECTED_DOCS[i]?.label || `Document ${i + 1}`))
+        .filter(Boolean);
+
+      if (shareLinks.length > 0) {
+        docLines = shareLinks.map((d, i) =>
           `${i + 1}. *${d.label}*\n${d.url}`
         ).join("\n\n");
       } else if (GENERATED_DOC_LINK) {
         docLines = `All Documents:\n${GENERATED_DOC_LINK}`;
       } else {
-        docLines = SELECTED_DOCS.map(m => m.label).join(", ");
+        toast("Document link missing. Generate the document again before WhatsApp send ❌", "error");
+        return;
       }
 
       const msgText =
