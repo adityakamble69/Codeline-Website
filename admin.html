@@ -3261,6 +3261,9 @@
       if (data.success) {
         toast(finalStatus === "Approved" ? "Approved ✅" : "Rejected ❌", "success");
 
+        // ✅ FIX 1: Cache turant saaf karo — warna stale data wapas aayega
+        cacheInvalidate("getPendingSubmissions");
+
         // FIX: row ID se seedha hataao — closest("tr") pe depend nahi
         const row = document.getElementById(ids.rowId || "subrow_" + submissionId);
         if (row) {
@@ -3270,10 +3273,11 @@
           setTimeout(() => { if (row.parentNode) row.parentNode.removeChild(row); }, 400);
         }
 
+        // ✅ FIX 2: 2s baad fresh server fetch (cache already clear hai)
         setTimeout(async () => {
           await loadSubmissions(false);
           await fetchNotifications();
-        }, 4000);
+        }, 2000);
 
       } else {
         toast(data.message || "Failed ❌", "error");
