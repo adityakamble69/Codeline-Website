@@ -555,17 +555,16 @@
     }
 
     .heatmapMonthLabels {
-      display: flex;
-      gap: 0;
-      margin-bottom: 6px;
-      padding-left: 28px;
+      position: relative;
+      height: 16px;
+      margin-bottom: 4px;
+      padding-left: 30px; /* align with heatmapWeeks (day labels width = 24px + 6px gap) */
     }
 
     .heatmapMonthLabel {
       font-size: 10px;
       color: #555;
       letter-spacing: 0.5px;
-      min-width: 0;
       white-space: nowrap;
     }
 
@@ -578,16 +577,18 @@
       display: flex;
       flex-direction: column;
       gap: 3px;
-      margin-right: 2px;
+      margin-right: 0;
+      flex-shrink: 0;
     }
 
     .heatmapDayLabel {
-      height: 13px;
+      height: 14px;
       font-size: 9px;
       color: #444;
-      line-height: 13px;
-      width: 22px;
+      line-height: 14px;
+      width: 24px;
       text-align: right;
+      padding-right: 4px;
     }
 
     .heatmapWeeks {
@@ -602,8 +603,8 @@
     }
 
     .heatCell {
-      width: 13px;
-      height: 13px;
+      width: 14px;
+      height: 14px;
       border-radius: 3px;
       background: #1c1c2c;
       transition: transform .15s, box-shadow .15s;
@@ -616,7 +617,7 @@
     }
 
     .heatCell:hover {
-      transform: scale(1.4);
+      transform: scale(1.5);
       z-index: 10;
     }
 
@@ -876,7 +877,10 @@
 
       border: 1px solid #2d2d45;
 
-      width: 380px;
+      width: 460px;
+      max-width: 92vw;
+      max-height: 85vh;
+      overflow-y: auto;
       padding: 28px;
 
       border-radius: 16px;
@@ -1213,12 +1217,27 @@
 
           <hr style="margin:20px 0; opacity:0.2;">
 
-          <label>Request Edit Permission</label>
-          <input id="requestSubmissionId" placeholder="Enter Submission ID (SUB0001)" />
+          <div class="cardHead" style="margin-bottom:12px;">
+            <div>
+              <h3 style="font-size:14px;">✏️ Edit Submission Link</h3>
+              <span>Admin approval required before editing</span>
+            </div>
+          </div>
 
-          <button class="btn ghost" onclick="requestEditPermission()">
+          <label>Submission ID</label>
+          <input id="editSubId" placeholder="Enter Submission ID (SUB0001)" />
+
+          <label style="margin-top:12px;">New Link (GitHub / Deploy)</label>
+          <input id="editNewLink" placeholder="https://github.com/..." />
+
+          <label style="margin-top:12px;">Updated Details (optional)</label>
+          <textarea id="editNewDetails" placeholder="What changed..." style="height:80px;"></textarea>
+
+          <button class="btn ghost" style="margin-top:12px;" onclick="requestEditPermissionFromEdit()">
             🔐 Request Admin Permission
           </button>
+
+
 
         </section>
 
@@ -1375,6 +1394,28 @@
                   <div class="statVal" id="statRankNum">—</div>
                   <div class="statLbl">Rank</div>
                 </div>
+                <div class="profileStat" id="statApprovedWrap" style="display:none;">
+                  <div class="statVal" id="statApproved">—</div>
+                  <div class="statLbl">Approved</div>
+                </div>
+              </div>
+
+              <!-- Batch + Duration info -->
+              <div id="profileMetaRow" style="
+                display:flex; gap:10px; flex-wrap:wrap; margin-top:14px;
+              ">
+                <span id="profileBatchBadge" style="
+                  display:none;
+                  font-size:11px; padding:4px 10px; border-radius:20px;
+                  background:rgba(0,140,255,0.1); border:1px solid rgba(0,140,255,0.25);
+                  color:#60b4ff;
+                "></span>
+                <span id="profileDurationBadge" style="
+                  display:none;
+                  font-size:11px; padding:4px 10px; border-radius:20px;
+                  background:rgba(57,211,83,0.08); border:1px solid rgba(57,211,83,0.2);
+                  color:#39d353;
+                "></span>
               </div>
 
             </div>
@@ -1409,6 +1450,7 @@
               <div class="legendCell" style="background:#26a641;"></div>
               <div class="legendCell" style="background:#39d353;"></div>
               <span>More</span>
+              <span style="margin-left:12px; color:#444; font-size:10px;">• Click green cells to view tasks</span>
             </div>
           </div>
           <div id="streakBox" class="streakBox"></div>
@@ -1732,13 +1774,14 @@
     }
 
     async function editSubmission() {
-      const submissionId = document.getElementById("requestSubmissionId").value.trim();
-      const link = document.getElementById("submitLink").value.trim();
-      const note = document.getElementById("submitDetails").value.trim();
+      const submissionId = document.getElementById("editSubId").value.trim();
+      const link = document.getElementById("editNewLink").value.trim();
+      const note = document.getElementById("editNewDetails").value.trim();
 
-      if (!submissionId) { toast("SubmissionID required ❌", "error"); return; }
+      if (!submissionId) { toast("Submission ID required ❌", "error"); return; }
+      if (!link) { toast("New link required ❌", "error"); return; }
 
-      showLoader(true, "Editing (5 min rule)...");
+      showLoader(true, "Updating...");
       const data = await apiPOST({
         action: "internEditSubmission",
         internId: intern.InternID,
@@ -1749,39 +1792,36 @@
       showLoader(false);
 
       if (data.success) {
-        toast("Edited ✅", "success");
-        document.getElementById("requestSubmissionId").value = "";
+        toast("Link Updated ✅", "success");
+        document.getElementById("editSubId").value = "";
+        document.getElementById("editNewLink").value = "";
+        document.getElementById("editNewDetails").value = "";
         loadHistory();
       } else toast(data.message, "error");
     }
 
-    async function requestEditPermission() {
-
-      const submissionId =
-        document.getElementById("requestSubmissionId").value.trim();
-
-      if (!submissionId) {
-        toast("Enter Submission ID ❌", "error");
-        return;
-      }
+    async function requestEditPermissionFromEdit() {
+      const submissionId = document.getElementById("editSubId").value.trim();
+      const newLink      = document.getElementById("editNewLink").value.trim();
+      if (!submissionId) { toast("Enter Submission ID ❌", "error"); return; }
+      if (!newLink)      { toast("Enter New Link ❌", "error"); return; }
 
       showLoader(true, "Sending Request...");
-
       const data = await apiPOST({
         action: "internRequestEditPermission",
         internId: intern.InternID,
-        submissionId
+        submissionId,
+        newLink
       });
-
       showLoader(false);
 
       if (data.success) {
-        toast("Edit Request Sent ✅", "success");
-        document.getElementById("requestSubmissionId").value = "";
+        toast("Edit Request Sent ✅ Admin will update your link.", "success");
       } else {
         toast(data.message, "error");
       }
     }
+
     async function changePassword() {
       const oldPassword = document.getElementById("oldPass").value.trim();
       const newPassword = document.getElementById("newPass").value.trim();
@@ -1870,6 +1910,26 @@
       if (statStreakEl) statStreakEl.innerText = currentStreak + " 🔥";
       if (statRankEl) statRankEl.innerText = "#" + (perfData.rank || "—");
 
+      // Approved stat
+      const statApprovedWrap = document.getElementById("statApprovedWrap");
+      const statApprovedEl = document.getElementById("statApproved");
+      if (approvedCount > 0 && statApprovedWrap) {
+        statApprovedWrap.style.display = "";
+        if (statApprovedEl) statApprovedEl.innerText = approvedCount;
+      }
+
+      // Batch + duration badges
+      const batchBadge = document.getElementById("profileBatchBadge");
+      const durationBadge = document.getElementById("profileDurationBadge");
+      if (batchBadge && (intern.BatchName || intern.Batch)) {
+        batchBadge.style.display = "";
+        batchBadge.innerText = "🏷 Batch: " + (intern.BatchName || intern.Batch);
+      }
+      if (durationBadge && intern.Duration) {
+        durationBadge.style.display = "";
+        durationBadge.innerText = "⏱ " + intern.Duration;
+      }
+
       // ── Rank Badge ──
       function getRank(total) {
         if (total >= 30) return "Master";
@@ -1893,10 +1953,21 @@
       // ── Heatmap ke liye activityMap banao history se ──
       const activityMap = {};
       if (histData.success && histData.history) {
+        // Debug: log first task to see actual field names
+        if (histData.history.length > 0) {
+          console.log("🔍 History task sample fields:", Object.keys(histData.history[0]));
+          console.log("🔍 First task data:", histData.history[0]);
+        }
         histData.history.forEach(task => {
           if (task.Submitted && task.SubmittedAt) {
             const day = task.SubmittedAt.slice(0, 10); // "YYYY-MM-DD"
-            activityMap[day] = (activityMap[day] || 0) + 1;
+            if (!activityMap[day]) activityMap[day] = [];
+            activityMap[day].push({
+              taskId: task.AssignedTaskID || task.TaskID || task.taskId || "",
+              title: task.Title || task.TaskTitle || task.taskTitle || "Task",
+              desc: task.Description || task.description || "",
+              link: task.SubmissionLink || task.submissionLink || task.Link || task.link || task.submission_link || task.SubmitLink || task.submitLink || ""
+            });
           }
         });
       }
@@ -2036,16 +2107,71 @@
     function renderGamingRoadmap(totalSubmissions) {
 
       const levels = [
-        { name: "Bronze", emoji: "🥉", min: 4, color: "#cd7f32", desc: "Getting started" },
-        { name: "Silver", emoji: "🥈", min: 8, color: "#c0c0c0", desc: "Building momentum" },
-        { name: "Gold", emoji: "🥇", min: 12, color: "#ffd700", desc: "Showing consistency" },
-        { name: "Platinum", emoji: "💎", min: 16, color: "#00e5ff", desc: "Elite performer" },
-        { name: "Diamond", emoji: "🔷", min: 20, color: "#00bfff", desc: "Top tier intern" },
-        { name: "Master", emoji: "👑", min: 30, color: "#ff3df0", desc: "Legendary status" }
+        {
+          name: "Bronze", emoji: "🥉", min: 4, color: "#cd7f32",
+          desc: "First steps — you're showing up and getting things done.",
+          perks: ["Access to intern leaderboard", "Basic task submission", "Profile badge unlocked"]
+        },
+        {
+          name: "Silver", emoji: "🥈", min: 8, color: "#c0c0c0",
+          desc: "Building momentum — consistency is becoming your superpower.",
+          perks: ["Silver profile badge", "Highlighted in batch list", "Eligible for feedback sessions"]
+        },
+        {
+          name: "Gold", emoji: "🥇", min: 12, color: "#ffd700",
+          desc: "Showing real consistency — you're in the top tier of contributors.",
+          perks: ["Gold badge + special highlight", "Priority task assignments", "Mentor recognition"]
+        },
+        {
+          name: "Platinum", emoji: "💎", min: 16, color: "#00e5ff",
+          desc: "Elite performer — your work ethic sets the standard.",
+          perks: ["Platinum certification", "LinkedIn recommendation eligible", "Featured intern spotlight"]
+        },
+        {
+          name: "Diamond", emoji: "🔷", min: 20, color: "#00bfff",
+          desc: "Top-tier intern — exceptional dedication and output.",
+          perks: ["Diamond badge + hall of fame", "Direct manager shoutout", "Internship extension priority"]
+        },
+        {
+          name: "Master", emoji: "👑", min: 30, color: "#ff3df0",
+          desc: "Legendary — you've redefined what an intern can achieve.",
+          perks: ["Master crown badge", "Guaranteed recommendation letter", "Alumni network access"]
+        }
       ];
 
       const box = document.getElementById("achievementRoadmap");
       box.innerHTML = "";
+
+      // Summary header
+      const nextLevel = levels.find(l => totalSubmissions < l.min);
+      const summaryEl = document.createElement("div");
+      summaryEl.style.cssText = `
+        background: linear-gradient(135deg, rgba(124,0,255,0.08), rgba(0,100,255,0.05));
+        border: 1px solid rgba(124,0,255,0.2);
+        border-radius: 14px;
+        padding: 14px 18px;
+        margin-bottom: 18px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+      `;
+      summaryEl.innerHTML = `
+        <div style="font-size:28px;">${levels.slice().reverse().find(l => totalSubmissions >= l.min)?.emoji || "🎯"}</div>
+        <div style="flex:1;">
+          <div style="font-family:'Syne',sans-serif; font-weight:700; font-size:14px; color:#fff;">
+            ${totalSubmissions} tasks completed
+          </div>
+          <div style="font-size:12px; color:#666; margin-top:2px;">
+            ${nextLevel ? `${nextLevel.min - totalSubmissions} more to reach <span style="color:${nextLevel.color};font-weight:600;">${nextLevel.name}</span>` : '<span style="color:#ff3df0;font-weight:600;">👑 Master achieved — you are legendary!</span>'}
+          </div>
+          ${nextLevel ? `
+            <div style="height:3px; background:rgba(255,255,255,0.05); border-radius:99px; margin-top:8px; overflow:hidden;">
+              <div style="height:100%; width:${Math.min(100, Math.round((totalSubmissions / nextLevel.min) * 100))}%; background:linear-gradient(90deg,#7c00ff,${nextLevel.color}); border-radius:99px; transition:width 1s;"></div>
+            </div>
+          ` : ""}
+        </div>
+      `;
+      box.appendChild(summaryEl);
 
       // Find current tier index
       let currentIdx = -1;
@@ -2056,20 +2182,16 @@
       levels.forEach((level, i) => {
         const unlocked = totalSubmissions >= level.min;
         const isCurrent = i === currentIdx;
-        const nextLevel = levels[i + 1];
+        const isNext = i === currentIdx + 1;
 
-        // Progress within this tier
         const prevMin = i === 0 ? 0 : levels[i - 1].min;
         const rangeSize = level.min - prevMin;
         const progress = unlocked ? 100 : Math.max(0, Math.min(99, Math.round(((totalSubmissions - prevMin) / rangeSize) * 100)));
 
-        // Status label
         let statusHTML = "";
-        if (unlocked && !isCurrent && i > currentIdx) {
-          statusHTML = `<div class="tierStatus locked">Locked</div>`;
-        } else if (unlocked) {
+        if (unlocked) {
           statusHTML = `<div class="tierStatus done">✓ Done</div>`;
-        } else if (i === currentIdx + 1) {
+        } else if (isNext) {
           statusHTML = `<div class="tierStatus active">In Progress</div>`;
         } else {
           statusHTML = `<div class="tierStatus locked">Locked</div>`;
@@ -2078,12 +2200,11 @@
         const needed = level.min - totalSubmissions;
         const subtext = unlocked
           ? `Unlocked at ${level.min} tasks`
-          : (i === currentIdx + 1 ? `${needed} more task${needed !== 1 ? "s" : ""} to unlock` : `Requires ${level.min} tasks`);
+          : (isNext ? `${needed} more task${needed !== 1 ? "s" : ""} to unlock` : `Requires ${level.min} tasks`);
 
         const wrapper = document.createElement("div");
         wrapper.style.position = "relative";
 
-        // Connector line between cards
         if (i < levels.length - 1) {
           const conn = document.createElement("div");
           conn.className = "tierConnector" + (unlocked ? " done" : "");
@@ -2095,172 +2216,211 @@
         card.className = "tierCard" + (unlocked ? " unlocked" : "") + (isCurrent ? " current-tier" : "");
         card.style.setProperty("--tier-color", level.color);
         card.style.marginBottom = "8px";
+        card.style.cursor = "pointer";
+
+        // Perks HTML
+        const perksHTML = level.perks.map(p => `
+          <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:${unlocked ? 'rgba(255,255,255,0.5)' : '#444'};padding:2px 0;">
+            <span style="color:${unlocked ? level.color : '#333'};font-size:10px;">▸</span> ${p}
+          </div>
+        `).join("");
+
+        const expandId = `tier-expand-${i}`;
 
         card.innerHTML = `
-          <div class="tierIcon">${level.emoji}</div>
+          <div class="tierIcon" style="${unlocked ? `box-shadow:0 0 16px ${level.color}44;` : ''}">${level.emoji}</div>
           <div class="tierInfo">
-            <div class="tierName">${level.name}</div>
+            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+              <div class="tierName" style="${unlocked ? `color:${level.color};` : ''}">${level.name}</div>
+              <div style="font-size:10px;color:#444;font-family:'Courier New',monospace;">${level.min} tasks</div>
+            </div>
             <div class="tierSubtext">${subtext}</div>
-            ${!unlocked && i === currentIdx + 1 ? `
-              <div class="tierProgressBar">
+            ${isNext ? `
+              <div class="tierProgressBar" style="margin-top:8px;">
                 <div class="tierProgressFill" style="width:${progress}%;background:${level.color};"></div>
               </div>
+              <div style="font-size:10px;color:#555;margin-top:4px;">${progress}% there</div>
             ` : ""}
           </div>
           ${statusHTML}
+          <div style="font-size:12px;color:#444;margin-left:4px;transition:.2s;" class="tier-chevron-${i}">▾</div>
         `;
 
+        // Expandable perks section
+        const expandDiv = document.createElement("div");
+        expandDiv.id = expandId;
+        expandDiv.style.cssText = `
+          display: none;
+          padding: 0 18px 14px 82px;
+          background: ${unlocked ? `linear-gradient(135deg, rgba(0,0,0,0), rgba(${hexToRgb(level.color)},0.04))` : 'rgba(0,0,0,0.2)'};
+          border: 1px solid ${unlocked ? `rgba(${hexToRgb(level.color)},0.15)` : 'rgba(255,255,255,0.04)'};
+          border-top: none;
+          border-radius: 0 0 14px 14px;
+          margin-top: -10px;
+          margin-bottom: 8px;
+        `;
+        expandDiv.innerHTML = `
+          <div style="font-size:11px;color:#555;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;padding-top:12px;">${level.desc}</div>
+          <div style="margin-top:4px;">${perksHTML}</div>
+        `;
+
+        card.style.borderRadius = "14px";
+        card.addEventListener("click", () => {
+          const isOpen = expandDiv.style.display === "block";
+          // Close all others
+          document.querySelectorAll("[id^='tier-expand-']").forEach(el => el.style.display = "none");
+          document.querySelectorAll("[class^='tier-chevron-']").forEach(el => el.style.transform = "");
+          if (!isOpen) {
+            expandDiv.style.display = "block";
+            card.style.borderRadius = "14px 14px 0 0";
+            card.querySelector(`.tier-chevron-${i}`).style.transform = "rotate(180deg)";
+          } else {
+            card.style.borderRadius = "14px";
+          }
+        });
+
         wrapper.appendChild(card);
+        wrapper.appendChild(expandDiv);
         box.appendChild(wrapper);
       });
     }
 
+    function hexToRgb(hex) {
+      const r = parseInt(hex.slice(1,3),16);
+      const g = parseInt(hex.slice(3,5),16);
+      const b = parseInt(hex.slice(5,7),16);
+      return `${r},${g},${b}`;
+    }
+
     function renderHeatmap(activityMap, createdAt, highestStreak) {
+      const CELL = 14;   // cell size px
+      const GAP  = 3;    // gap between cells px
+      const STEP = CELL + GAP; // 17px per column
 
       const weeksContainer = document.getElementById("heatmap");
-      const monthLabelsEl = document.getElementById("heatmapMonthLabels");
-      const statsEl = document.getElementById("heatmapStats");
+      const monthLabelsEl  = document.getElementById("heatmapMonthLabels");
+      const statsEl        = document.getElementById("heatmapStats");
 
       weeksContainer.innerHTML = "";
       if (monthLabelsEl) monthLabelsEl.innerHTML = "";
 
-      if (!createdAt) return;
-
-      const startDate = new Date(createdAt);
-      const today = new Date();
-
-      // Build array of all dates from start to today (max 26 weeks = ~6 months)
-      const allDates = [];
-      const maxDays = 26 * 7;
-
-      for (let i = 0; i < maxDays; i++) {
-        const d = new Date(startDate);
-        d.setDate(startDate.getDate() + i);
-        if (d > today) break;
-        allDates.push(d);
-      }
-
-      if (allDates.length === 0) return;
-
-      // Pad start to Sunday
-      const firstDay = allDates[0].getDay(); // 0=Sun
-      const paddedStart = firstDay; // number of empty cells at start
-
-      // Flatten into weeks
-      const totalCells = paddedStart + allDates.length;
-      const totalWeeks = Math.ceil(totalCells / 7);
-
-      // Count active days and total submissions
-      let activeDays = 0;
-      let totalSubmissionsFromMap = 0;
+      // ── Count stats ──────────────────────────────────────────────────────────
+      let activeDays = 0, totalSubs = 0;
       Object.values(activityMap).forEach(tasks => {
-        activeDays++;
-        totalSubmissionsFromMap += (tasks || []).length;
+        if (Array.isArray(tasks) && tasks.length > 0) {
+          activeDays++;
+          totalSubs += tasks.length;
+        }
       });
 
-      // Stats
       if (statsEl) {
         statsEl.innerHTML = `
           <div class="heatmapStat">
             <div class="hIcon" style="background:rgba(57,211,83,0.1);">🔥</div>
-            <div>
-              <div class="hVal">${highestStreak}</div>
-              <div class="hLbl">Best Streak</div>
-            </div>
+            <div><div class="hVal">${highestStreak}</div><div class="hLbl">Best Streak</div></div>
           </div>
           <div class="heatmapStat">
             <div class="hIcon" style="background:rgba(124,0,255,0.1);">📅</div>
-            <div>
-              <div class="hVal">${activeDays}</div>
-              <div class="hLbl">Active Days</div>
-            </div>
+            <div><div class="hVal">${activeDays}</div><div class="hLbl">Active Days</div></div>
           </div>
           <div class="heatmapStat">
             <div class="hIcon" style="background:rgba(0,140,255,0.1);">✅</div>
-            <div>
-              <div class="hVal">${totalSubmissionsFromMap}</div>
-              <div class="hLbl">Submissions</div>
-            </div>
+            <div><div class="hVal">${totalSubs}</div><div class="hLbl">Submissions</div></div>
           </div>
         `;
       }
 
-      // Month label tracking
-      const monthsSeen = {};
-      const weekMonths = []; // which month starts at each week col
+      // ── Date range: always show last 26 weeks regardless of createdAt ────────
+      const today     = new Date();
+      today.setHours(0, 0, 0, 0);
 
-      for (let w = 0; w < totalWeeks; w++) {
+      // Start = Sunday of the week 26 weeks ago
+      const rangeStart = new Date(today);
+      rangeStart.setDate(today.getDate() - 26 * 7);
+      // Roll back to Sunday
+      rangeStart.setDate(rangeStart.getDate() - rangeStart.getDay());
+
+      // End = Saturday of current week
+      const rangeEnd = new Date(today);
+      rangeEnd.setDate(today.getDate() + (6 - today.getDay()));
+
+      // ── Build week columns ───────────────────────────────────────────────────
+      const monthLabels = []; // { weekIndex, label }
+      let   lastMonth   = -1;
+
+      const cursor = new Date(rangeStart);
+      let   weekIdx = 0;
+
+      while (cursor <= rangeEnd) {
         const weekCol = document.createElement("div");
         weekCol.className = "heatWeekCol";
 
-        let weekFirstMonth = null;
+        // Month label for this column?
+        const colMonth = cursor.getMonth();
+        if (colMonth !== lastMonth) {
+          lastMonth = colMonth;
+          monthLabels.push({ weekIndex: weekIdx, label: cursor.toLocaleString("default", { month: "short" }) });
+        } else {
+          monthLabels.push({ weekIndex: weekIdx, label: "" });
+        }
 
         for (let d = 0; d < 7; d++) {
-          const cellIdx = w * 7 + d;
-          const dateIdx = cellIdx - paddedStart;
+          const date = new Date(cursor);
+          date.setDate(cursor.getDate() + d);
 
           const cell = document.createElement("div");
 
-          if (dateIdx < 0 || dateIdx >= allDates.length) {
+          if (date > today) {
+            // Future cell — transparent
             cell.className = "heatCell empty";
           } else {
-            const date = allDates[dateIdx];
-            const formatted = date.getFullYear() + "-" +
+            const fmt = date.getFullYear() + "-" +
               String(date.getMonth() + 1).padStart(2, "0") + "-" +
               String(date.getDate()).padStart(2, "0");
 
-            const tasks = activityMap[formatted];
-            const count = tasks ? tasks.length : 0;
+            const tasks = activityMap[fmt];
+            const count = Array.isArray(tasks) ? tasks.length : 0;
 
             cell.className = "heatCell";
-
-            if (count === 0) {
-              // no class — default dark
-            } else if (count === 1) {
-              cell.classList.add("level1");
-            } else if (count === 2) {
-              cell.classList.add("level2");
-            } else if (count === 3) {
-              cell.classList.add("level3");
-            } else {
-              cell.classList.add("level4");
-            }
+            if      (count === 1) cell.classList.add("level1");
+            else if (count === 2) cell.classList.add("level2");
+            else if (count === 3) cell.classList.add("level3");
+            else if (count >= 4)  cell.classList.add("level4");
 
             if (count > 0) {
               cell.classList.add("has-data");
-              cell.title = `${formatted}: ${count} submission${count > 1 ? "s" : ""}`;
-              cell.onclick = () => openDayTasks(tasks);
+              cell.title = `${fmt}: ${count} submission${count !== 1 ? "s" : ""}`;
+              const cd = fmt, ct = tasks;
+              cell.onclick = () => openDayTasks(cd, ct);
             } else {
-              cell.title = formatted;
-            }
-
-            // Track month label
-            if (d === 0 || (dateIdx === 0)) {
-              const month = date.getMonth();
-              const key = date.getFullYear() + "-" + month;
-              if (!monthsSeen[key]) {
-                monthsSeen[key] = true;
-                weekFirstMonth = date.toLocaleString("default", { month: "short" });
-              }
+              cell.title = fmt;
             }
           }
 
           weekCol.appendChild(cell);
         }
 
-        weekMonths.push(weekFirstMonth);
         weeksContainer.appendChild(weekCol);
+        cursor.setDate(cursor.getDate() + 7);
+        weekIdx++;
       }
 
-      // Render month labels
+      // ── Render month labels — absolutely positioned over week columns ─────────
       if (monthLabelsEl) {
-        weekMonths.forEach(label => {
-          const span = document.createElement("div");
+        // Use same STEP to align labels with week columns
+        monthLabelsEl.style.position = "relative";
+        monthLabelsEl.style.height = "16px";
+        monthLabelsEl.style.marginBottom = "4px";
+
+        monthLabels.forEach(({ weekIndex, label }) => {
+          if (!label) return;
+          const span = document.createElement("span");
           span.className = "heatmapMonthLabel";
-          span.style.width = "16px";
-          span.style.flexShrink = "0";
-          span.style.marginRight = "3px";
-          span.innerText = label || "";
+          span.style.position = "absolute";
+          span.style.left = (weekIndex * STEP) + "px";
+          span.style.top = "0";
+          span.style.whiteSpace = "nowrap";
+          span.innerText = label;
           monthLabelsEl.appendChild(span);
         });
       }
@@ -2279,22 +2439,59 @@
 
     }
 
-    function openDayTasks(tasks) {
+    function openDayTasks(dateStr, tasks) {
+      if (!tasks || tasks.length === 0) return;
 
-      let content = "";
+      // Build rich modal content
+      let content = `
+        <div style="margin-bottom:14px; font-size:12px; color:#666; text-transform:uppercase; letter-spacing:1px;">
+          📅 ${new Date(dateStr + 'T00:00:00').toLocaleDateString('en-IN', { weekday:'long', year:'numeric', month:'long', day:'numeric' })}
+        </div>
+      `;
 
-      tasks.forEach(t => {
+      tasks.forEach((t, idx) => {
         content += `
-      <div style="margin-bottom:10px;">
-        <b>${t.taskId}</b><br/>
-        ${t.link ? `<a href="${t.link}" target="_blank">Open Submission</a>` : ""}
-      </div>
-    `;
+          <div style="
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 12px;
+            padding: 14px 16px;
+            margin-bottom: 10px;
+          ">
+            <div style="display:flex; align-items:flex-start; gap:10px;">
+              <div style="
+                width:28px; height:28px; border-radius:8px;
+                background: rgba(124,0,255,0.2); border: 1px solid rgba(124,0,255,0.4);
+                display:flex; align-items:center; justify-content:center;
+                font-size:12px; font-weight:700; color:#b983ff; flex-shrink:0;
+              ">${idx + 1}</div>
+              <div style="flex:1;">
+                <div style="font-weight:700; font-size:14px; color:#fff; margin-bottom:4px;">
+                  ${t.title || 'Task ' + t.taskId}
+                </div>
+                ${t.taskId ? `<div style="font-size:11px; color:#555; margin-bottom:8px; font-family:'Courier New', monospace;">ID: ${t.taskId}</div>` : ''}
+                ${t.link ? `
+                  <a href="${t.link}" target="_blank" style="
+                    display: inline-flex; align-items: center; gap: 6px;
+                    background: rgba(124,0,255,0.15);
+                    border: 1px solid rgba(124,0,255,0.35);
+                    color: #b983ff; padding: 5px 12px; border-radius: 8px;
+                    font-size: 12px; text-decoration: none; font-weight: 600;
+                    transition: .2s;
+                  " onmouseover="this.style.background='rgba(124,0,255,0.3)'" onmouseout="this.style.background='rgba(124,0,255,0.15)'">
+                    🔗 Open Submission
+                  </a>
+                ` : `<span style="font-size:11px; color:#333; font-style:italic;">Link not available</span>`}
+              </div>
+            </div>
+          </div>
+        `;
       });
 
-      document.getElementById("modalTaskTitle").innerText = "Tasks Completed";
+      document.getElementById("modalTaskTitle").innerHTML = `
+        <span style="color:#b983ff;">✅</span> ${tasks.length} Task${tasks.length > 1 ? 's' : ''} Completed
+      `;
       document.getElementById("modalTaskDesc").innerHTML = content;
-
       document.getElementById("taskModal").classList.add("show");
     }
 
@@ -2453,70 +2650,161 @@
 
     }
 
-    function openProfile(id) {
-
+    async function openProfile(id) {
       if (!window.batchInternCache) return;
 
-      const intern = window.batchInternCache.find(x => x.InternID === id);
+      const internData = window.batchInternCache.find(x => x.InternID === id);
+      if (!internData) return;
 
-      if (!intern) return;
+      // Show modal immediately with basic info + loading state
+      const rankColors = {
+        Bronze: "#cd7f32", Silver: "#c0c0c0", Gold: "#ffd700",
+        Platinum: "#00e5ff", Diamond: "#00bfff", Master: "#ff3df0"
+      };
+      function getRankFromCount(n) {
+        if (n >= 30) return "Master";
+        if (n >= 20) return "Diamond";
+        if (n >= 16) return "Platinum";
+        if (n >= 12) return "Gold";
+        if (n >= 8)  return "Silver";
+        if (n >= 4)  return "Bronze";
+        return null;
+      }
+      const approved = internData.approved || 0;
+      const rank = getRankFromCount(approved);
+      const rankColor = rank ? rankColors[rank] : "#555";
 
-      /* BASIC INFO */
+      const initials = (internData.Name || "?").charAt(0).toUpperCase();
 
       document.getElementById("profileData").innerHTML = `
+        <div style="display:flex;flex-direction:column;align-items:center;gap:6px;margin-bottom:16px;">
+          ${internData.Photo
+            ? `<img src="${internData.Photo}" style="width:80px;height:80px;border-radius:50%;border:3px solid #7c00ff;box-shadow:0 0 20px rgba(124,0,255,0.5);object-fit:cover;">`
+            : `<div style="width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,#7c00ff,#b983ff);display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:800;color:white;border:3px solid #7c00ff;box-shadow:0 0 20px rgba(124,0,255,0.4);">${initials}</div>`
+          }
+          <h2 style="margin:6px 0 2px;font-size:18px;">${internData.Name}</h2>
+          <div style="font-size:11px;color:#555;font-family:'Courier New',monospace;">${internData.InternID}</div>
+          ${rank ? `<span style="font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;background:${rankColor}22;border:1px solid ${rankColor}55;color:${rankColor};">${rank}</span>` : ""}
+          <p style="font-size:13px;color:#888;margin:4px 0 0;">${internData.Bio || "No bio added."}</p>
+        </div>
+        <div style="display:flex;justify-content:center;gap:20px;padding:12px 0;border-top:1px solid rgba(255,255,255,0.06);border-bottom:1px solid rgba(255,255,255,0.06);margin-bottom:14px;">
+          <div style="text-align:center;">
+            <div style="font-size:20px;font-weight:800;color:#39d353;">${approved}</div>
+            <div style="font-size:10px;color:#555;text-transform:uppercase;letter-spacing:1px;">Approved</div>
+          </div>
+          <div style="text-align:center;" id="batchProfileTotalEl">
+            <div style="font-size:20px;font-weight:800;color:#b983ff;">—</div>
+            <div style="font-size:10px;color:#555;text-transform:uppercase;letter-spacing:1px;">Submitted</div>
+          </div>
+        </div>
+      `;
 
-<img src="${intern.Photo || 'logo.png'}"
-style="
-width:90px;
-height:90px;
-border-radius:50%;
-border:3px solid #7c00ff;
-box-shadow:0 0 15px rgba(124,0,255,.6);
-margin-bottom:10px;
-">
-
-<h2 style="margin:5px 0;">${intern.Name}</h2>
-
-<p style="color:#aaa;font-size:13px;">Intern ID: ${intern.InternID}</p>
-
-<p style="margin-top:6px;">
-${intern.Bio || "No profile description added"}
-</p>
-
-<div class="taskCount">
-✅ ${intern.approved} Approved Tasks
-</div>
-
-`;
-
-      /* PROJECTS */
-
-      const projectBox = document.getElementById("profileProjects");
-
-      projectBox.innerHTML = "";
-
-      (intern.projects || []).forEach(p => {
-
-        projectBox.innerHTML += `
-
-<div class="projectItem">
-
-<div class="projectTitle">
-${p.title}
-</div>
-
-<a href="${p.link}" target="_blank">
-View Project
-</a>
-
-</div>
-
-`;
-
-      });
+      document.getElementById("profileProjects").innerHTML = `
+        <div style="text-align:center;padding:20px;color:#444;font-size:13px;">
+          <div style="font-size:20px;margin-bottom:8px;">⏳</div>
+          Loading tasks...
+        </div>
+      `;
 
       document.getElementById("profileModal").style.display = "flex";
 
+      // Fetch tasks for this intern
+      const [histData, perfData] = await Promise.all([
+        apiGET({ action: "getInternHistory", internId: id }),
+        apiGET({ action: "getInternPerformance", internId: id })
+      ]);
+
+      // Update submitted count
+      if (perfData.success) {
+        const totalEl = document.getElementById("batchProfileTotalEl");
+        if (totalEl) totalEl.querySelector("div").innerText = perfData.submitted || 0;
+      }
+
+      const projectBox = document.getElementById("profileProjects");
+      projectBox.innerHTML = "";
+
+      if (!histData.success || !histData.history || histData.history.length === 0) {
+        projectBox.innerHTML = `<div style="text-align:center;padding:20px;color:#444;font-size:13px;">No tasks submitted yet.</div>`;
+        return;
+      }
+
+      // Debug: log status values to find exact field name
+      if (histData.history && histData.history.length > 0) {
+        console.log("🔍 Sample task keys:", Object.keys(histData.history[0]));
+        histData.history.slice(0, 5).forEach((h, i) => {
+          console.log(`Task ${i}:`, {
+            Submitted: h.Submitted,
+            Status: h.Status,
+            FinalStatus: h.FinalStatus,
+            Grade: h.Grade,
+            ApprovalStatus: h.ApprovalStatus
+          });
+        });
+      }
+
+      // Filter approved tasks — try all possible field/value combinations
+      const submitted = histData.history.filter(h => {
+        const finalStatus = (h.FinalStatus || "").toLowerCase();
+        const status      = (h.Status || "").toLowerCase();
+        const grade       = (h.Grade || "").toLowerCase();
+        return finalStatus.includes("approv") ||
+               status.includes("approv") ||
+               grade.includes("approv");
+      });
+
+      if (submitted.length === 0) {
+        projectBox.innerHTML = `<div style="text-align:center;padding:20px;color:#444;font-size:13px;">No approved tasks yet.</div>`;
+        return;
+      }
+
+      // Section header
+      projectBox.innerHTML = `
+        <div style="font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#555;margin-bottom:10px;">
+          ✅ Approved Projects (${submitted.length})
+        </div>
+      `;
+
+      submitted.forEach((h, idx) => {
+        const link = h.SubmissionLink || h.submissionLink || h.Link || h.link || h.submission_link || "";
+        const title = h.Title || h.TaskTitle || `Task ${h.AssignedTaskID || idx + 1}`;
+        const date = h.SubmittedAt ? h.SubmittedAt.slice(0, 10) : (h.Date || "");
+
+        projectBox.innerHTML += `
+          <div style="
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.07);
+            border-radius: 12px;
+            padding: 12px 14px;
+            margin-bottom: 8px;
+            text-align:left;
+            transition:.2s;
+          " onmouseover="this.style.borderColor='rgba(124,0,255,0.3)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.07)'">
+            <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;">
+              <div style="flex:1;">
+                <div style="font-weight:700;font-size:13px;color:#fff;margin-bottom:3px;">${title}</div>
+                ${h.AssignedTaskID ? `<div style="font-size:10px;color:#444;font-family:'Courier New',monospace;margin-bottom:6px;">ID: ${h.AssignedTaskID}</div>` : ""}
+                ${date ? `<div style="font-size:10px;color:#444;margin-bottom:6px;">📅 ${date}</div>` : ""}
+                ${link
+                  ? `<a href="${link}" target="_blank" style="
+                      display:inline-flex;align-items:center;gap:5px;
+                      font-size:11px;font-weight:600;color:#b983ff;text-decoration:none;
+                      padding:4px 10px;border-radius:8px;
+                      background:rgba(124,0,255,0.12);border:1px solid rgba(124,0,255,0.3);
+                      transition:.2s;
+                    " onmouseover="this.style.background='rgba(124,0,255,0.25)'" onmouseout="this.style.background='rgba(124,0,255,0.12)'">
+                      🔗 View Submission
+                    </a>`
+                  : `<span style="font-size:11px;color:#333;font-style:italic;">No link</span>`
+                }
+              </div>
+              <span style="
+                font-size:10px;font-weight:700;padding:3px 8px;border-radius:20px;flex-shrink:0;
+                background:#39d35318;border:1px solid #39d35344;color:#39d353;
+              ">✓ Approved</span>
+            </div>
+          </div>
+        `;
+      });
     }
 
     function closeProfile() {

@@ -135,6 +135,15 @@ function api_internRequestEditPermission(b) {
       return { success: false, message: "Submission not found ❌" };
 
     subsSh.getRange(found, editReqCol).setValue("Yes");
+
+    // Save RequestedAt timestamp
+    const reqAtCol = headers.indexOf("RequestedAt") + 1;
+    if (reqAtCol > 0) subsSh.getRange(found, reqAtCol).setValue(nowISO_());
+
+    // Save NewLink if provided
+    const newLinkCol = headers.indexOf("NewLink") + 1;
+    if (newLinkCol > 0 && b.newLink) subsSh.getRange(found, newLinkCol).setValue(b.newLink);
+
     return { success: true, message: "Edit request sent ✅" };
   } catch (err) {
     return { success: false, message: "Server error: " + err.message };
@@ -319,10 +328,21 @@ function api_getEditRequests(adminId, adminPass) {
       return { success: false, message: "Unauthorized ❌" };
 
     const subs     = mapRows_(sh_(SHEET_SUBS));
-    const requests = subs.filter(s =>
-      String(s.EditRequestStatus || "").toLowerCase() === "yes" &&
-      String(s.IsEditAllowed     || "").toLowerCase() !== "yes"
-    );
+    const requests = subs
+      .filter(s =>
+        String(s.EditRequestStatus || "").toLowerCase() === "yes" &&
+        String(s.IsEditAllowed     || "").toLowerCase() !== "yes"
+      )
+      .map(s => ({
+        SubmissionID:      s.SubmissionID,
+        InternID:          s.InternID,
+        AssignedTaskID:    s.AssignedTaskID,
+        Link:              s.Link || "",
+        NewLink:           s.NewLink || "",
+        EditRequestStatus: s.EditRequestStatus,
+        RequestedAt:       s.RequestedAt ? normalizeDate_(s.RequestedAt) : (s.SubmittedAt ? normalizeDate_(s.SubmittedAt) : ""),
+        SubmittedAt:       s.SubmittedAt || ""
+      }));
 
     return { success: true, requests };
   } catch (err) {
@@ -367,7 +387,25 @@ function api_adminApproveEdit(b) {
     subs.getRange(found, approvedCol).setValue("Yes");
     if (approvedAtCol > 0) subs.getRange(found, approvedAtCol).setValue(nowISO_());
 
-    return { success: true, message: "Edit approved ✅" };
+    // If NewLink exists, update the Link column directly
+    const newLinkCol = headers.indexOf("NewLink") + 1;
+    const linkCol    = headers.indexOf("Link") + 1;
+    if (newLinkCol > 0 && linkCol > 0) {
+      const newLinkVal = String(data[found - 1][newLinkCol - 1] || "").trim();
+      if (newLinkVal) {
+        subs.getRange(found, linkCol).setValue(newLinkVal);
+        // Clear NewLink after applying
+        subs.getRange(found, newLinkCol).setValue("");
+      }
+    }
+
+    // Also clear EditRequestStatus and IsEditAllowed after applying
+    const editReqCol2 = headers.indexOf("EditRequestStatus") + 1;
+    if (editReqCol2 > 0) subs.getRange(found, editReqCol2).setValue("");
+    subs.getRange(found, approvedCol).setValue("");
+
+    SpreadsheetApp.flush();
+    return { success: true, message: "Edit approved & link updated ✅" };
   } catch (err) {
     return { success: false, message: "Server error: " + err.message };
   }
